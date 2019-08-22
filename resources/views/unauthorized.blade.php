@@ -70,6 +70,11 @@
 				<div class="title m-b-md">
 				   You cannot access this page! This is for only '{{$role}}'"
 				</div>
+                <a href="{{ route('logout') }}" class="dropdown-item notify-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fe-log-out"></i>
+                    <span>Logout</span>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }} </form>
+                </a>
             </div>
         </div>
     </body>
