@@ -57,7 +57,7 @@
 
         @if ($errors->has('email'))
             <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
+                <strong>{{ $email }}</strong>
             </span>
         @endif
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -67,7 +67,7 @@
 
         @if ($errors->has('password'))
             <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
+                <strong>{{ $password }}</strong>
             </span>
         @endif
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
