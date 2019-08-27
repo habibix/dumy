@@ -43,6 +43,14 @@ class OperatorController extends Controller
 
 		//return $this->data_day(1, 14, 'mobil');
 
+		$now = Carbon::now();
+		$xAxis = [];
+		for ($i=$day; $i >= 1; $i--) { 
+			$xAxis[] = Carbon::today()->subDays($i)->toDateString();
+		}
+
+		//return $xAxis;
+
 		$chart_line = Charts::multi('line', 'highcharts')
 		    ->labels($xAxis)
 		    ->title('Jumlah Kendaraan Camera 1')
@@ -56,6 +64,7 @@ class OperatorController extends Controller
 			->with('xAxis', $xAxis)
 			->with('series', $series)
 			->with('chart', $chart_line)
+			->with('camera', $camera)
 			->with('count_rekap', $count_rekap);
 	}
 

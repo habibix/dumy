@@ -3,7 +3,7 @@
 
 <!-- NAVBAR SECTION -->
 @section('navbar')
-	@include('page.admin.nav')
+	@include('page.operator.nav')
 @endsection
 
 <!-- CONTENT SECTION -->
@@ -92,21 +92,19 @@
                   <th>Wilayah</th>
                   <th>Lokasi</th>
                   <th>IP Camera</th>
-                  <th>IP Address</th>
                   <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>
-                
+                @foreach ($camera as $row)
                   <tr>
-                    <td>1</td>
-                    <td>ATMC</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <th>No.</th>
+                    <td>{{ $row->wilayah }}</td>
+                    <td>{{ $row->lokasi }}</td>
+                    <td>{{ $row->ip_camera }}</td>
+                    <td>{{ $row->status }}</td>
                   </tr>
-                
+                @endforeach
                 </tbody>
                 <tfoot>
                 <tr>
@@ -114,7 +112,6 @@
                   <th>Wilayah</th>
                   <th>Lokasi</th>
                   <th>IP Camera</th>
-                  <th>IP Address</th>
                   <th>Status</th>
                 </tr>
                 </tfoot>
@@ -141,7 +138,6 @@
         <div class="col-xs-2">
             <div class="form-group">
               <select class="form-control">
-                <option>ALL</option>
                 <option>ATMS</option>
                 <option>ATMC</option>
               </select>
@@ -151,7 +147,6 @@
           <div class="col-xs-2">
             <div class="form-group">
               <select class="form-control">
-                <option>ALL</option>
                 <option>JPO MT Haryono</option>
                 <option>JPO Harapakn Kita</option>
                 <option>JPO POLDA</option>
@@ -302,23 +297,25 @@ Highcharts.chart('container-chart', {
 });
 </script>
 
-<script src='sdk/maps-web.min.js'></script>
-<script src="sdk/js/form.js"></script>
+<script src='../sdk/maps-web.min.js'></script>
+<script src="../sdk/js/form.js"></script>
 <script type='text/javascript' src='https://cdn.rawgit.com/jasonmoo/t.js/master/t.min.js'></script>
-<script src="sdk/tomtom.min.js"></script>
+<script src="../sdk/tomtom.min.js"></script>
 
-<script type="text/javascript">
-tomtom.setProductInfo('tmaps', '0.1');
+<script>
+// Define your product name and version
+tomtom.setProductInfo('<your-product-name>', '<your-product-version>');
 var markerOptions = {
     icon: tomtom.L.icon({
-        iconUrl: 'https://api.tomtom.com/maps-sdk-js/4.47.6/examples/img/icon.png',
+        iconUrl: '<your-tomtom-sdk-base-path>/../img/icon.png',
         iconSize: [30, 34],
         iconAnchor: [15, 34]
     })
 };
+
 var map = tomtom.map('map', {
     key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
-    source: 'raster',
+    source: 'vector',
     basePath: '<your-tomtom-sdk-base-path>'
 });
 tomtom.L.marker([43.26456, -71.5702], markerOptions).addTo(map);
@@ -326,6 +323,5 @@ tomtom.L.marker([39.73845, -104.98485], markerOptions).addTo(map);
 tomtom.L.marker([34.05224, -118.24334], markerOptions).addTo(map);
 tomtom.L.marker([37.78008, -122.42017], markerOptions).addTo(map);
 map.setView([39, -97.5], 4);
-
 </script>
 @endsection
