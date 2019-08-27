@@ -56,20 +56,20 @@
         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Email">
 
         @if ($errors->has('email'))
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $email }}</strong>
-            </span>
-        @endif
+                                                  <span class="help-block">
+                                                      <strong>{{ $errors->first('email') }}</strong>
+                                                  </span>
+                                              @endif
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
 
         @if ($errors->has('password'))
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $password }}</strong>
-            </span>
-        @endif
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('password') }}</strong>
+                                                    </span>
+                                                @endif
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
