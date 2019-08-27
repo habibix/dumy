@@ -313,16 +313,40 @@ var markerOptions = {
         iconAnchor: [15, 34]
     })
 };
+
+var addressPoints = [
+    [34.05224, -118.24334, 'Toowoomba'],
+    [39.73845, -104.98485, 'Ballarat'],
+    [43.26456, -71.5702, 'Shoalhaven']
+];
+
 var map = tomtom.map('map', {
+    dragging: false,
+    touchZoom: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    tap: false,
+    keyboard: false,
+    zoomControl: false,
     key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
     source: 'raster',
     basePath: '<your-tomtom-sdk-base-path>'
 });
-tomtom.L.marker([43.26456, -71.5702], markerOptions).addTo(map);
+/*tomtom.L.marker([43.26456, -71.5702], markerOptions).addTo(map);
 tomtom.L.marker([39.73845, -104.98485], markerOptions).addTo(map);
 tomtom.L.marker([34.05224, -118.24334], markerOptions).addTo(map);
-tomtom.L.marker([37.78008, -122.42017], markerOptions).addTo(map);
+tomtom.L.marker([37.78008, -122.42017], markerOptions).addTo(map);*/
 map.setView([39, -97.5], 4);
+
+var markers = tomtom.L.markerClusterGroup();
+addressPoints.forEach(function(point) {
+    var title = point[2],
+        marker = tomtom.L.marker(new tomtom.L.LatLng(point[0], point[1]), {title: title});
+    marker.bindPopup(title);
+    markers.addLayer(marker);
+});
+map.addLayer(markers);
 
 </script>
 @endsection
