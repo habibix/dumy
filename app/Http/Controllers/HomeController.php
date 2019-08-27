@@ -28,6 +28,10 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function test(){
+        return view('test');
+    }
+
     public function index()
     {
         if(Auth::user()->type == 'admin'){
