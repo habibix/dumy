@@ -103,9 +103,10 @@
                 </tr>
                 </thead>
                 <tbody>
+                @php $no = 1; @endphp
                 @foreach ($camera as $row)
                   <tr>
-                    <th>No.</th>
+                    <th>{{ $no++ }}</th>
                     <td>{{ $row->wilayah }}</td>
                     <td>{{ $row->lokasi }}</td>
                     <td>{{ $row->ip_camera }}</td>
