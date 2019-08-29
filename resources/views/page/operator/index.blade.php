@@ -76,9 +76,16 @@
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
+        <div class="col-lg-12">
+          <!-- Map box -->
+          <div id='map' class='use-all-space'></div>
+          <!-- /.box -->
+        </div>
+      </div>
+      <div class="row">
 
         <!-- Left col -->
-        <section class="col-lg-6 connectedSortable">
+        <section class="col-lg-12 connectedSortable">
           <div class="box">
             <div class="box-header">
               <h3 class="box-title">Data Kamera</h3>
@@ -122,17 +129,56 @@
           <!-- /.box -->
         </section>
         <!-- /.Left col -->
-        <!-- right col (We are only adding the ID to make the widgets sortable)-->
-        <section class="col-lg-6">
-
-          <!-- Map box -->
-          <div id='map' class='use-all-space'></div>
-          <!-- /.box -->
-
-        </section>
-        <!-- right col -->
       </div>
       <!-- /.row (main row) -->
+
+      <div class="row">
+        <div class="col-lg-6">
+          <iframe src="http://192.168.100.18:5000/" width="640" height="480" scrolling="no" frameborder="0"></iframe>
+        </div>
+        <div class="col-lg-6">
+                    <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Data Kendaraan</h3>
+              <!-- @foreach ($xAxis as $row)
+                {{ $row }}
+              @endforeach -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Camera</th>
+                  <th>Total</th>
+                  <th>Vehicle</th>
+                  <th>Datetime</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach ($count_rekap as $row)
+                  <tr>
+                    <td>{{ $row->camera_id }}</td>
+                    <td>{{ $row->total }}</td>
+                    <td>{{ $row->vehicle }}</td>
+                    <td>{{ $row->created_at->format('D, d/m/Y') }}</td>
+                  </tr>
+                @endforeach
+                </tbody>
+                <tfoot>
+                <tr>
+                  <th>Camera</th>
+                  <th>Total</th>
+                  <th>Vehicle</th>
+                  <th>Datetime</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        </div>
+      </div>
 
       <div class="row" style="margin-top: 20px">
         <div class="col-xs-2">
@@ -173,47 +219,22 @@
 
         <div class="col-xs-12">
           <!-- /.box -->
+          lg 12
 
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Data Kendaraan</h3>
-              
-              <!-- @foreach ($xAxis as $row)
-                {{ $row }}
-              @endforeach -->
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                  <th>Kendaraan</th>
-                  <th>Kamera</th>
-                  <th>Datetime</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($count_rekap as $row)
-                  <tr>
-                    <td>{{ $row->camera_id }}</td>
-                    <td>{{ $row->total }}</td>
-                    <td>{{ $row->created_at }}</td>
-                  </tr>
-                @endforeach
-                </tbody>
-                <tfoot>
-                <tr>
-                  <th>Kendaraan</th>
-                  <th>Kamera</th>
-                  <th>Datetime</th>
-                </tr>
-                </tfoot>
-              </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
           <!-- /.box -->
         </div>
+
+        <div class="col-xs-12">
+          <div class="col-xs-4">
+            <div id="speed_chart"></div>
+          </div>
+          <div class="col-xs-8">
+            <!-- data-chart -->
+          {!! $speed_chart->html() !!}
+          </div>
+          
+        </div>
+
       </div>
 
     </section>
@@ -223,21 +244,22 @@
 
 <!-- HEADER SECTION -->
 @section('header')
-<link rel="stylesheet" type="text/css" href='sdk/map.css'/>
-<link rel="stylesheet" type="text/css" href="sdk/elements.css">
+<link rel="stylesheet" type="text/css" href='../../sdk/map.css'/>
+<link rel="stylesheet" type="text/css" href="../../sdk/elements.css">
 
 <style type="text/css">
 #map {
 min-width: 320px;
 min-height: 400px;
-height: 400px;
+height: 600px;
 margin: auto;
 padding: 10px 10px 0 10px;
 }
 </style>
 
-<script src="sdk/js/form.js"></script>
-<script src="sdk/tomtom.min.js"></script>
+<script src="../../sdk/js/form.js"></script>
+<script src="../../sdk/tomtom.min.js"></script>
+
 @endsection
 
 <!-- FOOTER SECTION -->
@@ -245,6 +267,7 @@ padding: 10px 10px 0 10px;
 <!-- highcharts -->
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
@@ -268,35 +291,106 @@ padding: 10px 10px 0 10px;
 
 {!! $chart->script() !!}
 
-<script type="text/javascript">
-Highcharts.chart('container-chart', {
-    chart: {
-        type: 'line'
-    },
-    title: {
-        text: 'Weekly Average Counting'
-    },
-    subtitle: {
-        text: ''
-    },
-    xAxis: {
-        categories: {!! json_encode($xAxis) !!}
-    },
-    yAxis: {
-        title: {
-            text: 'Jumlah Kendaraan'
-        }
-    },
-    plotOptions: {
-        line: {
-            dataLabels: {
-                enabled: true
-            },
-            enableMouseTracking: false
-        }
-    },
-    series: {!! json_encode($series, JSON_HEX_QUOT) !!}
+{!! $speed_chart->script() !!}
 
+<script type="text/javascript">
+  Highcharts.chart('speed_chart', {
+
+    chart: {
+        type: 'gauge',
+        plotBackgroundColor: null,
+        plotBackgroundImage: null,
+        plotBorderWidth: 0,
+        plotShadow: false
+    },
+
+    title: {
+        text: 'Rata-rata Kecepatan Keseluruhan'
+    },
+
+    pane: {
+        startAngle: -150,
+        endAngle: 150,
+        background: [{
+            backgroundColor: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [
+                    [0, '#FFF'],
+                    [1, '#333']
+                ]
+            },
+            borderWidth: 0,
+            outerRadius: '109%'
+        }, {
+            backgroundColor: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [
+                    [0, '#333'],
+                    [1, '#FFF']
+                ]
+            },
+            borderWidth: 1,
+            outerRadius: '107%'
+        }, {
+            // default background
+        }, {
+            backgroundColor: '#DDD',
+            borderWidth: 0,
+            outerRadius: '105%',
+            innerRadius: '103%'
+        }]
+    },
+
+    // the value axis
+    yAxis: {
+        min: 0,
+        max: 200,
+
+        minorTickInterval: 'auto',
+        minorTickWidth: 1,
+        minorTickLength: 10,
+        minorTickPosition: 'inside',
+        minorTickColor: '#666',
+
+        tickPixelInterval: 30,
+        tickWidth: 2,
+        tickPosition: 'inside',
+        tickLength: 10,
+        tickColor: '#666',
+        labels: {
+            step: 2,
+            rotation: 'auto'
+        },
+        title: {
+            text: 'km/h'
+        },
+        plotBands: [{
+            from: 0,
+            to: 120,
+            color: '#55BF3B' // green
+        }, {
+            from: 120,
+            to: 160,
+            color: '#DDDF0D' // yellow
+        }, {
+            from: 160,
+            to: 200,
+            color: '#DF5353' // red
+        }]
+    },
+
+    series: [{
+        name: 'Speed',
+        data: [{{ $avg_speed }}],
+        tooltip: {
+            valueSuffix: ' km/h'
+        }
+    }]
+
+},
+// Add some life
+function (chart) {
+    
 });
 </script>
 
@@ -315,9 +409,16 @@ var markerOptions = {
 };
 
 var addressPoints = [
-    [34.05224, -118.24334, 'Toowoomba'],
-    [39.73845, -104.98485, 'Ballarat'],
-    [43.26456, -71.5702, 'Shoalhaven']
+    [-6.243347,106.8565551, 'ATMS 01 JPO KORLANTAS'],
+    [-6.2379992,106.8327819, 'ATMS 03 JPO TEBET 2'],
+    [-6.2379133,106.8327818, 'ATMS 09 JPO KUNINGAN'],
+    [-6.2341636,106.8207929, 'ATMS 10 JPO MAMPANG'],
+    [-6.2341529,106.8207929, 'ATMS 12 JPO JAMSOSTEK'],
+    [-6.2428229,106.8310242, 'ATMS 13 JPO TELKOM'],
+    [-6.242715,106.8047593, 'ATMS 14 JPO POLDA'],
+    [-6.2149985,106.8070094, 'ATMS 16 JPO SENAYAN-BARAT'],
+    [-6.1850632,106.7961225, 'ATMS 22 JPO HARAPAN KITA'],
+    [-6.2102507,106.819901, 'ATMS 26 JPO TAMAN-ANGGREK 2']
 ];
 
 var map = tomtom.map('map', {
@@ -337,7 +438,7 @@ var map = tomtom.map('map', {
 tomtom.L.marker([39.73845, -104.98485], markerOptions).addTo(map);
 tomtom.L.marker([34.05224, -118.24334], markerOptions).addTo(map);
 tomtom.L.marker([37.78008, -122.42017], markerOptions).addTo(map);*/
-map.setView([39, -97.5], 4);
+map.setView([-6.2106012,106.8199012], 12);
 
 var markers = tomtom.L.markerClusterGroup();
 addressPoints.forEach(function(point) {

@@ -30,6 +30,9 @@ Route::group(['middleware' => 'App\Http\Middleware\AdminMiddleware'], function()
 
 Route::group(['middleware' => 'App\Http\Middleware\MemberMiddleware'], function() {
 	Route::match(['get', 'post'], '/operator/', 'OperatorController@index')->name('operator');
+	Route::match(['get', 'post'], '/operator/counting/', 'OperatorController@counting_page')->name('operator_counting');
+	Route::match(['get', 'post'], '/operator/speed/', 'OperatorController@speed_page')->name('operator_speed');
+	Route::match(['get', 'post'], '/operator/gis/', 'OperatorController@gis_page')->name('operator_gis');
 });
 
 Route::group(['middleware' => 'App\Http\Middleware\SuperAdminMiddleware'], function() {

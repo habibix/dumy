@@ -15,7 +15,8 @@ class CountRekapSeeder extends Seeder
     {
         $camera = ["1", "2", "3", "4"];
 
-        $now = Carbon::now();
+        //$now = Carbon::now();
+        $now = new Carbon('2019-08-29 00:00:00');
 
         foreach ($camera as $key => $value) {
         	for ($i=0; $i < 14; $i++) {
@@ -45,14 +46,6 @@ class CountRekapSeeder extends Seeder
 	        	$rekap->save();
 	        }
 
-	        for ($i=0; $i < 14; $i++) {
-	        	$rekap = new CountingRekap;
-	        	$rekap->total = rand(10000,20000);
-	        	$rekap->camera_id = $value;
-	        	$rekap->vehicle = 'bajai';
-	        	$rekap->created_at = Carbon::today()->subDays($i);
-	        	$rekap->save();
-	        }
         }
     }
 }
