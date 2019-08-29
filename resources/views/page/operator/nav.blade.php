@@ -1,7 +1,7 @@
 <ul class="sidebar-menu" data-widget="tree">
   <li class="header">MAIN NAVIGATION</li>
   <li class="">
-    <a href="{{ route('operator') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+    <a href="{{ route('operator') }}"><i class="fa fa-dashboard"></i> <span>Camera List</span></a>
   </li>
   <li class="">
     <a href="{{ route('operator_counting') }}"><i class="fa fa-dashboard"></i> <span>Vehicle Counting</span></a>
