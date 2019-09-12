@@ -9,17 +9,28 @@
 <!-- CONTENT SECTION -->
 @section('content')
 
+<section class="content">
+
 <div class="col-md-12">
 
 @if (session('success'))
-    <div class="alert alert-success alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h4><i class="icon fa fa-check"></i> {!! session('success') !!}</h4>
-    </div>
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4><i class="icon fa fa-check"></i> {!! session('success') !!}</h4>
+</div>
+@endif @if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
 </div>
 
+<div class="row">
 <div class="col-md-6">
   <div class="box box-primary">
   <div class="box-header with-border">
@@ -67,15 +78,12 @@
 
 <div class="col-md-6">
   <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">List User</h3>
-            </div>
-            <!-- /.box-header -->
-            <!-- form start -->
-
-              <div class="box-body">
-                <div class="table-responsive">
-          <table class="table table-hover">
+    <div class="box-header with-border">
+      <h3 class="box-title">List User</h3>
+    </div>
+      <div class="box-body">
+        <div class="table-responsive">
+          <table id="list" class="table table-hover">
               <thead>
                   <tr>
                       <td>#</td>
@@ -109,14 +117,106 @@
                   @endforelse
               </tbody>
           </table>
+        </div>
       </div>
-              </div>
-              <!-- /.box-body -->
+    </div>
+  </div>
+</div>
 
-          </div>
-      
+<div class="row">
+  <div class="col-md-6">
+    <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">List User</h3>
+    </div>
+      <form action="{{ route('addCamera') }}" method="post">
+        {{ csrf_field() }}
+        <div class="box-body">
+        <div class="form-group">
+          <label for="">Wilayah</label>
+          <input name="wilayah" class="form-control" required>
+            <!-- <label for="">Wilayah</label>
+            <select class="form-control" name="wilayah">
+              <option value="">Pilih</option>
+              <option value="ATMS">ATMS</option>
+              <option value="ATMC">ATMC</option>
+            </select> -->
+        </div>
+        <div class="form-group">
+            <label for="">Lokasi</label>
+            <input name="lokasi" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="">IP Camera</label>
+            <input type="" name="ip_camera" class="form-control" placeholder="Example x.x.x.x" required>
+        </div>
+        <div class="form-group">
+            <label for="">Select User</label>
+            <select name="user_id" class="form-control" required>
+                <option value="">Pilih</option>
+                @foreach ($user as $row)
+                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary btn-sm">
+                <i class="fa fa-send"></i> Simpan
+            </button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">List Camera</h3>
+    </div>
+      <div class="box-body">
+        <div class="table-responsive">
+          <table id="camera" class="table table-hover">
+              <thead>
+                  <tr>
+                      <td>#</td>
+                      <td>Wilayah</td>
+                      <td>Lokasi</td>
+                      <td>IP Camera</td>
+                      <td>User</td>
+                      <td></td>
+                  </tr>
+              </thead>
+              <tbody>
+                  @php $no = 1; @endphp
+                  @forelse ($camera as $row)
+                  <tr>
+                      <td>{{ $no++ }}</td>
+                      <td>{{ $row->wilayah }}</td>
+                      <td>{{ $row->lokasi }}</td>
+                      <td>{{ $row->ip_camera }}</td>
+                      <td>{{ $row->user['name'] }}</td>
+                      <td>
+                          <form action="{{ route('deleteUser', $row->id) }}" method="GET">
+                              {{ csrf_field() }}
+                              <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                          </form>
+                      </td>
+                  </tr>
+                  @empty
+                  <tr>
+                      <td colspan="5" class="text-center">Tidak ada data</td>
+                  </tr>
+                  @endforelse
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
 </div>
-</div>
+
+</section>
 @endsection
 
 
@@ -151,75 +251,12 @@ padding: 10px 10px 0 10px;
 <script src="http://www.fasyasolusindo.com/tmaps/sdk/sdk/tomtom.min.js"></script>
 <script>
   $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
+    $('#list').DataTable({
+      pageLength : 6
+    })
+    $('#camera').DataTable({
+      pageLength : 6
     })
   })
-</script>
-
-<script type="text/javascript">
-Highcharts.chart('container-chart', {
-    chart: {
-        type: 'line'
-    },
-    title: {
-        text: 'Weekly Average Counting'
-    },
-    subtitle: {
-        text: ''
-    },
-    xAxis: {
-        categories: ['week 1', 'week 2', 'week 3', 'week 4', 'week 5', 'week 6', 'week 7', 'week 8']
-    },
-    yAxis: {
-        title: {
-            text: 'Jumlah Kendaraan'
-        }
-    },
-    plotOptions: {
-        line: {
-            dataLabels: {
-                enabled: true
-            },
-            enableMouseTracking: false
-        }
-    },
-    series: [{
-        name: 'Camera 1',
-        data: [{{ count($countWeek) }}]
-    }, {
-        name: 'Camera 2',
-        data: [3568]
-    }]
-});
-</script>
-
-<script type="text/javascript">
-tomtom.setProductInfo('<your-product-name>', '<your-product-version>');
-var markerOptions = {
-    icon: tomtom.L.icon({
-        iconUrl: 'https://api.tomtom.com/maps-sdk-js/4.47.6/examples/img/icon.png',
-        iconSize: [30, 34],
-        iconAnchor: [15, 34]
-    })
-};
-var map = tomtom.map('example-map', {
-    key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
-    source: 'raster',
-    basePath: '<your-tomtom-sdk-base-path>'
-});
-tomtom.L.marker([-6.213764, 106.806968], markerOptions).addTo(map);
-tomtom.L.marker([-6.196751, 106.897190], markerOptions).addTo(map);
-tomtom.L.marker([-6.263300, 106.872464], markerOptions).addTo(map);
-tomtom.L.marker([-6.148313, 106.791688], markerOptions).addTo(map);
-map.setView([-6.219184, 106.846257], 10);
-
-
 </script>
 @endsection

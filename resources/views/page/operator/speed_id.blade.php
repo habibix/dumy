@@ -10,6 +10,7 @@
 @section('content')
 <!-- Main content -->
     <section class="content">
+
       <div class="row">
         <div class="col-lg-2">
           <div class="dropdown form-group">
@@ -22,8 +23,22 @@
           </div>
         </div>
       </div>
+
       <div class="row">
-        <div class="col-lg-12">{!! $chart->html() !!}</div>
+        <div class="col-xs-12">
+          <!-- data-chart -->
+          {!! $chart->html() !!}
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 20px">
+        <div class="col-xs-6">
+          <!-- <iframe src="http://127.0.0.1:5000/?camera=111" width="640" height="480" scrolling="no" frameborder="0"></iframe> -->
+          {{ $active_camera->rtsp_address }}
+        </div>
+        <div class="col-xs-6">
+          <div id="speed_avg"></div>
+        </div>
       </div>
 
     </section>
@@ -41,12 +56,37 @@
 <!-- FOOTER SECTION -->
 @section('footer')
 
-{!! Charts::scripts() !!}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
 
-{!! $chart->script() !!}
+<script>
+    $(function() {
+        $('.charts').each(function() {
+            var chart = $(this).find('.charts-chart');
+            var loader = $(this).find('.charts-loader');
+            var time = loader.data('duration');
+
+            if(loader.hasClass('enabled')) {
+                chart.css({visibility: 'hidden'});
+                loader.fadeIn(350);
+
+                setTimeout(function() {
+                    loader.fadeOut(350, function() {
+                        chart.css({opacity: 0, visibility: 'visible'}).animate({opacity: 1}, 350);
+                    });
+                }, time)
+            }
+        });
+    })
+</script>
+
+
 
 <script type="text/javascript">
-  Highcharts.chart('speed_chart', {
+  Highcharts.chart('speed_avg', {
 
     chart: {
         type: 'gauge',
@@ -57,7 +97,7 @@
     },
 
     title: {
-        text: 'Rata-rata Kecepatan Keseluruhan'
+        text: 'Speedometer'
     },
 
     pane: {
@@ -142,25 +182,24 @@
 },
 // Add some life
 function (chart) {
-    
+    if (!chart.renderer.forExport) {
+        setInterval(function () {
+            var point = chart.series[0].points[0],
+                newVal,
+                inc = Math.round((Math.random() - 0.5) * 20);
+
+            newVal = {{ $avg_speed }};
+            if (newVal < 0 || newVal > 200) {
+                newVal = {{ $avg_speed }};
+            }
+
+            point.update(newVal);
+
+        }, 3000);
+    }
 });
 </script>
 
-<!-- DataTables -->
-<script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+{!! $chart->script() !!}
 
-<script>
-  $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-  })
-</script>
 @endsection

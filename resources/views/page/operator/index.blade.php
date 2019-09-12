@@ -16,7 +16,7 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>17</h3>
+              <h3>10</h3>
 
               <p>Jumlah Kamera Analitik</p>
             </div>
@@ -61,9 +61,9 @@
           <!-- small box -->
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>65</h3>
+              <h3>3</h3>
 
-              <p>Unique Visitors</p>
+              <p>Charts</p>
             </div>
             <div class="icon">
               <i class="ion ion-pie-graph"></i>
@@ -299,7 +299,8 @@ function (chart) {
 tomtom.setProductInfo('tmaps', '0.1');
 var markerOptions = {
     icon: tomtom.L.icon({
-        iconUrl: 'https://api.tomtom.com/maps-sdk-js/4.47.6/examples/img/icon.png',
+        //iconUrl: 'https://api.tomtom.com/maps-sdk-js/4.47.6/examples/img/icon.png',
+        iconUrl: 'https://icon-icons.com/icons2/390/PNG/512/cctv-camera_39530.png',
         iconSize: [30, 34],
         iconAnchor: [15, 34]
     })
@@ -329,7 +330,8 @@ var map = tomtom.map('map', {
     zoomControl: false,
     key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
     source: 'raster',
-    basePath: '<your-tomtom-sdk-base-path>'
+    basePath: '<your-tomtom-sdk-base-path>',
+    iconUrl: 'https://icon-icons.com/icons2/390/PNG/512/cctv-camera_39530.png'
 });
 /*tomtom.L.marker([43.26456, -71.5702], markerOptions).addTo(map);
 tomtom.L.marker([39.73845, -104.98485], markerOptions).addTo(map);

@@ -8,4 +8,8 @@ class CountingRekap extends Model
 {
     protected $table = "counting_rekap";
     //protected $fillable = ['vehicle', 'count', 'camera', 'created_at', 'updated_at'];
+
+    function camera(){
+        return $this->belongsTo('App\Camera');
+    }
 }

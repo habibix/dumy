@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Counting;
+use App\Camera;
 use App\User;
 use App\Logs;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use App\CountingRekap;
 
 class HomeController extends Controller
 {
@@ -45,7 +47,6 @@ class HomeController extends Controller
         } elseif(Auth::user()->type == 'operator'){
             $this->log_userLogin(Auth::user()->id);
             return redirect()->route('operator');
-            
         } else {
             //
         }
@@ -94,33 +95,13 @@ class HomeController extends Controller
 
     // ADMIN CASE
     public function admin(Request $req){
-        $kendaraan = Counting::distinct()->get(['vehicle']);        
 
-        $countMobil = Counting::where('vehicle', '=', 'mobil')->get();
-        $countTruk = Counting::where('vehicle', '=', 'truck/bus')->get();
-        $countBajai = Counting::where('vehicle', '=', 'bajai')->get();
-        $countMotor = Counting::where('vehicle', '=', 'motor')->get();
+        $countAll = CountingRekap::all();
+        $camera  = Camera::all();
 
-        //return $countMobil;
-        $countAll = Counting::all();
-        $countWeek = Counting::where('created_at', '>', Carbon::now()->startOfWeek())
-             ->where('created_at', '<', Carbon::now()->endOfWeek())
-             ->where('camera', '=', 'camera3.mp4')
-             ->get();
-        $countWeek2 = Counting::where('created_at', '>', Carbon::now()->startOfWeek())
-             ->where('created_at', '<', Carbon::now()->endOfWeek())
-             ->where('camera', '=', 'camera1.mp4')
-             ->get();
-             
         return view('page.admin.index')
             ->with('user', User::all())
-            ->with('kendaraan', $kendaraan)
-            ->with('countMobil', $countMobil)
-            ->with('countTruck', $countTruk)
-            ->with('countBajai', $countBajai)
-            ->with('countMotor', $countMotor)
-            ->with('countWeek', $countWeek)
-            ->with('countWeek2', $countWeek2)
+            ->with('camera', $camera)
             ->with('counting', $countAll);
         //return view('page.admin.index')->withMessage("Admin");
     }
@@ -155,6 +136,33 @@ class HomeController extends Controller
         $user->delete();
         $this->log_userDelete(Auth::user()->id);
         return redirect(route('admin'))->with(['success' => 'User Dihapus']);
+    }
+
+    public function addCamera(Request $request){
+
+        //$this->log_userCreate(Auth::user()->id);
+
+        $this->validate($request, [
+            'wilayah' => 'required|string|max:100',
+            'lokasi' => 'required|string|max:150',
+            'ip_camera' => 'required|ip',
+            'user_id' => 'required'
+        ]);
+
+        $user = Camera::firstOrCreate([
+            'ip_camera' => $request->ip_camera
+        ], [
+            'wilayah' => $request->wilayah,
+            'lokasi' => $request->lokasi,
+            'user_id' => $request->user_id,
+        ]);
+
+        /*if($user){
+            echo "baik";
+        }*/
+
+        return redirect(route('admin'))->with(['success' => 'Data Ditambahkan']);
+
     }
 
     public function showLogs(){
