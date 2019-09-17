@@ -1,0 +1,195 @@
+<!-- LAYOUT -->
+@extends('layouts.page_app')
+
+<!-- NAVBAR SECTION -->
+@section('navbar')
+@include('page.operator.page_nav')
+@endsection
+
+<!-- CONTENT -->
+@section('content')
+
+<!-- TABLE -->
+<div class="row">
+    <div class="col-sm-12">
+        <div class="nest" id="FilteringClose">
+            <div class="title-alt">
+                <h6>
+                    DATA KAMERA</h6>
+                <div class="titleClose">
+                    <a class="gone" href="#FilteringClose">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+                <div class="titleToggle">
+                    <a class="nav-toggle-alt" href="#Filtering">
+                        <span class="entypo-up-open"></span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="body-nest" id="Filtering">
+                <div class="row" style="margin-bottom:10px;">
+                    <div class="col-sm-6">
+                        <input class="form-control" id="filter" placeholder="Search..." type="text" />
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="#clear" style="margin-left:10px;" class="pull-right btn btn-info clear-filter" title="clear filter">clear</a>
+                    </div>
+                </div>
+
+                <table id="footable-res2" class="demo" data-filter="#filter" data-filter-text-only="true" data-page-size="10" data-page-navigation=".pagination">
+                    <thead>
+                        <tr>
+                            <th>
+                                <center>No<center>
+                            </th>
+                            <th>
+                                <center>Tanggal & Jam</center>
+                            </th>
+                            <th>
+                                <center>Lokasi</center>
+                            </th>
+                            <th>
+                                <center>Arah</center>
+                            </th>
+                            <th>
+                                <center>Map</center>
+                            </th>
+                            <th>
+                                <center>Jenis Pelanggaran</center>
+                            </th>
+                            <th>
+                                <center>Video Clip</center>
+                            </th>
+
+                            <th>
+                                <center>Capture Kamera</center>
+                            </th>
+
+                            <th>ETLE</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @php $no = 1; @endphp
+                        @foreach ($anomali as $row)
+                        <tr>
+                            <td>{{ $no++ }}</td>
+                            <td>16-9-2019 1:51 PM</td>
+                            <td>JPO MT Haryono</td>
+                            <td>Cawang Menuju Grogol</td>
+                            <td><a>show map</a></td>
+                            <td>{{ $row->anomali }}</td>
+                            <td><a href="#">{{ $row->video }}</a></td>
+                            <td><a class="pop" href="http://127.0.0.1:8000/vca/{{ $row->image }}">{{ $row->image }}</a></td>
+                            <td><a>Tilang</a></td>
+                        </tr>
+                        @endforeach
+
+                    </tbody>
+
+                    <tfoot class="hide-if-no-paging">
+                        <tr>
+                            <td colspan="9" class="text-center">
+                                <ul class="pagination"></ul>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <img src="" class="imagepreview" style="width: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- table -->
+@endsection
+
+<!-- HEADER -->
+@section('header')
+<!-- TABLE -->
+<link href="../../apricot/assets/js/footable/css/footable.core.css?v=2-0-1" rel="stylesheet" type="text/css" />
+<link href="../../apricot/assets/js/footable/css/footable.standalone.css" rel="stylesheet" type="text/css" />
+<link href="../../apricot/assets/js/footable/css/footable-demos.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
+<link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
+
+@endsection
+
+<!-- FOOTER -->
+@section('footer')
+<!-- Table -->
+<script type="text/javascript" src="../../apricot/assets/js/toggle_close.js"></script>
+<script src="../../apricot/assets/js/footable/js/footable.js?v=2-0-1" type="text/javascript"></script>
+<script src="../../apricot/assets/js/footable/js/footable.sort.js?v=2-0-1" type="text/javascript"></script>
+<script src="../../apricot/assets/js/footable/js/footable.filter.js?v=2-0-1" type="text/javascript"></script>
+<script src="../../apricot/assets/js/footable/js/footable.paginate.js?v=2-0-1" type="text/javascript"></script>
+
+
+
+<script type="text/javascript">
+    $(function() {
+        $('#footable-res2').footable().bind('footable_filtering', function(e) {
+            var selected = $('.filter-status').find(':selected').text();
+            if (selected && selected.length > 0) {
+                e.filter += (e.filter && e.filter.length > 0) ? ' ' + selected : selected;
+                e.clear = !e.filter;
+            }
+        });
+
+        $('.clear-filter').click(function(e) {
+            e.preventDefault();
+            $('.filter-status').val('');
+            $('table.demo').trigger('footable_clear_filter');
+        });
+
+        $('.filter-status').change(function(e) {
+            e.preventDefault();
+            $('table.demo').trigger('footable_filter', {
+                filter: $('#filter').val()
+            });
+        });
+
+        $('.filter-api').click(function(e) {
+            e.preventDefault();
+
+            //get the footable filter object
+            var footableFilter = $('table').data('footable-filter');
+
+            alert('about to filter table by "tech"');
+            //filter by 'tech'
+            footableFilter.filter('tech');
+
+            //clear the filter
+            if (confirm('clear filter now?')) {
+                footableFilter.clearFilter();
+            }
+        });
+    });
+</script>
+
+<script>
+    $(function() {
+        $('.pop').on('click', function(e) {
+            e.preventDefault();
+            //link = $(this).attr('href');
+            $('.imagepreview').attr('src', $(this).attr('href'));
+            //console.log(link)
+            $('#imagemodal').modal('show');
+        });
+    });
+</script>
+
+@endsection

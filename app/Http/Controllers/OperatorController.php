@@ -84,20 +84,21 @@ class OperatorController extends Controller
 
 		$avg_speed = Speed::avg('speed');
 
-		return view('page.operator.index')
+		return view('page.operator.page_index')
 			->with('xAxis', $xAxis)
 			->with('series', $series)
 			->with('chart', $chart_line)
 			->with('speed_chart', $chart_speed)
 			->with('camera', $camera)
 			->with('avg_speed', $avg_speed)
-			->with('count_rekap', $count_rekap);
+			->with('count_rekap', $count_rekap)
+			->with('page', 'Dashboard');
 	}
 
 	public function counting_page(){
 
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
-
+		$count_rekap = CountingRekap::all();
 		$chart = Charts::database(CountingRekap::all(), 'bar', 'highcharts');
 
 		//$data2 = CountingRekap::with('camera')->get();
@@ -121,7 +122,8 @@ class OperatorController extends Controller
 		             ->values($data->pluck('SUM(total)'))
 		             ->responsive(true);
 
-		return view('page.operator.counting', compact('camera', 'chart'));
+		return view('page.operator.page_counting', compact('camera', 'chart', 'count_rekap'))
+			->with('page', 'Analisa Perhitungan');
 	}
 
 	public function counting_page_id($id){
@@ -146,12 +148,13 @@ class OperatorController extends Controller
 		    ->dataset('Motor', $this->data_day($id, 14, 'motor'))
 		    ->dataset('Truk/Bus', $this->data_day($id, 14, 'bus/truk'));
 
-		return view('page.operator.counting_id')
+		return view('page.operator.page_counting_id')
 			->with('xAxis', $xAxis)
 			->with('chart', $chart_line)
 			->with('camera', $camera)
 			->with('active_camera', $active_camera)
-			->with('count_rekap', $count_rekap);
+			->with('count_rekap', $count_rekap)
+			->with('page', 'Analisa Perhitungan');
 	}
 
 	public function speed_page(){
@@ -174,7 +177,8 @@ class OperatorController extends Controller
 
 		$avg_speed = Speed::avg('speed');
 
-		return view('page.operator.speed', compact('chart', 'avg_speed', 'camera'));
+		return view('page.operator.page_speed', compact('chart', 'avg_speed', 'camera', 'speed'))
+			->with('page', 'Analisa Kecepatan');
 	}
 
 	public function speed_page_id($id){
@@ -199,7 +203,8 @@ class OperatorController extends Controller
 			$avg_speed = Speed::find($id)->avg('speed');
 		}
 
-		return view('page.operator.speed_id', compact('camera', 'avg_speed', 'chart', 'active_camera'));
+		return view('page.operator.page_speed_id', compact('camera', 'avg_speed', 'chart', 'active_camera'))
+			->with('page', 'Counting');
 	}
 
 	public function gis_page(){
@@ -229,8 +234,9 @@ class OperatorController extends Controller
 
 		$anomali = Anomali::all();
 
-		return view('page.operator.anomali')
-			->with('anomali', $anomali);
+		return view('page.operator.page_anomali')
+			->with('anomali', $anomali)
+			->with('page', 'Pelanggaran');
 	}
 
 }

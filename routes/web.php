@@ -21,6 +21,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/test', 'HomeController@test')->name('test');
 
+Route::get("/new", function(){
+	return View::make("page.operator.index");
+ });
+
 Route::group(['middleware' => 'App\Http\Middleware\AdminMiddleware'], function() {
 	Route::match(['get', 'post'], '/admin/', 'HomeController@admin')->name('admin');
 	Route::match(['get', 'post'], '/admin/adduser/', 'HomeController@addUser')->name('addUser');
