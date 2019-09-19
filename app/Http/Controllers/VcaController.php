@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\CountingRekap;
 use App\Speed;
 use App\Camera;
+use CountRekapSeeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -66,18 +67,37 @@ class VcaController extends Controller
         return $request;
     }
 
-    public function get_data_stream($id){
+    public function get_value_cam($id){
 
         $camera = Camera::find($id);
-        $speed = Speed::where('camera_id', $id);
-        $count = CountingRekap::where('camera_id', $id)
-        ->whereDate('created_at', Carbon::today())->first();;
+        $speed = Speed::where('camera_id', $id)->first();
 
+        $coun = CountingRekap::all();
+        
+        $bus_truck = CountingRekap::where('camera_id', $id)
+        ->where('vehicle', 'bus_truk')
+        ->whereDate('created_at', Carbon::today())->first();
+
+        $mobil = CountingRekap::where('camera_id', $id)
+        ->where('vehicle', 'mobil')
+        ->whereDate('created_at', Carbon::today())->first();
+
+        $motor = CountingRekap::where('camera_id', $id)
+        ->where('vehicle', 'motor')
+        ->whereDate('created_at', Carbon::today())->first();
+
+        // return $coun;
+        
         $data = [
-            'stream_url'=> "ll",
-            'total'=> $count
+
+            'stream_url'=> $camera['rtsp_address'],
+            'speed' => $speed['speed'],
+            'bus_truk' => $bus_truck ? $bus_truck['total'] : 0,
+            'mobil' => $mobil ? $mobil['total'] : 0,
+            'motor' => $motor ? $motor['total'] : 0
         ];
 
         return $data;
+        
     }
 }
