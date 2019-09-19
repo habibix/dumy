@@ -52,22 +52,38 @@
 
                     <li>
                         <a class="tooltip-tip ajax-load" href="{{ route('operator_counting') }}" title="Counting">
-                            <i class="icon-feed"></i>
+                            <i class="entypo-chart-bar"></i>
                             <span>Analisa Perhitungan</span>
 
                         </a>
                     </li>
                     <li>
                         <a class="tooltip-tip ajax-load" href="{{ route('operator_speed') }}" title="Speed">
-                            <i class="icon-camera"></i>
+                            <i class="fontawesome-bolt"></i>
                             <span>Analisa Kecepatan</span>
 
                         </a>
                     </li>
                     <li>
                         <a class="tooltip-tip ajax-load" href="{{ route('anomali') }}" title="Media">
-                            <i class="icon-camera"></i>
+                            <i class="fontawesome-ban-circle"></i>
                             <span>Pelanggaran</span>
+
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="tooltip-tip ajax-load" href="{{ route('macet') }}" title="Media">
+                            <i class="fontawesome-truck"></i>
+                            <span>Arus Lalu Lintas</span>
+
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="tooltip-tip ajax-load" href="{{ route('operator_gis') }}" title="Media">
+                            <i class="icon icon-map"></i>
+                            <span>GIS</span>
 
                         </a>
                     </li>

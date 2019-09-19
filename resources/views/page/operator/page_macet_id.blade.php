@@ -8,14 +8,13 @@
 
 <!-- CONTENT -->
 @section('content')
-
 <div class="row">
     <div class="col-sm-2">
         <div class="dropdown form-group" style="margin-bottom: 0 !important;">
             <a href="#" class="dropdown-toggle form-control" data-toggle="dropdown">Pilih Lokasi<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
                 @foreach ($camera as $row)
-                <li><a href="{{ route('anomali_id', $row->id) }}">{{ $row->lokasi }}</a></li>
+                <li><a href="{{ route('macet_id', $row->id) }}">{{ $row->lokasi }}</a></li>
                 @endforeach
             </ul>
         </div>
@@ -27,8 +26,7 @@
     <div class="col-sm-12">
         <div class="nest" id="FilteringClose">
             <div class="title-alt">
-                <h6>
-                    DATA KAMERA</h6>
+                <h6>DATA KAMERA - {{ $active_camera->lokasi }}</h6>
                 <div class="titleClose">
                     <a class="gone" href="#FilteringClose">
                         <span class="entypo-cancel"></span>
@@ -55,7 +53,7 @@
                     <thead>
                         <tr>
                             <th>
-                                <center>No<center>
+                                <center> No</center>
                             </th>
                             <th>
                                 <center>Tanggal & Jam</center>
@@ -70,34 +68,26 @@
                                 <center>Map</center>
                             </th>
                             <th>
-                                <center>Jenis Pelanggaran</center>
+                                <center>Capture</center>
                             </th>
                             <th>
                                 <center>Video Clip</center>
                             </th>
-
-                            <th>
-                                <center>Capture Kamera</center>
-                            </th>
-
-                            <th>ETLE</th>
-
                         </tr>
                     </thead>
 
                     <tbody>
                         @php $no = 1; @endphp
-                        @foreach ($anomali as $row)
+                        @foreach ($macet as $row)
                         <tr>
                             <td>{{ $no++ }}</td>
                             <td>{{ $row->created_at->format('Y-m-d h:i:s') }}</td>
                             <td>{{ $row->camera->lokasi }}</td>
-                            <td>Cawang Menuju Grogol</td>
-                            <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">Map</a></td>
-                            <td>{{ $row->anomali }}</td>
-                            <td><a href="#">{{ $row->video }}</a></td>
-                            <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">Tampilkan Gambar</a></td>
-                            <td><a class="pdf btn btn-info btn-lg" href="{{ config('app.url_root') }}/assets/test.pdf">Tilang</a></td>
+                            <td>{{ $row->camera->arah }}</td>
+                            <td><a>show map</a></td>
+                            <td><a class="pop" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">{{ $row->image }}</a></td>
+                            <td><a class="pop" href="#">{{ app.url_root }}</a></td>
+                            <td><a>Tilang</a></td>
                         </tr>
                         @endforeach
 
@@ -126,25 +116,38 @@
         </div>
     </div>
 
-    <div class="modal fade" id="pdfmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width:900px; height:800px">
-            <div class="modal-content">
-                <div class="modal-body" style="height:600px">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <embed src="" class="pdfview" frameborder="0" width="100%" height="96%">
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
 <!-- table -->
 
+<!-- Chart -->
+
 <div class="row">
-    <div class="col-lg-6">
-        <iframe src="{{ config('app.url_friend') }}/anomali_video/" width="600" height="450" scrolling="no" frameborder="0" style="margin: 30px auto 0;"></iframe>
+    <div class="col-sm-12">
+        <div id="RealTimeClose" class="nest">
+            <div class="title-alt">
+                <div class="title-alt">
+                    <h6>
+                        <span></span>Dashboard Kemacetan - {{ $active_camera->lokasi }}</h6>
+                    <div class="titleClose">
+                        <a class="gone" href="#RealTimeClose">
+                            <span class="entypo-cancel"></span>
+                        </a>
+                    </div>
+                    <div class="titleToggle">
+                        <a class="nav-toggle-alt" href="#RealTime">
+                            <span class="entypo-up-open"></span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div id="container-chart"></div>
+
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- end cHART -->
 @endsection
 
 <!-- HEADER -->
@@ -155,6 +158,13 @@
 <link href="../../apricot/assets/js/footable/css/footable-demos.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
+
+<!-- highcharts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
 
 @endsection
 
@@ -222,16 +232,69 @@
     });
 </script>
 
-<script>
-    $(function() {
-        $('.pdf').on('click', function(e) {
-            e.preventDefault();
-            //link = $(this).attr('href');
-            $('.pdfview').attr('src', $(this).attr('href'));
-            //console.log(link)
-            $('#pdfmodal').modal('show');
-        });
-    });
+
+<script type="text/javascript">
+    Highcharts.getJSON(
+        'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json',
+        function(data) {
+
+            Highcharts.chart('container-chart', {
+                chart: {
+                    zoomType: 'x'
+                },
+                title: {
+                    text: 'Dashboard Kemacetan'
+                },
+                subtitle: {
+                    text: document.ontouchstart === undefined ?
+                        'Wilayah Polda Metro' : 'Pinch the chart to zoom in'
+                },
+                xAxis: {
+                    type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Kemacetan Terditeksi'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    area: {
+                        fillColor: {
+                            linearGradient: {
+                                x1: 0,
+                                y1: 0,
+                                x2: 0,
+                                y2: 1
+                            },
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        marker: {
+                            radius: 2
+                        },
+                        lineWidth: 1,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        },
+                        threshold: null
+                    }
+                },
+
+                series: [{
+                    type: 'area',
+                    name: 'Traffic Volume',
+                    data: data
+                }]
+            });
+        }
+    );
 </script>
 
 @endsection

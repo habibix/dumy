@@ -2,6 +2,10 @@
 
 return [
 
+    'url_root' => env('URL_ROOT'),
+
+    'url_friend' => env('URL_FRIEND'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

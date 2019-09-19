@@ -13,6 +13,7 @@ use App\CountingRekap;
 use App\User;
 use App\Speed;
 use App\Logs;
+use App\Macet;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
@@ -146,7 +147,7 @@ class OperatorController extends Controller
 		    ->elementLabel('Jumlah Kendaraan')
 		    ->dataset('Mobil', $this->data_day($id, 14, 'mobil'))
 		    ->dataset('Motor', $this->data_day($id, 14, 'motor'))
-		    ->dataset('Truk/Bus', $this->data_day($id, 14, 'bus/truk'));
+		    ->dataset('Truk/Bus', $this->data_day($id, 14, 'bus-truk'));
 
 		return view('page.operator.page_counting_id')
 			->with('xAxis', $xAxis)
@@ -208,6 +209,12 @@ class OperatorController extends Controller
 	}
 
 	public function gis_page(){
+		#return view('page.operator.gis2');
+		return view('page.operator.page_gis')
+		->with('page', 'GIS');
+	}
+
+	public function gis_page_2(){
 		return view('page.operator.gis2');
 	}
 
@@ -233,10 +240,39 @@ class OperatorController extends Controller
 	public function anomali(){
 
 		$anomali = Anomali::all();
+		$camera = Camera::where('user_id', Auth::user()->id)->get();
 
-		return view('page.operator.page_anomali')
-			->with('anomali', $anomali)
+		return view('page.operator.page_anomali', compact('camera', 'anomali'))
 			->with('page', 'Pelanggaran');
+	}
+
+	public function anomali_id($id){
+
+		$anomali = Anomali::where('camera_id', $id)->get();
+		$camera = Camera::where('user_id', Auth::user()->id)->get();
+		$active_camera = Camera::find($id);
+
+		return view('page.operator.page_anomali_id', compact('anomali', 'camera', 'active_camera'))
+			->with('page', 'Pelanggaran');
+	}
+
+	public function macet(){
+
+		$macet = Macet::all();
+		$camera = Camera::where('user_id', Auth::user()->id)->get();
+
+		return view('page.operator.page_macet', compact('macet', 'camera'))
+			->with('page', 'Arus Lalu Lintas');
+	}
+
+	public function macet_id($id){
+
+		$macet = Macet::where('camera_id', $id)->get();
+		$camera = Camera::where('user_id', Auth::user()->id)->get();
+		$active_camera = Camera::find($id);
+
+		return view('page.operator.page_macet_id', compact('macet', 'camera', 'active_camera'))
+			->with('page', 'Arus Lalu Lintas');
 	}
 
 }

@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Anomali extends Model
+class Macet extends Model
 {
-    protected $table = "anomali";
-    protected $fillable = ['anomali', 'camera_id', 'image', 'video', 'lpr'];
+    protected $table = "macet";
+    protected $fillable = ['camera_id', 'image', 'video'];
 
     function camera(){
         return $this->belongsTo('App\Camera');

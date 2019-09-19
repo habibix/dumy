@@ -60,7 +60,7 @@
 
 
     <div class="col-lg-6">
-        <iframe src="http://127.0.0.1:5000/?camera={{ $active_camera->id }}" width="600" height="450" scrolling="no" frameborder="0" style="margin: 30px auto 0;"></iframe>
+        <iframe src="{{ config('app.url_friend') }}/?camera={{ $active_camera->id }}" width="600" height="450" scrolling="no" frameborder="0" style="margin: 30px auto 0;"></iframe>
     </div>
 
 
@@ -139,6 +139,13 @@
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
 
+<!-- highcharts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
 {!! Charts::styles() !!}
 
 @endsection
@@ -196,13 +203,6 @@
         });
     });
 </script>
-
-<!-- highcharts -->
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/series-label.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
 
 {!! $chart->script() !!}
 
