@@ -85,7 +85,7 @@
                             <td>{{ $row->anomali }}</td>
                             <td><a href="#">{{ $row->video }}</a></td>
                             <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">Tampilkan Gambar</a></td>
-                            <td><a class="pdf btn btn-info btn-lg" href="{{ config('app.url_root') }}/assets/test.pdf">Tilang</a></td>
+                            <td><a class="pdf btn btn-info btn-lg" href="http://10.45.42.3/assets/test.pdf">Tilang</a></td>
                         </tr>
                         @endforeach
 
