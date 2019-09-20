@@ -113,8 +113,16 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="#">
-                                    <span class="entypo-logout"></span>&#160;&#160;Logout</a>
+                            <span class="entypo-logout">
+                            <a href="{{ url('/logout') }}"
+                                            onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+
+                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
                             </li>
                         </ul>
                     </li>
