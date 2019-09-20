@@ -166,6 +166,11 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
+<style>
+.footable > tbody > tr > td {color: #000 !important}
+.footable > thead > tr > th, .footable > thead > tr > td {color: #000 !important}
+</style>
+
 @endsection
 
 <!-- FOOTER -->

@@ -9,22 +9,9 @@
 <!-- CONTENT -->
 @section('content')
 
-<div class="row">
-    <div class="col-sm-2">
-        <div class="dropdown form-group" style="margin-bottom: 0 !important;">
-            <a href="#" class="dropdown-toggle form-control" data-toggle="dropdown">Pilih Lokasi<span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-                @foreach ($camera as $row)
-                <li><a href="{{ route('anomali_id', $row->id) }}">{{ $row->lokasi }}</a></li>
-                @endforeach
-            </ul>
-        </div>
-    </div>
-</div>
-
 <!-- TABLE -->
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-8">
         <div class="nest" id="FilteringClose">
             <div class="title-alt">
                 <h6>
@@ -40,9 +27,10 @@
                     </a>
                 </div>
             </div>
-
+                
             <div class="body-nest" id="Filtering">
                 <div class="row" style="margin-bottom:10px;">
+                
                     <div class="col-sm-6">
                         <input class="form-control" id="filter" placeholder="Search..." type="text" />
                     </div>
@@ -114,6 +102,55 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-4">
+                        <div id="RealTimeClose" class="nest">
+                            <div class="title-alt">
+                                <h6>
+                                    <span class="fontawesome-resize-horizontal"></span>&nbsp;Kategori Pelanggaran</h6>
+                                <div class="titleClose">
+                                    <a class="gone" href="#RealTimeClose">
+                                        <span class="entypo-cancel"></span>
+                                    </a>
+                                </div>
+                                <div class="titleToggle">
+                                    <a class="nav-toggle-alt" href="#RealTime">
+                                        <span class="entypo-up-open"></span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="RealTime" style="min-height:296px;padding-top:20px;" class="body-nest">
+                                <ul class="direction">
+                                    <li>
+                                        <span class="direction-icon maki-fuel" style="background:#FF6B6B"></span>
+                                        <h3>
+                                            <span>Melanggar Bahu Jalan</span>
+                                        </h3>
+                                        <p> Keterangan :</p>
+                                        <p>Kendaraan yang melalui bahu jalan</p>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <span class="direction-icon maki-fast-food" style="background:#65C3DF"></span>
+                                        <h3>
+                                            <span>Dilarang Berhenti</span>
+                                        </h3>
+                                        <p> Keterangan :</p>
+                                       <p>Berhenti pada area yang terlarang dalam waktu lebih dari 30 detik</p>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <span class="direction-icon maki-giraffe" style="background:#45B6B0"></span>
+                                        <h3>
+                                            <span>Lawan Arus</span>
+                                        </h3>
+                                        <p> Keterangan :</p>                                
+                                        <p>Kendaraan yang melakukan lawan arah</p>
+                                    </li>
+                                    <li class="divider"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
     <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -140,11 +177,6 @@
 </div>
 <!-- table -->
 
-<div class="row">
-    <div class="col-lg-6">
-        <iframe src="{{ config('app.url_friend') }}/anomali_video/" width="600" height="450" scrolling="no" frameborder="0" style="margin: 30px auto 0;"></iframe>
-    </div>
-</div>
 @endsection
 
 <!-- HEADER -->
@@ -155,6 +187,12 @@
 <link href="../../apricot/assets/js/footable/css/footable-demos.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
+
+<style>
+.footable > tbody > tr > td {color: #000 !important}
+.footable > thead > tr > th, .footable > thead > tr > td {color: #000 !important}
+</style>
+
 
 @endsection
 

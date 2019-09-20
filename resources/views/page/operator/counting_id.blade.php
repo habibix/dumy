@@ -63,7 +63,7 @@
 
       <div class="row" style="margin-top: 20px">
         <div class="col-lg-6">
-          <iframe src="http://127.0.0.1:5000/?camera={{ $active_camera->id }}" width="640" height="480" scrolling="no" frameborder="0"></iframe> 
+          <iframe src="{{ config('app.url_friend') }}/?camera={{ $active_camera->id }}" width="640" height="480" scrolling="no" frameborder="0"></iframe> 
         </div>
         <div class="col-lg-6">
           <div class="box">
@@ -118,7 +118,7 @@
 @section('header')
 
 
-{!! Charts::styles() !!}
+<link rel="stylesheet" href="../../apricot/dark-chart.css" />
 
 @endsection
 

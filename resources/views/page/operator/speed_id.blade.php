@@ -34,7 +34,6 @@
       <div class="row" style="margin-top: 20px">
         <div class="col-xs-6">
           <!-- <iframe src="http://127.0.0.1:5000/?camera=111" width="640" height="480" scrolling="no" frameborder="0"></iframe> -->
-          {{ $active_camera->rtsp_address }}
         </div>
         <div class="col-xs-6">
           <div id="speed_avg"></div>
@@ -49,7 +48,7 @@
 <!-- HEADER SECTION -->
 @section('header')
 
-{!! Charts::styles() !!}
+<link rel="stylesheet" href="../../apricot/dark-chart.css" />
 
 @endsection
 

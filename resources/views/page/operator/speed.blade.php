@@ -34,7 +34,7 @@
 <!-- HEADER SECTION -->
 @section('header')
 
-{!! Charts::styles() !!}
+<link rel="stylesheet" href="../../apricot/dark-chart.css" />
 
 @endsection
 

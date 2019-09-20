@@ -106,7 +106,12 @@
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
 
-{!! Charts::styles() !!}
+<link rel="stylesheet" href="../../apricot/dark-chart.css" />
+
+<style>
+.footable > tbody > tr > td {color: #000 !important}
+.footable > thead > tr > th, .footable > thead > tr > td {color: #000 !important}
+</style>
 
 @endsection
 

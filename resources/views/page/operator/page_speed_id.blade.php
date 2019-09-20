@@ -31,10 +31,67 @@
 
 <div class="row" style="margin-top: 20px">
     <div class="col-sm-6">
-        <iframe src="http://127.0.0.1:5000/?camera={{ $active_camera->id }}" width="600" height="450" scrolling="no" frameborder="0"></iframe>
+        <iframe src="{{ config('app.url_friend') }}/?camera={{ $active_camera->id }}" width="600" height="450" scrolling="no" frameborder="0"></iframe>
     </div>
-    <div class="col-sm-6">
-        <div id="speed_avg"></div>
+
+    <div class="col-lg-6">
+        <div class="nest" id="FilteringClose">
+            <div class="title-alt">
+                <h6>
+                    DATA KAMERA</h6>
+                <div class="titleClose">
+                    <a class="gone" href="#FilteringClose">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+                <div class="titleToggle">
+                    <a class="nav-toggle-alt" href="#Filtering">
+                        <span class="entypo-up-open"></span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="body-nest" id="Filtering">
+                <div class="row" style="margin-bottom:10px;">
+                    <div class="col-sm-6">
+                        <input class="form-control" id="filter" placeholder="Search..." type="text" />
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="#clear" style="margin-left:10px;" class="pull-right btn btn-info clear-filter" title="clear filter">clear</a>
+                    </div>
+                </div>
+
+                <table id="footable-res2" class="demo" data-filter="#filter" data-filter-text-only="true">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Camera</th>
+                            <th>Kecepatan Rata-rata</th>
+                            <th>Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $no = 1; @endphp
+                        @foreach ($speed as $row)
+                        <tr>
+                            <td>{{ $no++ }}</td>
+                            <td>{{ $row->camera->lokasi }}</td>
+                            <td>{{ $row->speed }}</td>
+                            <td>{{ $row->updated_at->format('D, d/m/Y') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>No.</th>
+                            <th>Camera</th>
+                            <th>Total</th>
+                            <th>Tanggal</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -42,157 +99,80 @@
 
 <!-- HEADER -->
 @section('header')
+<!-- TABLE -->
+<link href="../../apricot/assets/js/footable/css/footable.core.css?v=2-0-1" rel="stylesheet" type="text/css" />
+<link href="../../apricot/assets/js/footable/css/footable.standalone.css" rel="stylesheet" type="text/css" />
+<link href="../../apricot/assets/js/footable/css/footable-demos.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
+<link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
+<link rel="stylesheet" href="../../apricot/dark-chart.css" />
 
-{!! Charts::styles() !!}
+<style>
+.footable > tbody > tr > td {color: #000 !important}
+.footable > thead > tr > th, .footable > thead > tr > td {color: #000 !important}
+</style>
 
 @endsection
 
 <!-- FOOTER -->
 @section('footer')
 
+<!-- Table -->
+<script type="text/javascript" src="../../apricot/assets/js/toggle_close.js"></script>
+<script src="../../apricot/assets/js/footable/js/footable.js?v=2-0-1" type="text/javascript"></script>
+<script src="../../apricot/assets/js/footable/js/footable.sort.js?v=2-0-1" type="text/javascript"></script>
+<script src="../../apricot/assets/js/footable/js/footable.filter.js?v=2-0-1" type="text/javascript"></script>
+<script src="../../apricot/assets/js/footable/js/footable.paginate.js?v=2-0-1" type="text/javascript"></script>
+<script src="../../apricot/assets/js/footable/js/footable.paginate.js?v=2-0-1" type="text/javascript"></script>
+
+
+
+<script type="text/javascript">
+    $(function() {
+        $('#footable-res2').footable().bind('footable_filtering', function(e) {
+            var selected = $('.filter-status').find(':selected').text();
+            if (selected && selected.length > 0) {
+                e.filter += (e.filter && e.filter.length > 0) ? ' ' + selected : selected;
+                e.clear = !e.filter;
+            }
+        });
+
+        $('.clear-filter').click(function(e) {
+            e.preventDefault();
+            $('.filter-status').val('');
+            $('table.demo').trigger('footable_clear_filter');
+        });
+
+        $('.filter-status').change(function(e) {
+            e.preventDefault();
+            $('table.demo').trigger('footable_filter', {
+                filter: $('#filter').val()
+            });
+        });
+
+        $('.filter-api').click(function(e) {
+            e.preventDefault();
+
+            //get the footable filter object
+            var footableFilter = $('table').data('footable-filter');
+
+            alert('about to filter table by "tech"');
+            //filter by 'tech'
+            footableFilter.filter('tech');
+
+            //clear the filter
+            if (confirm('clear filter now?')) {
+                footableFilter.clearFilter();
+            }
+        });
+    });
+</script>
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script src="https://code.highcharts.com/highcharts-more.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
-
-<script>
-    $(function() {
-        $('.charts').each(function() {
-            var chart = $(this).find('.charts-chart');
-            var loader = $(this).find('.charts-loader');
-            var time = loader.data('duration');
-
-            if(loader.hasClass('enabled')) {
-                chart.css({visibility: 'hidden'});
-                loader.fadeIn(350);
-
-                setTimeout(function() {
-                    loader.fadeOut(350, function() {
-                        chart.css({opacity: 0, visibility: 'visible'}).animate({opacity: 1}, 350);
-                    });
-                }, time)
-            }
-        });
-    })
-</script>
-
-
-
-<script type="text/javascript">
-  Highcharts.chart('speed_avg', {
-
-    chart: {
-        type: 'gauge',
-        plotBackgroundColor: null,
-        plotBackgroundImage: null,
-        plotBorderWidth: 0,
-        plotShadow: false
-    },
-
-    title: {
-        text: 'Kecepatan Rata-Rata'
-    },
-
-    pane: {
-        startAngle: -150,
-        endAngle: 150,
-        background: [{
-            backgroundColor: {
-                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-                stops: [
-                    [0, '#FFF'],
-                    [1, '#333']
-                ]
-            },
-            borderWidth: 0,
-            outerRadius: '109%'
-        }, {
-            backgroundColor: {
-                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-                stops: [
-                    [0, '#333'],
-                    [1, '#FFF']
-                ]
-            },
-            borderWidth: 1,
-            outerRadius: '107%'
-        }, {
-            // default background
-        }, {
-            backgroundColor: '#DDD',
-            borderWidth: 0,
-            outerRadius: '105%',
-            innerRadius: '103%'
-        }]
-    },
-
-    // the value axis
-    yAxis: {
-        min: 0,
-        max: 200,
-
-        minorTickInterval: 'auto',
-        minorTickWidth: 1,
-        minorTickLength: 10,
-        minorTickPosition: 'inside',
-        minorTickColor: '#666',
-
-        tickPixelInterval: 30,
-        tickWidth: 2,
-        tickPosition: 'inside',
-        tickLength: 10,
-        tickColor: '#666',
-        labels: {
-            step: 2,
-            rotation: 'auto'
-        },
-        title: {
-            text: 'km/h'
-        },
-        plotBands: [{
-            from: 0,
-            to: 120,
-            color: '#55BF3B' // green
-        }, {
-            from: 120,
-            to: 160,
-            color: '#DDDF0D' // yellow
-        }, {
-            from: 160,
-            to: 200,
-            color: '#DF5353' // red
-        }]
-    },
-
-    series: [{
-        name: 'Speed',
-        data: [{{ $avg_speed }}],
-        tooltip: {
-            valueSuffix: ' km/h'
-        }
-    }]
-
-},
-// Add some life
-function (chart) {
-    if (!chart.renderer.forExport) {
-        setInterval(function () {
-            var point = chart.series[0].points[0],
-                newVal,
-                inc = Math.round((Math.random() - 0.5) * 20);
-
-            newVal = {{ $avg_speed }};
-            if (newVal < 0 || newVal > 200) {
-                newVal = {{ $avg_speed }};
-            }
-
-            point.update(newVal);
-
-        }, 3000);
-    }
-});
-</script>
 
 {!! $chart->script() !!}
 

@@ -143,7 +143,7 @@ class OperatorController extends Controller
 
 		$chart_line = Charts::multi('line', 'highcharts')
 		    ->labels($xAxis)
-		    ->title('Jumlah Kendaraan : '.$active_camera->lokasi)
+		    ->title('Dashboard : '.$active_camera->lokasi)
 		    ->elementLabel('Jumlah Kendaraan')
 		    ->dataset('Mobil', $this->data_day($id, 14, 'mobil'))
 		    ->dataset('Motor', $this->data_day($id, 14, 'motor'))
@@ -188,6 +188,7 @@ class OperatorController extends Controller
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
 		$active_camera = Camera::find($id);
 		$now = Carbon::now();
+		$speed = Speed::all();
 
 		$xAxis = [];
 		for ($i=$day; $i >= 0; $i--) {
@@ -204,7 +205,7 @@ class OperatorController extends Controller
 			$avg_speed = Speed::find($id)->avg('speed');
 		}
 
-		return view('page.operator.page_speed_id', compact('camera', 'avg_speed', 'chart', 'active_camera'))
+		return view('page.operator.page_speed_id', compact('camera', 'avg_speed', 'chart', 'active_camera', 'speed'))
 			->with('page', 'Counting');
 	}
 

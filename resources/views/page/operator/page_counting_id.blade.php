@@ -23,30 +23,101 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-12">
-
-        <div class="box box-solid">
-            <!-- /.box-header -->
-            <div class="box-body">
-                <dl class="dl-horizontal">
-                    <dt>Wilayah :</dt>
-                    <dd>Polda Metro</dd>
-
-                    <dt>Area :</dt>
-                    <dd>ATCS</dd>
-
-                    <dt>Lokasi :</dt>
-                    <dd>{{ $active_camera->lokasi }}</dd>
-
-                    <dt>Arah :</dt>
-                    <dd>Cawang menuju Grogol</dd>
-
-                </dl>
+    <div class="col-sm-3">
+        <div class="order" id="orderClose">
+            <div class="headline ">
+                <h3>
+                    <span style="background-color: #FF6B6B">
+                        <i class="maki-airport"></i>&#160;&#160;WILAYAH</span>
+                </h3>
+                <div class="titleClose">
+                    <a href="#orderClose" class="gone">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
             </div>
-            <!-- /.box-body -->
+            <span>
+                <h3>
+                    <center style="margin-top: 10px">{{ Auth::user()->name }}</center>
+                </h3>
+            </span>
+            <div class="progress-tinny">
+                <div style="width: 10%" class="bar"></div>
+            </div>
         </div>
-
     </div>
+    <div class="col-sm-3">
+        <div class="order" id="orderClose">
+            <div class="headline ">
+                <h3>
+                    <span style="background-color: #FFA200;">
+                        <i class="maki-airport"></i>&#160;&#160;LOKASI</span>
+                </h3>
+                <div class="titleClose">
+                    <a href="#orderClose" class="gone">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+            </div>
+            <span>
+                <h3>
+                    <center style="margin-top: 10px">{{ $active_camera->lokasi }}</center>
+                </h3>
+            </span>
+            <div class="progress-tinny">
+                <div style="width: 10%" class="bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="order" id="orderClose">
+            <div class="headline ">
+                <h3>
+                    <span>
+                        <i class="maki-airport"></i>&#160;&#160;KOORDINAT</span>
+                </h3>
+                <div class="titleClose">
+                    <a href="#orderClose" class="gone">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+            </div>
+            <span>
+                <h3>
+                    <center style="margin-top: 10px">{{ $active_camera->koordinat }}</center>
+                </h3>
+            </span>
+            <div class="progress-tinny">
+                <div style="width: 10%" class="bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="order" id="orderClose">
+            <div class="headline ">
+                <h3>
+                    <span style="background-color: #65C3DF">
+                        <i class="maki-airport"></i>&#160;&#160;ARAH</span>
+                </h3>
+                <div class="titleClose">
+                    <a href="#orderClose" class="gone">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+            </div>
+            <span>
+                <h3>
+                    <center style="margin-top: 10px">{{ $active_camera->arah }}</center>
+                </h3>
+            </span>
+            <div class="progress-tinny">
+                <div style="width: 10%" class="bar"></div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div class="row">
@@ -138,6 +209,7 @@
 <link href="../../apricot/assets/js/footable/css/footable-demos.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
+<link rel="stylesheet" href="../../apricot/dark-chart.css" />
 
 <!-- highcharts -->
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -146,7 +218,10 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
-{!! Charts::styles() !!}
+<style>
+.footable > tbody > tr > td {color: #000 !important}
+.footable > thead > tr > th, .footable > thead > tr > td {color: #000 !important}
+</style>
 
 @endsection
 
