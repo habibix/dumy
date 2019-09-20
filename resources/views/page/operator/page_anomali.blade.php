@@ -27,10 +27,10 @@
                     </a>
                 </div>
             </div>
-                
+
             <div class="body-nest" id="Filtering">
                 <div class="row" style="margin-bottom:10px;">
-                
+
                     <div class="col-sm-6">
                         <input class="form-control" id="filter" placeholder="Search..." type="text" />
                     </div>
@@ -103,54 +103,54 @@
         </div>
     </div>
     <div class="col-sm-4">
-                        <div id="RealTimeClose" class="nest">
-                            <div class="title-alt">
-                                <h6>
-                                    <span class="fontawesome-resize-horizontal"></span>&nbsp;Kategori Pelanggaran</h6>
-                                <div class="titleClose">
-                                    <a class="gone" href="#RealTimeClose">
-                                        <span class="entypo-cancel"></span>
-                                    </a>
-                                </div>
-                                <div class="titleToggle">
-                                    <a class="nav-toggle-alt" href="#RealTime">
-                                        <span class="entypo-up-open"></span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div id="RealTime" style="min-height:296px;padding-top:20px;" class="body-nest">
-                                <ul class="direction">
-                                    <li>
-                                        <span class="direction-icon maki-fuel" style="background:#FF6B6B"></span>
-                                        <h3>
-                                            <span>Melanggar Bahu Jalan</span>
-                                        </h3>
-                                        <p> Keterangan :</p>
-                                        <p>Kendaraan yang melalui bahu jalan</p>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <span class="direction-icon maki-fast-food" style="background:#65C3DF"></span>
-                                        <h3>
-                                            <span>Dilarang Berhenti</span>
-                                        </h3>
-                                        <p> Keterangan :</p>
-                                       <p>Berhenti pada area yang terlarang dalam waktu lebih dari 30 detik</p>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <span class="direction-icon maki-giraffe" style="background:#45B6B0"></span>
-                                        <h3>
-                                            <span>Lawan Arus</span>
-                                        </h3>
-                                        <p> Keterangan :</p>                                
-                                        <p>Kendaraan yang melakukan lawan arah</p>
-                                    </li>
-                                    <li class="divider"></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+        <div id="RealTimeClose" class="nest">
+            <div class="title-alt">
+                <h6>
+                    <span class="fontawesome-resize-horizontal"></span>&nbsp;Kategori Pelanggaran</h6>
+                <div class="titleClose">
+                    <a class="gone" href="#RealTimeClose">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+                <div class="titleToggle">
+                    <a class="nav-toggle-alt" href="#RealTime">
+                        <span class="entypo-up-open"></span>
+                    </a>
+                </div>
+            </div>
+            <div id="RealTime" style="min-height:296px;padding-top:20px;" class="body-nest">
+                <ul class="direction">
+                    <li>
+                        <span class="" style="background:#FF6B6B"></span>
+                        <h3>
+                            <span>Melanggar Bahu Jalan</span>
+                        </h3>
+                        <p> Keterangan :</p>
+                        <p>Kendaraan yang melalui bahu jalan</p>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <span class="" style="background:#65C3DF"></span>
+                        <h3>
+                            <span>Dilarang Berhenti</span>
+                        </h3>
+                        <p> Keterangan :</p>
+                        <p>Berhenti pada area yang terlarang dalam waktu lebih dari 30 detik</p>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <span class="" style="background:#45B6B0"></span>
+                        <h3>
+                            <span>Lawan Arus</span>
+                        </h3>
+                        <p> Keterangan :</p>
+                        <p>Kendaraan yang melakukan lawan arah</p>
+                    </li>
+                    <li class="divider"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -189,8 +189,14 @@
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
 
 <style>
-.footable > tbody > tr > td {color: #000 !important}
-.footable > thead > tr > th, .footable > thead > tr > td {color: #000 !important}
+    .footable>tbody>tr>td {
+        color: #000 !important
+    }
+
+    .footable>thead>tr>th,
+    .footable>thead>tr>td {
+        color: #000 !important
+    }
 </style>
 
 
