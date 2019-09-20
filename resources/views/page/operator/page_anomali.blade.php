@@ -55,9 +55,6 @@
                                 <center>Arah</center>
                             </th>
                             <th>
-                                <center>Map</center>
-                            </th>
-                            <th>
                                 <center>Jenis Pelanggaran</center>
                             </th>
                             <th>
@@ -81,7 +78,6 @@
                             <td>{{ $row->created_at->format('Y-m-d h:i:s') }}</td>
                             <td>{{ $row->camera->lokasi }}</td>
                             <td>Cawang Menuju Grogol</td>
-                            <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">Map</a></td>
                             <td>{{ $row->anomali }}</td>
                             <td><a href="#">{{ $row->video }}</a></td>
                             <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">Tampilkan Gambar</a></td>
