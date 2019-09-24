@@ -10,10 +10,10 @@
     <!-- Le styles -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
 
-    <link rel="stylesheet" href="../../apricot/assets/css/style.css">
-    <link rel="stylesheet" href="../../apricot/assets/css/loader-style.css">
-    <link rel="stylesheet" href="../../apricot/assets/css/bootstrap.css">
-    <link rel="stylesheet" href="../../apricot/assets/js/button/ladda/ladda.min.css">
+    <link rel="stylesheet" href="{{ asset('apricot/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('apricot/assets/css/loader-style.css') }}">
+    <link rel="stylesheet" href="{{ asset('apricot/assets/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('apricot/assets/js/button/ladda/ladda.min.css') }}">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -96,7 +96,7 @@
                 <ul style="margin-right:0;" class="nav navbar-nav navbar-right">
                     <li>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img alt="" class="admin-pic img-circle" src="../../dist/img/logo-polda-metro.png">Hi, {{ Auth::user()->name }} <b class="caret"></b>
+                            <img alt="" class="admin-pic img-circle" src="{{asset('img')}}/{{ Auth::user()->image }}">Hi, {{ Auth::user()->name }} <b class="caret"></b>
                         </a>
                         <ul style="margin-top:14px;" role="menu" class="dropdown-setting dropdown-menu">
                             <li>
@@ -255,11 +255,11 @@
 
 
         <!-- MAIN EFFECT -->
-        <script type="text/javascript" src="../../apricot/assets/js/preloader.js"></script>
-        <script type="text/javascript" src="../../apricot/assets/js/bootstrap.js"></script>
-        <script type="text/javascript" src="../../apricot/assets/js/app.js"></script>
-        <script type="text/javascript" src="../../apricot/assets/js/load.js"></script>
-        <script type="text/javascript" src="../../apricot/assets/js/main.js"></script>
+        <script type="text/javascript" src="{{ asset('apricot/assets/js/preloader.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('apricot/assets/js/bootstrap.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('apricot/assets/js/app.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('apricot/assets/js/load.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('apricot/assets/js/main.js') }}"></script>
 
     <!-- START FOOTER SCRIPT -->
 

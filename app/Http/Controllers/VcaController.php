@@ -100,4 +100,18 @@ class VcaController extends Controller
         return $data;
         
     }
+
+    public function get_speed($id){
+        $speed = Speed::where('camera_id', $id)->whereDate('created_at', Carbon::today())->first();
+
+        $data = [
+            'id'=> $speed['id'],
+            'speed' => $speed ? $speed['speed'] : 0,
+            'camera_id' => $speed['camera_id'],
+            'created_at' => date_format($speed['created_at'],"N, d/m/Y H:i:s"),
+            'updated_at' => date_format($speed['updated_at'],"N, d/m/Y H:i:s")
+        ];
+
+        return $data;
+    }
 }

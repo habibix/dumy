@@ -30,23 +30,25 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function test(){
+    public function test()
+    {
         return view('test');
     }
 
     public function index()
     {
-        if(Auth::user()->type == 'admin'){
+        if (Auth::user()->type == 'admin') {
             $this->log_userLogin(Auth::user()->id);
             return redirect()->route('admin');
-
-        } elseif(Auth::user()->type == 'super_admin'){
+        } elseif (Auth::user()->type == 'super_admin') {
             $this->log_userLogin(Auth::user()->id);
             return redirect()->route('super_admin');
-
-        } elseif(Auth::user()->type == 'operator'){
+        } elseif (Auth::user()->type == 'operator') {
             $this->log_userLogin(Auth::user()->id);
             return redirect()->route('operator');
+        } elseif (Auth::user()->type == 'korlantas') {
+            $this->log_userLogin(Auth::user()->id);
+            return redirect()->route('korlantas');
         } else {
             //
         }
@@ -58,35 +60,40 @@ class HomeController extends Controller
     }
 
     // LOGS
-    public function log_userLogin($id){
+    public function log_userLogin($id)
+    {
         $log = new Logs;
         $log->user_id = $id;
         $log->activity = 'User Login';
         $log->save();
     }
 
-    public function log_userLogout($id){
+    public function log_userLogout($id)
+    {
         $log = new Logs;
         $log->user_id = $id;
         $log->activity = 'User Logout';
         $log->save();
     }
 
-    public function log_userCreate($id){
+    public function log_userCreate($id)
+    {
         $log = new Logs;
         $log->user_id = $id;
         $log->activity = 'Create User';
         $log->save();
     }
 
-    public function log_userDelete($id){
+    public function log_userDelete($id)
+    {
         $log = new Logs;
         $log->user_id = $id;
         $log->activity = 'Delete User';
         $log->save();
     }
 
-    public function log_insertLicense($id){
+    public function log_insertLicense($id)
+    {
         $log = new Logs;
         $log->user_id = $id;
         $log->activity = 'Insert License';
@@ -94,7 +101,8 @@ class HomeController extends Controller
     }
 
     // ADMIN CASE
-    public function admin(Request $req){
+    public function admin(Request $req)
+    {
 
         $countAll = CountingRekap::all();
         $camera  = Camera::all();
@@ -106,7 +114,8 @@ class HomeController extends Controller
         //return view('page.admin.index')->withMessage("Admin");
     }
 
-    public function addUser(Request $request){
+    public function addUser(Request $request)
+    {
         // CURD USER
 
         $this->log_userCreate(Auth::user()->id);
@@ -115,7 +124,8 @@ class HomeController extends Controller
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-            'role' => 'required|string'
+            'role' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $user = User::firstOrCreate([
@@ -124,13 +134,17 @@ class HomeController extends Controller
             'name' => $request->name,
             'password' => bcrypt($request->password),
             'type' => $request->role,
+            'image' => $request->file('image')->getClientOriginalName()
         ]);
 
-        return redirect(route('admin'))->with(['success' => 'User: <strong>' . $user->name . '</strong> Ditambahkan']);
+        $imageName = $request->file('image')->getClientOriginalName();
+        request()->image->move(public_path('img'), $imageName);
 
+        return redirect(route('admin'))->with(['success' => 'User: <strong>' . $user->name . '</strong> Ditambahkan']);
     }
 
-    public function deleteUser($id){
+    public function deleteUser($id)
+    {
         // CURD USER
         $user = User::findOrFail($id);
         $user->delete();
@@ -138,7 +152,8 @@ class HomeController extends Controller
         return redirect(route('admin'))->with(['success' => 'User Dihapus']);
     }
 
-    public function addCamera(Request $request){
+    public function addCamera(Request $request)
+    {
 
         //$this->log_userCreate(Auth::user()->id);
 
@@ -162,10 +177,10 @@ class HomeController extends Controller
         }*/
 
         return redirect(route('admin'))->with(['success' => 'Data Ditambahkan']);
-
     }
 
-    public function showLogs(){
+    public function showLogs()
+    {
         // CURD USER
         $logs = Logs::all();
         return view('page.admin.logs')
@@ -173,13 +188,14 @@ class HomeController extends Controller
     }
 
     // SUPERADMIN CASE
-    public function super_admin(Request $req){
+    public function super_admin(Request $req)
+    {
         return view('page.superadmin.index')->withMessage("Super Admin");
     }
 
     // OPERATOR CASE
-    public function member(Request $req){
+    public function member(Request $req)
+    {
         return view('page.operator.index')->withMessage("Member");
     }
-
 }

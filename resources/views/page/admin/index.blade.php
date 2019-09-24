@@ -38,7 +38,7 @@
   </div>
   <!-- /.box-header -->
   <!-- form start -->
-  <form action="{{ route('addUser') }}" method="post">
+  <form action="{{ route('addUser') }}" method="post" enctype="multipart/form-data">
   {{ csrf_field() }}
   <div class="box-body">
   <div class="form-group">
@@ -62,8 +62,14 @@
           <option value="">Pilih</option>
           <option value="operator">Operator</option>
           <option value="admin">Admin</option>
+          <option value="korlantas">Korlantas</option>
       </select>
       <p class="text-danger">{{ $errors->first('role') }}</p>
+  </div>
+  <div class="form-group">
+      <label for="">Logo</label>
+      <input type="file" name="image" class="form-control {{ $errors->has('image') ? 'is-invalid':'' }}" style="padding: 0px 12px !important" required>
+      <p class="text-danger">{{ $errors->first('image') }}</p>
   </div>
   <div class="form-group">
       <button class="btn btn-primary btn-sm">

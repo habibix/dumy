@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Response;
-class SuperAdminMiddleware
+
+class KorlantasMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,9 +15,8 @@ class SuperAdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user() && $request->user()->type != 'super_admin')
-        {
-            return new Response(view('unauthorized')->with('role', 'SUPER ADMINN'));
+        if ($request->user() && $request->user()->type != 'korlantas') {
+            return new Response(view('unauthorized')->with('role', 'KORLANTAS'));
         }
         return $next($request);
     }

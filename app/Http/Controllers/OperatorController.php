@@ -22,37 +22,41 @@ class OperatorController extends Controller
 
 	protected $day = 14;
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->middleware('auth');
 	}
 
-	public function data_day($cam_id, $day, $vehicle){
+	public function data_day($cam_id, $day, $vehicle)
+	{
 		for ($x = 1; $x <= $day; $x++) {
 			//echo $x;
 			$date_fix = Carbon::today()->subDays($x)->toDateString();
 			$data = CountingRekap::where('camera_id', $cam_id)
-				->where( 'vehicle', '=', $vehicle)
-				->where( 'created_at', '>=', $date_fix)
-				->orderBy('created_at','asc')->pluck('total');
+				->where('vehicle', '=', $vehicle)
+				->where('created_at', '>=', $date_fix)
+				->orderBy('created_at', 'asc')->pluck('total');
 		}
 
 		return $data;
 	}
 
-	public function data_speed_day($cam_id, $day){
+	public function data_speed_day($cam_id, $day)
+	{
 		$days[] = '';
 		for ($x = 1; $x <= $day; $x++) {
 			//echo $x;
 			$date_fix = Carbon::today()->subDays($x)->toDateString();
 			$data = Speed::where('camera_id', $cam_id)
-				->where( 'created_at', '>=', $date_fix)
-				->orderBy('created_at','asc')->pluck('speed');
+				->where('created_at', '>=', $date_fix)
+				->orderBy('created_at', 'asc')->pluck('speed');
 		}
 
 		return $data;
 	}
 
-	public function index(){
+	public function index()
+	{
 		$count_rekap = CountingRekap::all();
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
 		$series[] = [];
@@ -63,25 +67,25 @@ class OperatorController extends Controller
 
 		$now = Carbon::now();
 		$xAxis = [];
-		for ($i=$day; $i >= 0; $i--) {
+		for ($i = $day; $i >= 0; $i--) {
 			$xAxis[] = Carbon::today()->subDays($i)->format('D, d M Y');;
 		}
 
 		//return $xAxis;
 
 		$chart_line = Charts::multi('line', 'highcharts')
-		    ->labels($xAxis)
-		    ->title('Jumlah Kendaraan Camera 1')
-		    ->elementLabel('Jumlah Kendaraan')
-		    ->dataset('Mobil', $this->data_day(1, 14, 'mobil'))
-		    ->dataset('Motor', $this->data_day(1, 14, 'motor'))
-		    ->dataset('Truk/Bus', $this->data_day(1, 14, 'truk/bus'));
+			->labels($xAxis)
+			->title('Jumlah Kendaraan Camera 1')
+			->elementLabel('Jumlah Kendaraan')
+			->dataset('Mobil', $this->data_day(1, 14, 'mobil'))
+			->dataset('Motor', $this->data_day(1, 14, 'motor'))
+			->dataset('Truk/Bus', $this->data_day(1, 14, 'truk/bus'));
 
 		$chart_speed = Charts::multi('line', 'highcharts')
-		    ->labels($xAxis)
-		    ->title('Kecepatan Rata-rata Kendaraan')
-		    ->elementLabel('Kecepatan KM/H')
-		    ->dataset('Average Speed', $this->data_speed_day(1, 14));
+			->labels($xAxis)
+			->title('Kecepatan Rata-rata Kendaraan')
+			->elementLabel('Kecepatan KM/H')
+			->dataset('Average Speed', $this->data_speed_day(1, 14));
 
 		$avg_speed = Speed::avg('speed');
 
@@ -96,7 +100,8 @@ class OperatorController extends Controller
 			->with('page', 'Dashboard');
 	}
 
-	public function counting_page(){
+	public function counting_page()
+	{
 
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
 		$count_rekap = CountingRekap::all();
@@ -105,9 +110,9 @@ class OperatorController extends Controller
 		//$data2 = CountingRekap::with('camera')->get();
 
 		$data = DB::table('counting_rekap')
-			    ->select('camera_id', DB::raw('SUM(total)'))
-			    ->groupBy('camera_id')
-			    ->get();
+			->select('camera_id', DB::raw('SUM(total)'))
+			->groupBy('camera_id')
+			->get();
 
 		foreach ($data as $key => $value) {
 			$val_chart[] = Camera::find($value->camera_id)->lokasi;
@@ -117,17 +122,18 @@ class OperatorController extends Controller
 
 		//return $users = CountingRekap::groupBy('camera_id')->get();
 		$chart = Charts::create('line', 'highcharts')
-		             ->title('Jumlah Kendaraan Keseluruhan')
-		             ->elementLabel('Jumlah Kendaraan')
-		             ->labels($val_chart)
-		             ->values($data->pluck('SUM(total)'))
-		             ->responsive(true);
+			->title('Jumlah Kendaraan Keseluruhan')
+			->elementLabel('Jumlah Kendaraan')
+			->labels($val_chart)
+			->values($data->pluck('SUM(total)'))
+			->responsive(true);
 
 		return view('page.operator.page_counting', compact('camera', 'chart', 'count_rekap'))
 			->with('page', 'Analisa Perhitungan');
 	}
 
-	public function counting_page_id($id){
+	public function counting_page_id($id)
+	{
 		$count_rekap = CountingRekap::all();
 		$series[] = [];
 		$day = 14;
@@ -136,18 +142,18 @@ class OperatorController extends Controller
 
 		$now = Carbon::now();
 		$xAxis = [];
-		for ($i=$day; $i >= 0; $i--) {
+		for ($i = $day; $i >= 0; $i--) {
 			$xAxis[] = Carbon::today()->subDays($i)->format('D, d M Y');;
 		}
 
 
 		$chart_line = Charts::multi('line', 'highcharts')
-		    ->labels($xAxis)
-		    ->title('Dashboard : '.$active_camera->lokasi)
-		    ->elementLabel('Jumlah Kendaraan')
-		    ->dataset('Mobil', $this->data_day($id, 14, 'mobil'))
-		    ->dataset('Motor', $this->data_day($id, 14, 'motor'))
-		    ->dataset('Truk/Bus', $this->data_day($id, 14, 'bus-truk'));
+			->labels($xAxis)
+			->title('Dashboard : ' . $active_camera->lokasi)
+			->elementLabel('Jumlah Kendaraan')
+			->dataset('Mobil', $this->data_day($id, 14, 'mobil'))
+			->dataset('Motor', $this->data_day($id, 14, 'motor'))
+			->dataset('Truk/Bus', $this->data_day($id, 14, 'bus-truk'));
 
 		return view('page.operator.page_counting_id')
 			->with('xAxis', $xAxis)
@@ -158,7 +164,8 @@ class OperatorController extends Controller
 			->with('page', 'Analisa Perhitungan');
 	}
 
-	public function speed_page(){
+	public function speed_page()
+	{
 		$day = 14;
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
 		$speed = Speed::all();
@@ -166,15 +173,15 @@ class OperatorController extends Controller
 		$now = Carbon::now();
 
 		$xAxis = [];
-		for ($i=$day; $i >= 0; $i--) {
+		for ($i = $day; $i >= 0; $i--) {
 			$xAxis[] = Carbon::today()->subDays($i)->format('D, d M Y');;
 		}
 
 		$chart = Charts::multi('line', 'highcharts')
-		    ->labels($xAxis)
-		    ->title('Kecepatan Rata-rata Kendaraan')
-		    ->elementLabel('Kecepatan KM/H')
-		    ->dataset('Average Speed', $this->data_speed_day(1, 14));
+			->labels($xAxis)
+			->title('Kecepatan Rata-rata Kendaraan')
+			->elementLabel('Kecepatan KM/H')
+			->dataset('Average Speed', $this->data_speed_day(1, 14));
 
 		$avg_speed = Speed::avg('speed');
 
@@ -182,7 +189,8 @@ class OperatorController extends Controller
 			->with('page', 'Analisa Kecepatan');
 	}
 
-	public function speed_page_id($id){
+	public function speed_page_id($id)
+	{
 		$avg_speed = 0;
 		$day = 14;
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
@@ -191,17 +199,17 @@ class OperatorController extends Controller
 		$speed = Speed::all();
 
 		$xAxis = [];
-		for ($i=$day; $i >= 0; $i--) {
+		for ($i = $day; $i >= 0; $i--) {
 			$xAxis[] = Carbon::today()->subDays($i)->format('D, d M Y');;
 		}
 
 		$chart = Charts::multi('line', 'highcharts')
-		    ->labels($xAxis)
-		    ->title('Kecepatan Rata-rata Kendaraan : '.$active_camera->lokasi)
-		    ->elementLabel('Kecepatan KM/H')
-		    ->dataset('Average Speed', $this->data_speed_day($id, 14));
+			->labels($xAxis)
+			->title('Kecepatan Rata-rata Kendaraan : ' . $active_camera->lokasi)
+			->elementLabel('Kecepatan KM/H')
+			->dataset('Average Speed', $this->data_speed_day($id, 14));
 
-		if(Speed::find($id)){
+		if (Speed::find($id)) {
 			$avg_speed = Speed::find($id)->avg('speed');
 		}
 
@@ -209,36 +217,40 @@ class OperatorController extends Controller
 			->with('page', 'Counting');
 	}
 
-	public function gis_page(){
+	public function gis_page()
+	{
 		#return view('page.operator.gis2');
 		return view('page.operator.page_gis')
-		->with('page', 'GIS');
+			->with('page', 'GIS');
 	}
 
-	public function gis_page_2(){
+	public function gis_page_2()
+	{
 		return view('page.operator.gis2');
 	}
 
 	//API CHART
-	public function chartCounting($id) {
+	public function chartCounting($id)
+	{
 		$now = Carbon::now();
 		$xAxis = [];
-		for ($i=$this->day; $i >= 0; $i--) {
+		for ($i = $this->day; $i >= 0; $i--) {
 			$xAxis[] = Carbon::today()->subDays($i)->format('D, d M Y');;
 		}
 
-	    $chart_line = Charts::multi('line', 'highcharts')
-		    ->labels($xAxis)
-		    ->title('Jumlah Kendaraan Camera')
-		    ->elementLabel('Jumlah Kendaraan')
-		    ->dataset('Mobil', $this->data_day($id, 14, 'mobil'))
-		    ->dataset('Motor', $this->data_day($id, 14, 'motor'))
-		    ->dataset('Truk/Bus', $this->data_day($id, 14, 'truk/bus'));
+		$chart_line = Charts::multi('line', 'highcharts')
+			->labels($xAxis)
+			->title('Jumlah Kendaraan Camera')
+			->elementLabel('Jumlah Kendaraan')
+			->dataset('Mobil', $this->data_day($id, 14, 'mobil'))
+			->dataset('Motor', $this->data_day($id, 14, 'motor'))
+			->dataset('Truk/Bus', $this->data_day($id, 14, 'truk/bus'));
 
-	    return response()->json($chart_line);
+		return response()->json($chart_line);
 	}
 
-	public function anomali(){
+	public function anomali()
+	{
 
 		$anomali = Anomali::all();
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
@@ -247,7 +259,8 @@ class OperatorController extends Controller
 			->with('page', 'Pelanggaran');
 	}
 
-	public function anomali_id($id){
+	public function anomali_id($id)
+	{
 
 		$anomali = Anomali::where('camera_id', $id)->get();
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
@@ -257,7 +270,8 @@ class OperatorController extends Controller
 			->with('page', 'Pelanggaran');
 	}
 
-	public function macet(){
+	public function macet()
+	{
 
 		$macet = Macet::all();
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
@@ -266,7 +280,8 @@ class OperatorController extends Controller
 			->with('page', 'Arus Lalu Lintas');
 	}
 
-	public function macet_id($id){
+	public function macet_id($id)
+	{
 
 		$macet = Macet::where('camera_id', $id)->get();
 		$camera = Camera::where('user_id', Auth::user()->id)->get();
@@ -276,4 +291,14 @@ class OperatorController extends Controller
 			->with('page', 'Arus Lalu Lintas');
 	}
 
+	public function view_user()
+	{
+		// $operators = User::where('type', 'operator')->get();
+		$operators = User::where('type', 'operator')->withCount('punyaKamera')->get();
+
+		//return $operators;
+
+		return view('page.operator.page_index_view_user', compact('operators'))
+			->with('page', 'Lihat Polda');
+	}
 }

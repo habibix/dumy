@@ -46,10 +46,18 @@ Route::group(['middleware' => 'App\Http\Middleware\MemberMiddleware'], function(
 	Route::match(['get', 'post'], '/operator/anomali/{id}', 'OperatorController@anomali_id')->name('anomali_id');
 	Route::match(['get', 'post'], '/operator/macet/', 'OperatorController@macet')->name('macet');
 	Route::match(['get', 'post'], '/operator/macet/{id}', 'OperatorController@macet_id')->name('macet_id');
+	Route::match(['get', 'post'], '/operator/view/', 'OperatorController@view_user')->name('view_user');
 });
 
 Route::group(['middleware' => 'App\Http\Middleware\SuperAdminMiddleware'], function() {
 	Route::match(['get', 'post'], '/superadmin/', 'HomeController@super_admin')->name('super_admin');	
+});
+
+Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], function() {
+	Route::match(['get', 'post'], '/korlantas/', 'KorlantasController@index')->name('korlantas');	
+	Route::match(['get', 'post'], '/korlantas/volume/', 'KorlantasController@view_volume_kendaraan')->name('korlantas_view_volume');
+	Route::match(['get', 'post'], '/korlantas/volume/{id}', 'KorlantasController@index_view_volume')->name('index_view_volume');
+	Route::match(['get', 'post'], '/korlantas/volume/{id_user}/camera/{id_camera}', 'KorlantasController@view_volume_kendaraan_cam')->name('view_volume_kendaraan_cam');
 });
 
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');
@@ -57,6 +65,7 @@ Route::get('/insert_speed', 'VcaController@insert_speed');
 Route::post('/insert_anomali', 'VcaController@insert_anomali');
 
 Route::get('/get_value_cam/{id}', 'VcaController@get_value_cam');
+Route::get('/get_speed/{id}', 'VcaController@get_speed');
 
 /*
 Route::post('/insert_speed', [
