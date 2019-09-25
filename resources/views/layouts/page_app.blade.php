@@ -24,6 +24,7 @@
     <!-- START HEADER SCRIPT -->
     @yield('header')
     <!-- END HEADER SCRIPT -->
+
 </head>
 
 <body>
@@ -172,9 +173,7 @@
 
     <!--  PAPER WRAP -->
     <div class="wrap-fluid">
-        <div class="container-fluid paper-wrap bevel tlbr">
-
-
+        <div class="container-fluid paper-wrap bevel tlbr" style="background: url(/img/background_content.png) no-repeat center center fixed !important;">
             <!-- CONTENT -->
             <!--TITLE -->
             <div class="row">

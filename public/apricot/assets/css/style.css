@@ -1708,7 +1708,7 @@ ul.topnav h4 {
     background-position:right;
     padding-right: 0;
     text-decoration: none;
-    color:#9EA7B3;
+    color: #f7f7f7 !important;
 }
 .home {
     border: none;
@@ -1735,7 +1735,7 @@ ul.topnav h4 {
     padding: 15px 0 0;
 }
 .tittle-content-header {
-    color: #9EA7B3 !important;
+    color: #f7f7f7 !important;
     font-family:"Open Sans";
     font-size: 16px;
     font-weight: normal;
@@ -2769,8 +2769,6 @@ b#speed {
     width: 100%;
 }
 #footer {
-    background: none repeat scroll 0 0 #f8f8f8;
-    border-top: 1px solid #DDDDDD;
     bottom: 0;
     height: 50px;
     left: 0;
@@ -2791,7 +2789,7 @@ b#speed {
 }
 .copyright {
     bottom: 0;
-    color: #666666;
+    color: #f7eaea;
     float: right;
     font-size: 12px !important;
     padding: 5px 15px;
