@@ -163,24 +163,16 @@
 
                  <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>
+              </div>   
               </div>
-
-
-                
-              </div>
-              <!-- /.box-body -->
-
-              
+              <!-- /.box-body --> 
             </form>
           </div>
-
-          
-
           <!-- /.box -->
           <!-- general form elements disabled -->
           <div class="box box-warning">
             <div class="box-header with-border">
-              <h3 class="box-title">License Table | VCAPro</h3>
+              <h3 class="box-title">License Table | TLAPro</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">

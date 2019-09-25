@@ -1,7 +1,7 @@
 <div id="skin-select">
     <div id="logo">
         <h1>VCA PRO
-            <span>v1.0</span>
+            <span>v1.1</span>
         </h1>
     </div>
 

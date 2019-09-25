@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Charts;
+use App\Anomali;
 use App\User;
 use App\Camera;
 use App\CountingRekap;
@@ -228,5 +229,24 @@ class KorlantasController extends Controller
 
         return view('page.korlantas.page_view_speed_kendaraan_cam', compact('cameras', 'operator', 'selected_camera', 'data_camera_dsc', 'chart'))
             ->with('page', 'Keterangan');
+    }
+
+    public function view_display($id_user){
+        $cameras = Camera::where('user_id', $id_user)->get();
+        $cameras_random = Camera::where('user_id', $id_user)->inRandomOrder()->take(2)->get();
+
+        //return $cameras_random;
+
+        return view('page.korlantas.page_view_display', compact('cameras_random'))
+        ->with('page', 'Viewer');
+    }
+
+    public function pelanggaran($id_user){
+        $pelanggaran = Anomali::all()->sortByDesc("created_at");
+        $operator = User::find($id_user);
+		$cameras = Camera::where('user_id', $id_user)->get();
+
+		return view('page.korlantas.page_pelanggaran', compact('cameras', 'pelanggaran', 'operator'))
+			->with('page', 'Pelanggaran');
     }
 }

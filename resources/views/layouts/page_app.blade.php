@@ -46,7 +46,7 @@
 
                 <div id="logo-mobile" class="visible-xs">
                     <h1>VCA PRO
-                        <span>v1.0</span>
+                        <span>v1.1</span>
                     </h1>
                 </div>
             </div>
@@ -209,23 +209,17 @@
             <!-- BREADCRUMB -->
             <ul id="breadcrumb">
                 <li>
-                    <span class="entypo-home"></span>
+                <a href="{{ route('korlantas') }}" title="Home"><span class="entypo-home"></span></a>
                 </li>
                 <li>
                     <i class="fa fa-lg fa-angle-right"></i>
                 </li>
                 <li><a href="#" title="Sample page 1">{{ $page }}</a>
-
-                <li class="pull-right">
-                    <div class="input-group input-widget">
-                        <input style="border-radius:15px" type="text" placeholder="Search..." class="form-control">
-                    </div>
-                </li>
             </ul>
 
             <!-- END OF BREADCRUMB -->
 
-            <div class="content-wrap" style="margin-top: 30px">
+            <div class="content-wrap">
                 <!-- /Start OF CONTENT -->
 
                 @yield('content')

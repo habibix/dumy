@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,87 +29,92 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   <style type="text/css">
-    .login-page{background: none !important}
-    html { 
-        background: url(/img/bg1.png) no-repeat center center fixed; 
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
-      }
+    .login-page {
+      background: none !important
+    }
+
+    html {
+      background: url(/img/bg1.png) no-repeat center center fixed;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
   </style>
 </head>
+
 <body class="hold-transition login-page">
-<div class="login-box">
-  <div class="login-logo">
-    <img src="../../dist/img/korlantas.png" class="user-image" alt="User Image" width=" 150px">
-  </div>
-  <!-- /.login-logo -->
-  <div class="login-box-body">
+  <div class="login-box">
     <div class="login-logo">
-      <a href="../../index2.html"><b>VCA</b>PRO</a>
+      <img src="../../img/logo.png" class="user-image" alt="User Image" width=" 350px">
     </div>
-    <p class="login-box-msg">Sign in to start your session</p>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+      <div class="login-logo">
+        <a href="#"><b>TLA</b></a>
+      </div>
+      <p class="login-box-msg">Masuk untuk memulai sesi Anda</p>
 
-    <form method="POST" action="{{ route('login') }}">
+      <form method="POST" action="{{ route('login') }}">
         {{ csrf_field() }}
-      <div class="form-group has-feedback">
-        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Email">
+        <div class="form-group has-feedback">
+          <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Email">
 
-        @if ($errors->has('email'))
-                                                  <span class="help-block">
-                                                      <strong>{{ $errors->first('email') }}</strong>
-                                                  </span>
-                                              @endif
-        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
+          @if ($errors->has('email'))
+          <span class="help-block">
+            <strong>{{ $errors->first('email') }}</strong>
+          </span>
+          @endif
+          <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+          <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
 
-        @if ($errors->has('password'))
-                                                    <span class="help-block">
-                                                        <strong>{{ $errors->first('password') }}</strong>
-                                                    </span>
-                                                @endif
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-      </div>
-      <div class="row">
-        <div class="col-xs-8">
-          <div class="checkbox icheck">
-            <label>
-              <input type="checkbox"> Remember Me
-            </label>
+          @if ($errors->has('password'))
+          <span class="help-block">
+            <strong>{{ $errors->first('password') }}</strong>
+          </span>
+          @endif
+          <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+        <div class="row">
+          <div class="col-xs-8">
+            <div class="checkbox icheck">
+              <label>
+                <input type="checkbox"> Ingat Saya
+              </label>
+            </div>
           </div>
+          <!-- /.col -->
+          <div class="col-xs-4">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Masuk</button>
+          </div>
+          <!-- /.col -->
         </div>
-        <!-- /.col -->
-        <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
-        </div>
-        <!-- /.col -->
-      </div>
-    </form>
+      </form>
 
-    <a href="#">I forgot my password</a><br>
+      <a href="#">Lupa Password</a><br>
 
+    </div>
+    <!-- /.login-box-body -->
   </div>
-  <!-- /.login-box-body -->
-</div>
-<!-- /.login-box -->
+  <!-- /.login-box -->
 
-<!-- jQuery 3 -->
-<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- iCheck -->
-<script src="../../plugins/iCheck/icheck.min.js"></script>
-<script>
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' /* optional */
+  <!-- jQuery 3 -->
+  <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+  <!-- Bootstrap 3.3.7 -->
+  <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- iCheck -->
+  <script src="../../plugins/iCheck/icheck.min.js"></script>
+  <script>
+    $(function() {
+      $('input').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue',
+        increaseArea: '20%' /* optional */
+      });
     });
-  });
-</script>
+  </script>
 </body>
+
 </html>

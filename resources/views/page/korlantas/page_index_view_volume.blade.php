@@ -257,9 +257,8 @@
     //var marker = tomtom.L.marker(speedyPizzaCoordinates).addTo(map);
     @foreach($cameras as $camera)
         var marker_{{$camera->id}} = tomtom.L.marker([{{ $camera->koordinat }}]).addTo(map);
-        marker_{{$camera->id}}.bindPopup("<iframe src='{{ config('app.url_friend') }}/?camera={{ $camera->id }}' width='450' height='350'></iframe>");
+        marker_{{$camera->id}}.bindPopup("<iframe src='{{ config('app.url_friend') }}/?camera={{ $camera->id }}' width='450' height='350'></iframe><p>{{$camera->lokasi}}</p>");
     @endforeach
-    //marker.bindPopup("<iframe src='http://127.0.0.1:8000/korlantas' width='200' height='100'></iframe><b>Speedy's pizza</b><br/>100 Century Center Ct 210, San Jose, CA 95112, USA");
 </script>
 
 @endsection

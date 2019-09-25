@@ -1,7 +1,7 @@
 <div id="skin-select">
     <div id="logo">
         <h1>VCA PRO
-            <span>v1.0</span>
+            <span>v1.1</span>
         </h1>
     </div>
 
@@ -58,6 +58,13 @@
                         </a>
                     </li>
 
+                    <li>
+                        <a class="tooltip-tip " href="#" title="login">
+                            <i class="icon icon-feed"></i>
+                            <span>Viewer</span>
+                        </a>
+                    </li>
+
                 </ul>
 
                 <ul class="topnav menu-left-nest">
@@ -99,7 +106,7 @@
                     </li>
 
                     <li>
-                        <a class="tooltip-tip " href="login.html" title="login">
+                        <a class="tooltip-tip " href="{{ route('pelanggaran', $operator->id) }}" title="login">
                             <i class="icon-document-new"></i>
                             <span>Pelanggaran</span>
                         </a>
@@ -120,29 +127,6 @@
                     </li>
 
                 </ul>
-
-
-
-
-                <div class="side-dash">
-                    <h3>
-                        <span>Device</span>
-                    </h3>
-                    <ul class="side-dashh-list">
-                        <li>Avg. Traffic
-                            <span>25k<i style="color:#44BBC1;" class="fa fa-arrow-circle-up"></i>
-                            </span>
-                        </li>
-                        <li>Visitors
-                            <span>80%<i style="color:#AB6DB0;" class="fa fa-arrow-circle-down"></i>
-                            </span>
-                        </li>
-                        <li>Convertion Rate
-                            <span>13m<i style="color:#19A1F9;" class="fa fa-arrow-circle-up"></i>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>

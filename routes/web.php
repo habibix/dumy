@@ -56,9 +56,11 @@ Route::group(['middleware' => 'App\Http\Middleware\SuperAdminMiddleware'], funct
 Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], function() {
 	Route::match(['get', 'post'], '/korlantas/', 'KorlantasController@index')->name('korlantas');	
 	Route::match(['get', 'post'], '/korlantas/volume/', 'KorlantasController@view_volume_kendaraan')->name('korlantas_view_volume');
+	Route::match(['get', 'post'], '/korlantas/pelanggaran/{id_user}', 'KorlantasController@pelanggaran')->name('pelanggaran');
 	Route::match(['get', 'post'], '/korlantas/volume/{id}', 'KorlantasController@index_view_volume')->name('index_view_volume');
 	Route::match(['get', 'post'], '/korlantas/volume/{id_user}/camera/{id_camera}', 'KorlantasController@view_volume_kendaraan_cam')->name('view_volume_kendaraan_cam');
 	Route::match(['get', 'post'], '/korlantas/speed/{id_user}/camera/{id_camera}', 'KorlantasController@view_speed_kendaraan_cam')->name('view_speed_kendaraan_cam');
+	Route::match(['get', 'post'], '/korlantas/view/{id_user}', 'KorlantasController@view_display')->name('view_display');
 });
 
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');
