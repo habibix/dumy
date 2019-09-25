@@ -10,9 +10,9 @@
 @section('content')
 
 <div class="row">
-    <div class="col-sm-7">
+    <div class="col-sm-12">
         <div id="siteClose" class="nest">
-            <div class="title-alt" style="margin:0 !important">
+            <div class="title-alt">
                 <h6>
                     <span class="fontawesome-truck"></span>&nbsp;CCTV MAP Analytic</h6>
                 <div class="titleClose">
@@ -27,13 +27,17 @@
                 </div>
             </div>
             <div id="site" class="body-nest" style="min-height:296px;">
-                cctv map
+                <div id='map' class='use-all-space'></div>
             </div>
         </div>
     </div>
-    <div class="col-sm-5">
+
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
         <div id="RealTimeClose" class="nest">
-            <div class="title-alt" style="margin:0 !important">
+            <div class="title-alt">
                 <h6>
                     <span class="fontawesome-resize-horizontal"></span>&nbsp;Database - {{ $operator->name }}</h6>
                 <div class="titleClose">
@@ -54,32 +58,32 @@
                         <table id="footable-res2" class="demo" data-filter="#filter" data-filter-text-only="true">
                             <thead>
                                 <tr>
-                                    <th data-toggle="true">
+                                    <th>
                                         No
                                     </th>
                                     <th>
-                                        Tanggal & Jam
+                                        IP Camera
                                     </th>
-                                    <th data-hide="phone,tablet">
-                                        Jenis Kendaraan
-                                    </th>
-                                    <th data-hide="phone,tablet">
+                                    <th>
                                         Lokasi
                                     </th>
-                                    <th>Status</th>
+                                    <th>
+                                        Arah
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php $no = 1; @endphp
-                                @foreach($data_camera as $data)
+                                @foreach($cameras as $data)
                                 <tr>
                                     <td>{{ $no++ }}</td>
-                                    <td>{{ $data->updated_at->format('D, d-M-Y H:i:s') }}</td>
-                                    <td>{{ ucfirst($data->vehicle) }}</td>
-                                    <td>{{ $data->camera->lokasi }}</td>
-                                    <td>
-                                        <span class="status-metro status-active" title="Active">Active</span>
-                                    </td>
+                                    <td>{{ $data->ip_camera }}</td>
+                                    <td>{{ $data->lokasi }}</td>
+                                    <td>{{ $data->arah }}</td>
+                                    <td><span class="status-metro status-active" title="Active">Active</span></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -100,16 +104,25 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-12">
-    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto; padding-top: 20px"></div>
-    </div>
-</div>
 
 @endsection
 
 <!-- HEADER -->
 @section('header')
+
+<link rel="stylesheet" type="text/css" href='../../sdk/map.css' />
+<link rel="stylesheet" type="text/css" href="../../sdk/elements.css">
+<style type="text/css">
+    #map {
+        min-width: 320px;
+        min-height: 400px;
+        height: 600px;
+        margin: auto;
+        padding: 10px 10px 0 10px;
+    }
+</style>
+<script src="../../sdk/js/form.js"></script>
+<script src="../../sdk/tomtom.min.js"></script>
 
 <!-- TABLE -->
 <link href="../../apricot/assets/js/footable/css/footable.core.css?v=2-0-1" rel="stylesheet" type="text/css" />
@@ -117,7 +130,6 @@
 <link href="../../apricot/assets/js/footable/css/footable-demos.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
-<link rel="stylesheet" href="../../apricot/dark-chart.css" />
 
 <!-- highcharts -->
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -125,6 +137,7 @@
 <script src="https://code.highcharts.com/highcharts-more.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/themes/dark-unica.js"></script>
 
 <style>
     .footable>tbody>tr>td {
@@ -135,6 +148,7 @@
     .footable>thead>tr>td {
         color: #000 !important
     }
+    .leaflet-popup-content-wrapper{width: 486px}
 </style>
 
 
@@ -192,71 +206,60 @@
 </script>
 
 <script type="text/javascript">
-Highcharts.chart('container', {
-    chart: {
-        type: 'column'
-    },
-    title: {
-        text: 'Monthly Average Rainfall'
-    },
-    subtitle: {
-        text: 'Source: WorldClimate.com'
-    },
-    xAxis: {
-        categories: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec'
-        ],
-        crosshair: true
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Rainfall (mm)'
-        }
-    },
-    tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-        footerFormat: '</table>',
-        shared: true,
-        useHTML: true
-    },
-    plotOptions: {
-        column: {
-            pointPadding: 0.2,
-            borderWidth: 0
-        }
-    },
-    series: [{
-        name: 'Tokyo',
-        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+    $(function() {
+        $('#footable-res3').footable().bind('footable_filtering', function(e) {
+            var selected = $('.filter-status').find(':selected').text();
+            if (selected && selected.length > 0) {
+                e.filter += (e.filter && e.filter.length > 0) ? ' ' + selected : selected;
+                e.clear = !e.filter;
+            }
+        });
 
-    }, {
-        name: 'New York',
-        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+        $('.clear-filter').click(function(e) {
+            e.preventDefault();
+            $('.filter-status').val('');
+            $('table.demo').trigger('footable_clear_filter');
+        });
 
-    }, {
-        name: 'London',
-        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+        $('.filter-status').change(function(e) {
+            e.preventDefault();
+            $('table.demo').trigger('footable_filter', {
+                filter: $('#filter').val()
+            });
+        });
 
-    }, {
-        name: 'Berlin',
-        data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+        $('.filter-api').click(function(e) {
+            e.preventDefault();
 
-    }]
-});
-		</script>
+            //get the footable filter object
+            var footableFilter = $('table').data('footable-filter');
+
+            alert('about to filter table by "tech"');
+            //filter by 'tech'
+            footableFilter.filter('tech');
+
+            //clear the filter
+            if (confirm('clear filter now?')) {
+                footableFilter.clearFilter();
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    //var speedyPizzaCoordinates = [{{ $operator->center_koordinat }}];
+    var map = tomtom.L.map('map', {
+        key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
+        basePath: '<your-tomtom-sdk-base-path>',
+        center: [{{ $operator->center_koordinat }}],
+        zoom: 15
+    });
+    //var marker = tomtom.L.marker(speedyPizzaCoordinates).addTo(map);
+    @foreach($cameras as $camera)
+        var marker_{{$camera->id}} = tomtom.L.marker([{{ $camera->koordinat }}]).addTo(map);
+        marker_{{$camera->id}}.bindPopup("<iframe src='{{ config('app.url_friend') }}/?camera={{ $camera->id }}' width='450' height='350'></iframe>");
+    @endforeach
+    //marker.bindPopup("<iframe src='http://127.0.0.1:8000/korlantas' width='200' height='100'></iframe><b>Speedy's pizza</b><br/>100 Century Center Ct 210, San Jose, CA 95112, USA");
+</script>
 
 @endsection

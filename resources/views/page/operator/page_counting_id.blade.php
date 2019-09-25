@@ -237,7 +237,6 @@
 <script src="../../apricot/assets/js/footable/js/footable.paginate.js?v=2-0-1" type="text/javascript"></script>
 
 
-
 <script type="text/javascript">
     $(function() {
         $('#footable-res2').footable().bind('footable_filtering', function(e) {

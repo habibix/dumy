@@ -52,7 +52,7 @@
                     </li>
 
                     <li>
-                        <a class="tooltip-tip " href="login.html" title="login">
+                        <a class="tooltip-tip " href="#" title="login">
                             <i class="icon icon-feed"></i>
                             <span>Data CCTV Analytic</span>
                         </a>
@@ -90,36 +90,11 @@
                             <span>Analisa Kecepatan</span>
                         </a>
                         <ul>
+                            @foreach ($cameras as $camera)
                             <li>
-                                <a class="tooltip-tip2 ajax-load" href="jpo_kuningan.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Kuningann</span></a>
+                                <a class="tooltip-tip2 ajax-load" href="{{route('view_speed_kendaraan_cam',['id_user'=>$operator->id, 'id_camera'=>$camera->id])}}" title="Blank Page"><i class="icon-media-record"></i><span>{{ substr($camera->lokasi, 0, 22) }}</span></a>
                             </li>
-                            <li>
-                                <a class="tooltip-tip2 ajax-load" href="blank_page.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Tebet</span></a>
-                            </li>
-                            <li>
-                                <a class="tooltip-tip2 ajax-load" href="blank_page.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Jamsostek</span></a>
-                            </li>
-                            <li>
-                                <a class="tooltip-tip2 ajax-load" href="blank_page.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Telkom</span></a>
-                            </li>
-                            <li>
-                                <a class="tooltip-tip2 ajax-load" href="blank_page.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Harapan Kita</span></a>
-                            </li>
-                            <li>
-                                <a class="tooltip-tip2 ajax-load" href="blank_page.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Taman Anggrek</span></a>
-                            </li>
-                            <li>
-                                <a class="tooltip-tip2 ajax-load" href="blank_page.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Korlantas</span></a>
-                            </li>
-                            <li>
-                                <a class="tooltip-tip2 ajax-load" href="blank_page.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Senayan Barat</span></a>
-                            </li>
-                            <li>
-                                <a class="tooltip-tip2 ajax-load" href="blank_page.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Mampang</span></a>
-                            </li>
-                            <li>
-                                <a class="tooltip-tip2 ajax-load" href="blank_page.html" title="Blank Page"><i class="icon-media-record"></i><span>JPO Polda</span></a>
-                            </li>
+                            @endforeach
                         </ul>
                     </li>
 

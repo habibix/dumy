@@ -105,11 +105,10 @@ class VcaController extends Controller
         $speed = Speed::where('camera_id', $id)->whereDate('created_at', Carbon::today())->first();
 
         $data = [
-            'id'=> $speed['id'],
             'speed' => $speed ? $speed['speed'] : 0,
-            'camera_id' => $speed['camera_id'],
-            'created_at' => date_format($speed['created_at'],"N, d/m/Y H:i:s"),
-            'updated_at' => date_format($speed['updated_at'],"N, d/m/Y H:i:s")
+            'camera_id' => $speed ? $speed['camera_id'] : 0,
+            'created_at' => $speed ? date_format($speed['created_at'], "Y/m/d H:i:s") : 0,
+            'updated_at' => $speed ? date_format($speed['updated_at'], "Y/m/d H:i:s") : 0
         ];
 
         return $data;

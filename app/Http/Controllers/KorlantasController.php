@@ -1,9 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use Charts;
 use App\User;
 use App\Camera;
 use App\CountingRekap;
+use App\Speed;
+use DB;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -18,10 +23,53 @@ class KorlantasController extends Controller
 
         $operators = User::where('type', 'operator')->withCount('punyaKamera')->get();
         return view('page.korlantas.page_index', compact('operators'))
-        ->with('page', 'Dashboard');
+            ->with('page', 'Dashboard');
     }
 
-    public function view_volume_kendaraan($id){
+    public function data_day($cam_id, $day, $vehicle)
+    {
+        for ($x = 1; $x <= $day; $x++) {
+            //echo $x;
+            $date_fix = Carbon::today()->subDays($x)->toDateString();
+            $data = CountingRekap::where('camera_id', $cam_id)
+                ->where('vehicle', '=', $vehicle)
+                ->where('created_at', '>=', $date_fix)
+                ->orderBy('created_at', 'asc')->pluck('total');
+        }
+
+        $data_14 = CountingRekap::where('camera_id', $cam_id)
+            ->groupBy('created_at')
+            ->orderBy('created_at', 'dsc')
+            ->take(14)->get();
+
+        foreach ($data_14 as $row) {
+            $data = CountingRekap::where('camera_id', $cam_id)
+                ->where('vehicle', '=', $vehicle)
+                ->where('created_at', '>=', $date_fix)
+                ->orderBy('created_at', 'asc')->get();
+        }
+
+        return $data;
+    }
+
+    public function get_date($cam_id)
+    {
+        $data_14 = CountingRekap::where('camera_id', $cam_id)
+            ->groupBy('created_at')
+            ->orderBy('created_at', 'asc')
+            ->take(14)->get();
+
+        $dates = $data_14->pluck('created_at');
+
+        $formattedDates = $dates->map(function ($date) {
+            return $date->format('d, M Y');
+        });
+
+        return $formattedDates;
+    }
+
+    public function view_volume_kendaraan($id)
+    {
 
         $cameras = Camera::where('user_id', $id)->get();
 
@@ -30,10 +78,11 @@ class KorlantasController extends Controller
         //return $camera;
 
         return view('page.korlantas.page_index', compact('camera', 'cameras'))
-        ->with('page', 'Keterangan');
+            ->with('page', 'Keterangan');
     }
 
-    public function view_volume_kendaraan_id($id){
+    public function view_volume_kendaraan_id($id)
+    {
         //$operator = User::where('camera_id', $id)->first();
         //$camera = Camera::find($id)->get();
         // return $id;
@@ -45,7 +94,7 @@ class KorlantasController extends Controller
         $data_camera = CountingRekap::orderBy('created_at', 'dsc')->get();
 
         return view('page.korlantas.page_view_volume_kendaraan', compact('cameras', 'operator', 'random_camera', 'data_camera'))
-        ->with('page', 'Keterangan');
+            ->with('page', 'Keterangan');
     }
 
     public function view_volume_kendaraan_cam($id_user, $id_camera)
@@ -53,20 +102,131 @@ class KorlantasController extends Controller
         $cameras = Camera::where('user_id', $id_user)->get();
         $operator = User::find($id_user);
         $selected_camera = Camera::find($id_camera);
-        $data_camera = CountingRekap::orderBy('created_at', 'dsc')->get();
+        $data_camera = CountingRekap::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->get();
+
+        $data_motor = $this->data_day($id_camera, 14, 'motor')->pluck('total');
+        $data_mobil = $this->data_day($id_camera, 14, 'mobil')->pluck('total');
+        $data_bus_truk = $this->data_day($id_camera, 14, 'bus-truk')->pluck('total');
+
+        $categorys = $this->get_date($id_camera);
+
+        $chart = Charts::multi('bar', 'highcharts')
+            ->labels($categorys)
+            ->title('Jumlah Kendaraan - ' . $selected_camera->lokasi)
+            ->elementLabel('Jumlah Kendaraan')
+            ->dataset('Mobil', $data_mobil)
+            ->dataset('Motor', $data_motor)
+            ->dataset('Truk/Bus', $data_bus_truk);
+
+        //return $data_motor;
+        //return $categorys;
 
         //return $camera;
-        return view('page.korlantas.page_view_volume_kendaraan_cam', compact('cameras', 'operator', 'selected_camera', 'data_camera'))
-        ->with('page', 'Keterangan');
+        return view(
+            'page.korlantas.page_view_volume_kendaraan_cam',
+            compact('cameras', 'operator', 'selected_camera', 'data_camera', 'data_motor', 'data_mobil', 'data_bus_truk', 'categorys', 'chart')
+        )
+            ->with('page', 'Keterangan');
     }
 
-    public function index_view_volume($id){
+    public function index_view_volume($id)
+    {
         $cameras = Camera::where('user_id', $id)->get();
         $operator = User::find($id);
-        $random_camera = Camera::orderByRaw("RAND()")->first();
-        $data_camera = CountingRekap::orderBy('created_at', 'dsc')->get();
 
-        return view('page.korlantas.page_index_view_volume', compact('cameras', 'operator', 'random_camera', 'data_camera'))
-        ->with('page', 'Keterangan');
+        //return $cameras;
+        
+        /*
+        $data_camera = CountingRekap::orderBy('created_at', 'dsc')->get();
+        $data_speed = Speed::orderBy('created_at', 'dsc')->get();
+
+        $data = DB::table('counting_rekap')
+            ->select('camera_id', DB::raw('SUM(total)'))
+            ->groupBy('camera_id')
+            ->get();
+
+        foreach ($data as $key => $value) {
+            $val_chart[] = Camera::find($value->camera_id)->lokasi;
+        }
+
+        //return $data_camera;
+
+
+        $chart = Charts::create('bar', 'highcharts')
+            ->title('Jumlah Kendaraan Keseluruhan - ' . $operator->name)
+            ->elementLabel('Jumlah Kendaraan')
+            ->labels($val_chart)
+            ->values($data->pluck('SUM(total)'))
+            ->responsive(true);
+
+        //chart speed
+        $data_speed_chart = Speed::take(14)->orderBy('created_at', 'dsc')->get();
+        $dates_speed = $data_speed_chart->pluck('created_at');
+        $formatted_dates_speed = $dates_speed->map(function ($date) {
+            return $date->format('d, M Y');
+        });
+
+        //return $data_speed_chart;
+
+        $chart_speed = Charts::create('bar', 'highcharts')
+            ->title('Kecepatan Rata-rata Kendaraan Keseluruhan')
+            ->elementLabel('kecepatan Kendaraan')
+            ->labels($formatted_dates_speed)
+            ->values($data_speed_chart->pluck('speed'))
+            ->responsive(true);
+        */
+
+        return view('page.korlantas.page_index_view_volume', 
+            compact('cameras', 'operator'))
+            ->with('page', 'Keterangan');
+    }
+
+    public function view_speed_kendaraan_cam($id_user, $id_camera)
+    {
+        $cameras = Camera::where('user_id', $id_user)->get();
+        $operator = User::find($id_user);
+        $selected_camera = Camera::find($id_camera);
+        $data_camera_dsc = Speed::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->get();
+
+        $data_camera = Speed::where('camera_id', $id_camera)
+            ->take(14)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $dates = $data_camera->pluck('created_at');
+
+        $formattedDates = $dates->map(function ($date) {
+            return $date->format('d, M Y');
+        });
+
+        $chart = Charts::create('bar', 'highcharts')
+            ->title('Kecepatan Rata-rata - '.$operator->name)
+            ->elementLabel('Kecepatan Kendaraan')
+            ->labels($formattedDates)
+            ->values($data_camera->pluck('speed'))
+            ->responsive(true);
+
+        /*
+        $data = Speed::where('camera_id', $id_camera)
+            ->take(14)
+            ->orderBy('created_at', 'dsc')
+            ->get();
+
+        //return $data;
+
+        foreach ($data as $key => $value) {
+            $val_chart[] = Camera::find($value->camera_id)->lokasi;
+        }
+
+        $chart = Charts::create('bar', 'highcharts')
+			->title('Kecepatan Rata-rata - '.$operator->name)
+			->elementLabel('Kecepatan Kendaraan')
+			->labels($val_chart)
+			->values($data->pluck('speed'))
+            ->responsive(true);
+        */
+
+        return view('page.korlantas.page_view_speed_kendaraan_cam', compact('cameras', 'operator', 'selected_camera', 'data_camera_dsc', 'chart'))
+            ->with('page', 'Keterangan');
     }
 }

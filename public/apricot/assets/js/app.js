@@ -16,7 +16,7 @@
 
       $("#button-bg3").click(function() {
           $("body").css({
-              "background": "url('assets/img/bg.jpg')no-repeat center center fixed"
+              "background": "url('assets/img/background_panel.png')no-repeat center center fixed"
           });
 
 

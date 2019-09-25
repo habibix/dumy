@@ -58,6 +58,7 @@ Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], functi
 	Route::match(['get', 'post'], '/korlantas/volume/', 'KorlantasController@view_volume_kendaraan')->name('korlantas_view_volume');
 	Route::match(['get', 'post'], '/korlantas/volume/{id}', 'KorlantasController@index_view_volume')->name('index_view_volume');
 	Route::match(['get', 'post'], '/korlantas/volume/{id_user}/camera/{id_camera}', 'KorlantasController@view_volume_kendaraan_cam')->name('view_volume_kendaraan_cam');
+	Route::match(['get', 'post'], '/korlantas/speed/{id_user}/camera/{id_camera}', 'KorlantasController@view_speed_kendaraan_cam')->name('view_speed_kendaraan_cam');
 });
 
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');

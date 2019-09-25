@@ -22,7 +22,7 @@
                 <h6>
                     <span class="fontawesome-resize-horizontal"></span>&nbsp;{{ $operator->name }} - {{ $selected_camera->lokasi }}</h6>
             </div>
-            <iframe src="{{ config('app.url_friend') }}/?camera={{ $selected_camera->id }}" width="680px" height="480px" scrolling="no" frameborder="0"></iframe>
+            <iframe src="{{ config('app.url_friend') }}/speed/?camera={{ $selected_camera->id }}" width="680px" height="480px" scrolling="no" frameborder="0"></iframe>
         </div>
     </div>
     <div class="col-sm-5">
@@ -55,25 +55,21 @@
                                         Tanggal & Jam
                                     </th>
                                     <th data-hide="phone,tablet">
-                                        Jenis Kendaraan
-                                    </th>
-                                    <th data-hide="phone,tablet">
                                         Lokasi
                                     </th>
                                     <th>
-                                        Jumlah
+                                        Kecepatan
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php $no = 1; @endphp
-                                @foreach($data_camera as $data)
+                                @foreach($data_camera_dsc as $data)
                                 <tr>
                                     <td>{{ $no++ }}</td>
                                     <td>{{ $data->created_at->format('D, d-M-Y') }}</td>
-                                    <td>{{ ucfirst($data->vehicle) }}</td>
                                     <td>{{ $data->camera->lokasi }}</td>
-                                    <td>{{ $data->total }}</td>
+                                    <td>{{ $data->speed }} KM/H</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -135,7 +131,6 @@
 <link href="{{ asset('apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('apricot/assets/js/dataTable/css/datatables.responsive.css') }}" rel="stylesheet" type="text/css" />
 <!--link href="{{ asset('apricot/dark-chart.css') }}" rel="stylesheet" type="text/css" /-->
-
 
 <!-- highcharts -->
 <script src="https://code.highcharts.com/highcharts.js"></script>
