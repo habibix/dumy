@@ -59,7 +59,7 @@
                     </li>
 
                     <li>
-                        <a class="tooltip-tip " href="#" title="login">
+                        <a class="tooltip-tip " href="{{ route('view_display', $operator->id) }}" title="login">
                             <i class="icon icon-feed"></i>
                             <span>Viewer</span>
                         </a>
