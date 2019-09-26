@@ -30,7 +30,7 @@ class CountRekapSeeder extends Seeder
 
 	        for ($i=0; $i < 14; $i++) {
 	        	$rekap = new CountingRekap;
-	        	$rekap->total = rand(10000,20000);
+	        	$rekap->total = rand(100000,200000);
 	        	$rekap->camera_id = $value;
 	        	$rekap->vehicle = 'mobil';
 	        	$rekap->created_at = Carbon::today()->subDays($i);
@@ -39,7 +39,7 @@ class CountRekapSeeder extends Seeder
 
 	        for ($i=0; $i < 14; $i++) {
 	        	$rekap = new CountingRekap;
-	        	$rekap->total = rand(10000,20000);
+	        	$rekap->total = rand(1000,2000);
 	        	$rekap->camera_id = $value;
 	        	$rekap->vehicle = 'bus-truk';
 	        	$rekap->created_at = Carbon::today()->subDays($i);
