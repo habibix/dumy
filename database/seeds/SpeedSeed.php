@@ -21,7 +21,7 @@ class SpeedSeed extends Seeder
         foreach ($camera as $key => $value) {
         	for ($i=0; $i < 14; $i++) {
 	        	$rekap = new Speed;
-	        	$rekap->speed = rand(30, 100);
+	        	$rekap->speed = rand(70, 110);
 	        	$rekap->camera_id = $value;
 	        	$rekap->created_at = Carbon::today()->subDays($i);
 	        	$rekap->save();
