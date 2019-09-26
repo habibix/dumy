@@ -41,7 +41,7 @@ class CountRekapSeeder extends Seeder
 	        	$rekap = new CountingRekap;
 	        	$rekap->total = rand(1000,2000);
 	        	$rekap->camera_id = $value;
-	        	$rekap->vehicle = 'bus-truk';
+	        	$rekap->vehicle = 'bus_truk';
 	        	$rekap->created_at = Carbon::today()->subDays($i);
 	        	$rekap->save();
 	        }
