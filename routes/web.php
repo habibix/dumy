@@ -64,7 +64,7 @@ Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], functi
 });
 
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');
-Route::get('/insert_speed', 'VcaController@insert_speed');
+Route::get('/insert_speed/{camera_id}/{speed}', 'VcaController@insert_speed');
 Route::post('/insert_anomali', 'VcaController@insert_anomali');
 
 Route::get('/get_value_cam/{id}', 'VcaController@get_value_cam');

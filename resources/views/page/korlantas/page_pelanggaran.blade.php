@@ -60,7 +60,7 @@
                             <th>
                                 <center>Capture Kamera</center>
                             </th>
-
+                            <th>Plat Nomor</th>
                             <th>ETLE</th>
 
                         </tr>
@@ -76,6 +76,7 @@
                             <td>Cawang Menuju Grogol</td>
                             <td>{{ $row->anomali }}</td>
                             <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">Tampilkan Gambar</a></td>
+                            <td>UNREAD</td>
                             <td><a class="pdf btn btn-info btn-lg" href="http://10.45.42.3/assets/test.pdf">Tilang</a></td>
                         </tr>
                         @endforeach
