@@ -79,14 +79,14 @@
             },
             center: [-6.2106012, 106.8199012],
             zoom: 10,
-            dragging: false,
-            touchZoom: false,
-            scrollWheelZoom: false,
-            doubleClickZoom: false,
-            boxZoom: false,
-            tap: false,
-            keyboard: false,
-            zoomControl: false,
+            //dragging: false,
+            //touchZoom: false,
+            //scrollWheelZoom: false,
+            //doubleClickZoom: false,
+            //boxZoom: false,
+            //tap: false,
+            //keyboard: false,
+            //zoomControl: false,
         });
 
 
