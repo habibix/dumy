@@ -72,24 +72,7 @@
                     </ul>
                     <ul id="nt-title">
 
-                        <li><i class="wi-day-lightning"></i>&#160;&#160;Berlin&#160;
-                            <b>85</b><i class="wi-fahrenheit"></i>&#160;; 15km/h
-                        </li>
-                        <li><i class="wi-day-lightning"></i>&#160;&#160;Yogyakarta&#160;
-                            <b>85</b><i class="wi-fahrenheit"></i>&#160;; Tonight- 72 °F (22.2 °C)
-                        </li>
-
-                        <li><i class="wi-day-lightning"></i>&#160;&#160;Sttugart&#160;
-                            <b>85</b><i class="wi-fahrenheit"></i>&#160;; 15km/h
-                        </li>
-
-                        <li><i class="wi-day-lightning"></i>&#160;&#160;Muchen&#160;
-                            <b>85</b><i class="wi-fahrenheit"></i>&#160;; 15km/h
-                        </li>
-
-                        <li><i class="wi-day-lightning"></i>&#160;&#160;Frankurt&#160;
-                            <b>85</b><i class="wi-fahrenheit"></i>&#160;; 15km/h
-                        </li>
+                        
 
                     </ul>
                 </div>
