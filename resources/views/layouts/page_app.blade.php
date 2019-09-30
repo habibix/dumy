@@ -71,7 +71,7 @@
                         <li class="meridiem"></li>
                     </ul>
                     <ul id="nt-title">
-                        
+
                         <li><i class="wi-day-lightning"></i>&#160;&#160;Berlin&#160;
                             <b>85</b><i class="wi-fahrenheit"></i>&#160;; 15km/h
                         </li>
@@ -114,16 +114,15 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                            <span class="entypo-logout">
-                            <a href="{{ url('/logout') }}"
-                                            onclick="event.preventDefault();
+                                <span class="entypo-logout">
+                                    <a href="{{ url('/logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
+                                        Logout
+                                    </a>
 
-                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
+                                    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
                             </li>
                         </ul>
                     </li>
@@ -209,7 +208,7 @@
             <!-- BREADCRUMB -->
             <ul id="breadcrumb">
                 <li>
-                <a href="{{ route('korlantas') }}" title="Home"><span class="entypo-home"></span></a>
+                    <a href="{{ route('korlantas') }}" title="Home"><span class="entypo-home"></span></a>
                 </li>
                 <li>
                     <i class="fa fa-lg fa-angle-right"></i>
@@ -254,11 +253,11 @@
         <script type="text/javascript" src="{{ asset('apricot/assets/js/load.js') }}"></script>
         <script type="text/javascript" src="{{ asset('apricot/assets/js/main.js') }}"></script>
 
-    <!-- START FOOTER SCRIPT -->
+        <!-- START FOOTER SCRIPT -->
 
-    @yield('footer')
+        @yield('footer')
 
-    <!-- END FOOTER SCRIPT -->
+        <!-- END FOOTER SCRIPT -->
 
 </body>
 

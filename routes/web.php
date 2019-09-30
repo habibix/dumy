@@ -61,6 +61,7 @@ Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], functi
 	Route::match(['get', 'post'], '/korlantas/volume/{id_user}/camera/{id_camera}', 'KorlantasController@view_volume_kendaraan_cam')->name('view_volume_kendaraan_cam');
 	Route::match(['get', 'post'], '/korlantas/speed/{id_user}/camera/{id_camera}', 'KorlantasController@view_speed_kendaraan_cam')->name('view_speed_kendaraan_cam');
 	Route::match(['get', 'post'], '/korlantas/view/{id_user}', 'KorlantasController@view_display')->name('view_display');
+	Route::match(['get', 'post'], '/korlantas/gis/{id_user}', 'KorlantasController@korlantas_gis')->name('korlantas_gis');
 });
 
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');
@@ -69,6 +70,8 @@ Route::post('/insert_anomali', 'VcaController@insert_anomali');
 
 Route::get('/get_value_cam/{id}', 'VcaController@get_value_cam');
 Route::get('/get_speed/{id}', 'VcaController@get_speed');
+Route::get('/connect_notif/', 'VcaController@connect_notif');
+Route::get('/release_notif/{id}', 'VcaController@release_notif');
 
 /*
 Route::post('/insert_speed', [

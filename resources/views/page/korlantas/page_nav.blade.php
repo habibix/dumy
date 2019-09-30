@@ -119,14 +119,29 @@
                         </a>
                     </li>
 
+
+                </ul>
+
+                <ul class="topnav menu-left-nest">
                     <li>
-                        <a class="tooltip-tip " href="login.html" title="login">
+                        <a href="#" style="border-left:0px solid!important;" class="title-menu-left">
+
+                            <span class="">Menu GIS</span>
+                            <i data-toggle="tooltip" class="entypo-cog pull-right config-wrap"></i>
+
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a class="tooltip-tip " href="{{ route('korlantas_gis', $operator->id) }}" title="login">
                             <i class="icon-document-new"></i>
-                            <span>LPR</span>
+                            <span>GIS</span>
                         </a>
                     </li>
 
                 </ul>
+                
             </div>
         </div>
     </div>

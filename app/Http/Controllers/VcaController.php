@@ -113,4 +113,14 @@ class VcaController extends Controller
 
         return $data;
     }
+
+    public function connect_notif(){
+        $notif = Anomali::where('notif', 0)->orderBy('id', 'dsc')->with(['camera'])->first();
+        return $notif;
+    }
+
+    public function release_notif($id){
+        $notif = Anomali::where('id', $id)->update(array('notif' => '1'));
+        return $notif;
+    }
 }

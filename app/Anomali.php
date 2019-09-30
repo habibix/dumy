@@ -12,4 +12,5 @@ class Anomali extends Model
     function camera(){
         return $this->belongsTo('App\Camera');
     }
+    
 }

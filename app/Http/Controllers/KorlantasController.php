@@ -249,4 +249,12 @@ class KorlantasController extends Controller
 		return view('page.korlantas.page_pelanggaran', compact('cameras', 'pelanggaran', 'operator'))
 			->with('page', 'Pelanggaran');
     }
+
+    public function korlantas_gis($id_user){
+        $operator = User::find($id_user);
+        $cameras = Camera::where('user_id', $id_user)->get();
+
+        return view('page.korlantas.page_gis', compact('operator', 'cameras'))
+         ->with('page', 'GIS');
+    }
 }

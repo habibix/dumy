@@ -252,13 +252,26 @@
         key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
         basePath: '<your-tomtom-sdk-base-path>',
         center: [{{ $operator->center_koordinat }}],
-        zoom: 15
+        zoom: 15,
+        traffic: {
+                style: 's3',
+                key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
+                trafficService: {
+                    preserveCluster: true,
+                    expandCluster: true,
+                    language: 'en-GB'
+                },
+                createPopupForCluster: true,
+                diff: true,
+                minZoom: 10
+            }
     });
     //var marker = tomtom.L.marker(speedyPizzaCoordinates).addTo(map);
     @foreach($cameras as $camera)
         var marker_{{$camera->id}} = tomtom.L.marker([{{ $camera->koordinat }}]).addTo(map);
-        marker_{{$camera->id}}.bindPopup("<iframe src='{{ config('app.url_friend') }}/?camera={{ $camera->id }}' width='450' height='350'></iframe><p>{{$camera->lokasi}}</p>");
+        marker_{{$camera->id}}.bindPopup("<iframe src='{{ config('app.url_friend') }}/?camera={{ $camera->id }}' width='450' height='350'></iframe><p>Lokasi : {{$camera->lokasi}}</p><p>Wilayah : {{$camera->wilayah}}</p><p>Arah : {{$camera->arah}}</p>");
     @endforeach
+    
 </script>
 
 @endsection

@@ -51,7 +51,7 @@
     <!-- /.login-logo -->
     <div class="login-box-body">
       <div class="login-logo">
-        <a href="#"><b>TLA</b></a>
+        <a href="#"><b>VCA</b>Pro</a>
       </div>
       <p class="login-box-msg">Masuk untuk memulai sesi Anda</p>
 
