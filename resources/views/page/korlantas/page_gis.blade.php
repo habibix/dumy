@@ -427,8 +427,8 @@
 
 <style>
     .map-container {
-        margin-left: 40%;
-        width: 60%;
+        margin-left: 30%;
+        width: 70%;
     }
 
     .container {
@@ -450,15 +450,17 @@
     .traffic-incidents-list-container {
         max-height: 600px !important;
     }
-</style>
 
-<style type="text/css">
     #map {
         min-width: 320px;
         min-height: 400px;
         height: 600px;
         margin: auto;
         padding: 10px 10px 0 10px;
+    }
+
+    .traffic-incidents-list-container{
+        width: 30% !important;
     }
 </style>
 
