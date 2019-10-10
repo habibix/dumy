@@ -8,10 +8,69 @@
 
 <!-- CONTENT -->
 @section('content')
-
+<div class="row">
+    <div class="col-sm-12">
+        <div id="RealTimeClose" class="nest">
+            <div class="title-alt">
+                <h6>
+                    <span class="fontawesome-resize-horizontal"></span>&nbsp;Kategori Pelanggaran</h6>
+                <div class="titleClose">
+                    <a class="gone" href="#RealTimeClose">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+                <div class="titleToggle">
+                    <a class="nav-toggle-alt" href="#RealTime">
+                        <span class="entypo-up-open"></span>
+                    </a>
+                </div>
+            </div>
+            <div id="RealTime" style="min-height:296px;padding-top:20px;" class="body-nest">
+                <ul class="direction">
+                    <li>
+                        <span class="" style="background:#FF6B6B"></span>
+                        <h3>
+                            <span>Melanggar Bahu Jalan</span>
+                        </h3>
+                        <p> Keterangan :</p>
+                        <p>Kendaraan yang melalui bahu jalan</p>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <span class="" style="background:#65C3DF"></span>
+                        <h3>
+                            <span>Dilarang Berhenti</span>
+                        </h3>
+                        <p> Keterangan :</p>
+                        <p>Berhenti pada area yang terlarang dalam waktu lebih dari 30 detik</p>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <span class="" style="background:#45B6B0"></span>
+                        <h3>
+                            <span>Lawan Arus</span>
+                        </h3>
+                        <p> Keterangan :</p>
+                        <p>Kendaraan yang melakukan lawan arah</p>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <span class="" style="background:#45B6B0"></span>
+                        <h3>
+                            <span>Melanggar Batas Kecepatan</span>
+                        </h3>
+                        <p> Keterangan :</p>
+                        <p>Kendaraan yang melaju diatas batas kecepatan yang sudah ditentukan</p>
+                    </li>
+                    <li class="divider"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- TABLE -->
 <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-12">
         <div class="nest" id="FilteringClose">
             <div class="title-alt">
                 <h6>
@@ -58,10 +117,13 @@
                                 <center>Jenis Pelanggaran</center>
                             </th>
                             <th>
-                                <center>Capture Kamera</center>
+                                <center>Gambar Kendaraan</center>
+                            </th>
+                            <th>
+                                <center>Gambar Plat</center>
                             </th>
                             <th>Plat Nomor</th>
-                            <th>ETLE</th>
+                            <th>Data Pelanggar</th>
 
                         </tr>
                     </thead>
@@ -75,9 +137,10 @@
                             <td>{{ $row->camera->lokasi }}</td>
                             <td>Cawang Menuju Grogol</td>
                             <td>{{ $row->anomali }}</td>
-                            <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">Tampilkan Gambar</a></td>
+                            <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">Tampilkan</a></td>
+                            <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->lpr_image }}">Tampilkan</a></td>
                             <td>UNREAD</td>
-                            <td><a class="pdf btn btn-info btn-lg" href="http://10.45.42.3/assets/test.pdf">Tilang</a></td>
+                            <td><a class="pdf btn btn-info btn-lg" href="http://10.45.42.3/assets/test.pdf">Data</a></td>
                         </tr>
                         @endforeach
 
@@ -94,55 +157,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-4">
-        <div id="RealTimeClose" class="nest">
-            <div class="title-alt">
-                <h6>
-                    <span class="fontawesome-resize-horizontal"></span>&nbsp;Kategori Pelanggaran</h6>
-                <div class="titleClose">
-                    <a class="gone" href="#RealTimeClose">
-                        <span class="entypo-cancel"></span>
-                    </a>
-                </div>
-                <div class="titleToggle">
-                    <a class="nav-toggle-alt" href="#RealTime">
-                        <span class="entypo-up-open"></span>
-                    </a>
-                </div>
-            </div>
-            <div id="RealTime" style="min-height:296px;padding-top:20px;" class="body-nest">
-                <ul class="direction">
-                    <li>
-                        <span class="" style="background:#FF6B6B"></span>
-                        <h3>
-                            <span>Melanggar Bahu Jalan</span>
-                        </h3>
-                        <p> Keterangan :</p>
-                        <p>Kendaraan yang melalui bahu jalan</p>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <span class="" style="background:#65C3DF"></span>
-                        <h3>
-                            <span>Dilarang Berhenti</span>
-                        </h3>
-                        <p> Keterangan :</p>
-                        <p>Berhenti pada area yang terlarang dalam waktu lebih dari 30 detik</p>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <span class="" style="background:#45B6B0"></span>
-                        <h3>
-                            <span>Lawan Arus</span>
-                        </h3>
-                        <p> Keterangan :</p>
-                        <p>Kendaraan yang melakukan lawan arah</p>
-                    </li>
-                    <li class="divider"></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+
 
     <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">

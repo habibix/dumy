@@ -13,4 +13,9 @@ class Camera extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    function camera_setting()
+    {
+        return $this->hasOne('App\User');
+    }
 }

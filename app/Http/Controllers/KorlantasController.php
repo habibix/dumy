@@ -237,7 +237,7 @@ class KorlantasController extends Controller
 
         //return $cameras_random;
 
-        return view('page.korlantas.page_view_display', compact('cameras_random'))
+        return view('page.korlantas.page_view_display', compact('cameras_random', 'cameras'))
         ->with('page', 'Viewer');
     }
 

@@ -64,6 +64,17 @@ Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], functi
 	Route::match(['get', 'post'], '/korlantas/gis/{id_user}', 'KorlantasController@korlantas_gis')->name('korlantas_gis');
 });
 
+Route::group(['middleware' => 'auth'], function () {
+    // User needs to be authenticated to enter here.
+    Route::get('/view/{event}/', function ()    {
+        // Uses Auth Middleware
+    });
+
+    Route::get('user/profile', function () {
+        // Uses Auth Middleware
+    });
+});
+
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');
 Route::get('/insert_speed/{camera_id}/{speed}', 'VcaController@insert_speed');
 Route::post('/insert_anomali', 'VcaController@insert_anomali');
@@ -72,6 +83,7 @@ Route::get('/get_value_cam/{id}', 'VcaController@get_value_cam');
 Route::get('/get_speed/{id}', 'VcaController@get_speed');
 Route::get('/connect_notif/', 'VcaController@connect_notif');
 Route::get('/release_notif/{id}', 'VcaController@release_notif');
+Route::post('/insert_speedrecord', 'VcaController@insert_speedrecord');
 
 /*
 Route::post('/insert_speed', [

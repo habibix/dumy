@@ -22,7 +22,7 @@
                 <h6>
                     <span class="fontawesome-resize-horizontal"></span>&nbsp;{{ $operator->name }} - {{ $selected_camera->lokasi }}</h6>
             </div>
-            <iframe src="{{ config('app.url_friend') }}/speed/?camera={{ $selected_camera->id }}" width="680px" height="480px" scrolling="no" frameborder="0"></iframe>
+            <iframe src="{{ config('app.url_friend') }}/speed/?camera={{ $selected_camera->id }}" width="100%" height="480px" scrolling="no" frameborder="0"></iframe>
         </div>
     </div>
     <div class="col-sm-5">

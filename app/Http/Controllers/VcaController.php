@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\CountingRekap;
 use App\Speed;
 use App\Camera;
+use App\SpeedRecord;
 use CountRekapSeeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -62,6 +63,7 @@ class VcaController extends Controller
         $anomali->image = $request->image;
         $anomali->video = $request->video;
         $anomali->lpr = $request->lpr;
+        $anomali->lpr_image = $request->lpr_image;
         $anomali->save();
     
         return $request;
@@ -115,12 +117,35 @@ class VcaController extends Controller
     }
 
     public function connect_notif(){
-        $notif = Anomali::where('notif', 0)->orderBy('id', 'dsc')->with(['camera'])->first();
-        return $notif;
+        $notif = Anomali::where('notif', 0)
+            ->where('created_at', '>', Carbon::now()->subMinutes(1)->toDateTimeString())
+            ->orderBy('id', 'dsc')
+            ->with(['camera'])
+            ->first();
+        if ($notif) {
+            return $notif;
+        } else {
+            return [];
+        }
+        
     }
 
     public function release_notif($id){
         $notif = Anomali::where('id', $id)->update(array('notif' => '1'));
         return $notif;
+    }
+
+    public function insert_speedrecord(Request $request){
+        $speed_record = new SpeedRecord();
+        $speed_record->vehicle = $request->vehicle;
+        $speed_record->speed_record = $request->speed_record;
+        $speed_record->camera_id = $request->camera_id;
+        $insert = $speed_record->save();
+        
+        if($insert){
+            return "created";
+        } else {
+            return "failed";
+        }
     }
 }

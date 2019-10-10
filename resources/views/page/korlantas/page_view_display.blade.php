@@ -9,45 +9,61 @@
 <!-- CONTENT -->
 @section('content')
 
-<div class="row">
-    
-    @foreach($cameras_random as $camera)
-    <div class="col-sm-6">
-        <div id="RealTimeClose" class="nest">
-            <div class="title-alt">
-                <h6>
-                    <span class="fontawesome-resize-horizontal"></span>&nbsp;CCTV ANALYTIC</h6>
-                <div class="titleClose">
-                    <a class="gone" href="#RealTimeClose">
-                        <span class="entypo-cancel"></span>
-                    </a>
-                </div>
-                <div class="titleToggle">
-                    <a class="nav-toggle-alt" href="#RealTime">
-                        <span class="entypo-up-open"></span>
-                    </a>
-                </div>
-            </div>
-            <div id="RealTime" class="body-nest">
-            <iframe src="{{ config('app.url_friend') }}/speed/?camera={{ $camera->id }}" width="680px" height="480px" scrolling="no" frameborder="0"></iframe>
-            </div>
-        </div>
-    </div>
-    @endforeach
+<div class="form-group">
+    <label for="sel1">Select Event</label>
+    <select class="form-control" id="select_event">
+        <option value="speed">Analisa kecepatan</option>
+        <option value="counting">Perhitungan Kendaraan</option>
+    </select>
 </div>
+
+<div class="form-group">
+    <label for="sel1">Select Camera</label>
+    <select class="form-control" id="select_camera">
+        @foreach($cameras as $camera)
+            <option value="{{ $camera->id }}">{{ $camera->lokasi }}</option>
+        @endforeach
+    </select>
+</div>
+
 
 @endsection
 
 <!-- HEADER -->
 @section('header')
 
+<script>
+    $(document).ready(function() {
+        // http://127.0.0.1:5000/speed/?camera=1
+        // http://127.0.0.1:5000/?camera=1
 
+        $('#select_camera').on('change', function() {
+            //var optionValue = $(this).val();
+            //var optionText = $('#dropdownList option[value="'+optionValue+'"]').text();
+            var selectedEvent = $("#select_event option:selected").val();
+            var selectedCamera = $("#select_camera option:selected").val();
+
+            var url = "{{ config('app.url_friend') }}";
+
+            if (selectedEvent == 'speed'){
+                //url
+                //window.open(url, '_blank');
+                url = url+"/speed/?camera=" + selectedCamera
+                window.open(url, '_blank');
+            } else if (selectedEvent == 'counting'){
+                url = url+"/?camera=" + selectedCamera
+                window.open(url, '_blank');
+            }
+
+            //alert("Selected Option Text: " + url);
+        });
+    });
+</script>
 
 @endsection
 
 <!-- FOOTER -->
 @section('footer')
-
 
 
 @endsection
