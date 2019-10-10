@@ -195,6 +195,8 @@
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
 
+<meta http-equiv="refresh" content="120" >
+
 <style>
     .footable>tbody>tr>td {
         color: #000 !important
