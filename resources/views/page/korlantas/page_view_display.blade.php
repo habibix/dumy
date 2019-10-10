@@ -9,23 +9,30 @@
 <!-- CONTENT -->
 @section('content')
 
-<div class="form-group">
-    <label for="sel1">Select Event</label>
-    <select class="form-control" id="select_event">
-        <option value="speed">Analisa kecepatan</option>
-        <option value="counting">Perhitungan Kendaraan</option>
-    </select>
-</div>
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <div class="profit" style="color: #000;">
+            <div class="form-group">
+                <label for="sel1">Pilih Jenis Analitik</label>
+                <select class="form-control" id="select_event">
+                    <option value="speed">Analisa kecepatan</option>
+                    <option value="counting">Perhitungan Kendaraan</option>
+                </select>
+            </div>
 
-<div class="form-group">
-    <label for="sel1">Select Camera</label>
-    <select class="form-control" id="select_camera">
-        @foreach($cameras as $camera)
-            <option value="{{ $camera->id }}">{{ $camera->lokasi }}</option>
-        @endforeach
-    </select>
+            <div class="form-group">
+                <label for="sel1">Pilih Kamera</label>
+                <select class="form-control" id="select_camera">
+                    @foreach($cameras as $camera)
+                    <option value="{{ $camera->id }}">{{ $camera->lokasi }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4"></div>
 </div>
-
 
 @endsection
 
@@ -45,13 +52,13 @@
 
             var url = "{{ config('app.url_friend') }}";
 
-            if (selectedEvent == 'speed'){
+            if (selectedEvent == 'speed') {
                 //url
                 //window.open(url, '_blank');
-                url = url+"/speed/?camera=" + selectedCamera
+                url = url + "/speed/?camera=" + selectedCamera
                 window.open(url, '_blank');
-            } else if (selectedEvent == 'counting'){
-                url = url+"/?camera=" + selectedCamera
+            } else if (selectedEvent == 'counting') {
+                url = url + "/?camera=" + selectedCamera
                 window.open(url, '_blank');
             }
 
