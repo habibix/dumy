@@ -153,7 +153,7 @@ class OperatorController extends Controller
 			->elementLabel('Jumlah Kendaraan')
 			->dataset('Mobil', $this->data_day($id, 14, 'mobil'))
 			->dataset('Motor', $this->data_day($id, 14, 'motor'))
-			->dataset('Truk/Bus', $this->data_day($id, 14, 'bus-truk'));
+			->dataset('Truk/Bus', $this->data_day($id, 14, 'bus_truk'));
 
 		return view('page.operator.page_counting_id')
 			->with('xAxis', $xAxis)

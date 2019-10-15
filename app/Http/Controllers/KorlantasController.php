@@ -53,22 +53,6 @@ class KorlantasController extends Controller
         return $data;
     }
 
-    public function get_date($cam_id)
-    {
-        $data_14 = CountingRekap::where('camera_id', $cam_id)
-            ->groupBy('created_at')
-            ->orderBy('created_at', 'asc')
-            ->take(14)->get();
-
-        $dates = $data_14->pluck('created_at');
-
-        $formattedDates = $dates->map(function ($date) {
-            return $date->format('d, M Y');
-        });
-
-        return $formattedDates;
-    }
-
     public function view_volume_kendaraan($id)
     {
 
@@ -98,6 +82,38 @@ class KorlantasController extends Controller
             ->with('page', 'Keterangan');
     }
 
+    public function get_date($cam_id)
+    {
+        $data_14 = CountingRekap::where('camera_id', $cam_id)
+            ->groupBy('created_at')
+            ->orderBy('created_at', 'dsc')
+            ->where('vehicle', 'mobil')
+            ->take(14)->get();
+
+        #return $data_14;
+
+        $dates = $data_14->pluck('created_at');
+        #$sortedDates = collect($data_14)->sortBy('created_at')->all();
+        #$dates = $data_14->pluck('created_at');
+        #$sortedDates = collect($dates)->sortBy('date')->all();
+
+        $formattedDates = $dates->map(function ($date) {
+            return $date;
+        });
+
+        return $formattedDates;
+    }
+
+    public function get_data_bydate($cam_id, $date, $vehicle)
+    {
+        $data = CountingRekap::where('camera_id', $cam_id)
+            ->where('vehicle', '=', $vehicle)
+            ->where('created_at', '>=', $date)
+            ->orderBy('created_at', 'dsc')->pluck('total');
+
+        return $data;
+    }
+
     public function view_volume_kendaraan_cam($id_user, $id_camera)
     {
         $cameras = Camera::where('user_id', $id_user)->get();
@@ -105,11 +121,26 @@ class KorlantasController extends Controller
         $selected_camera = Camera::find($id_camera);
         $data_camera = CountingRekap::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->get();
 
-        $data_motor = $this->data_day($id_camera, 14, 'motor')->pluck('total');
-        $data_mobil = $this->data_day($id_camera, 14, 'mobil')->pluck('total');
-        $data_bus_truk = $this->data_day($id_camera, 14, 'bus-truk')->pluck('total');
-
         $categorys = $this->get_date($id_camera);
+
+        #return $categorys;
+
+        //$data_motor = $this->data_day($id_camera, 14, 'motor')->pluck('total');
+        //$data_mobil = $this->data_day($id_camera, 14, 'mobil')->pluck('total');
+        //$data_bus_truk = $this->data_day($id_camera, 14, 'bus_truk')->pluck('total');
+
+        foreach($categorys as $category){
+            $data_motor = $this->get_data_bydate($id_camera, $category, 'motor');
+            $data_mobil = $this->get_data_bydate($id_camera, $category, 'mobil');
+            $data_bus_truk = $this->get_data_bydate($id_camera, $category, 'bus_truk');
+
+            $dada = $this->get_data_bydate($id_camera, $category, 'mobil');
+
+            $cat[] = $category->format('d, M Y');
+            #echo $category;
+        }
+
+        //return $dada;
 
         $chart = Charts::multi('bar', 'highcharts')
             ->labels($categorys)
@@ -136,7 +167,7 @@ class KorlantasController extends Controller
         $operator = User::find($id);
 
         //return $cameras;
-        
+
         /*
         $data_camera = CountingRekap::orderBy('created_at', 'dsc')->get();
         $data_speed = Speed::orderBy('created_at', 'dsc')->get();
@@ -177,8 +208,10 @@ class KorlantasController extends Controller
             ->responsive(true);
         */
 
-        return view('page.korlantas.page_index_view_volume', 
-            compact('cameras', 'operator'))
+        return view(
+            'page.korlantas.page_index_view_volume',
+            compact('cameras', 'operator')
+        )
             ->with('page', 'Keterangan');
     }
 
@@ -201,7 +234,7 @@ class KorlantasController extends Controller
         });
 
         $chart = Charts::create('bar', 'highcharts')
-            ->title('Kecepatan Rata-rata - '.$operator->name)
+            ->title('Kecepatan Rata-rata - ' . $operator->name)
             ->elementLabel('Kecepatan Kendaraan')
             ->labels($formattedDates)
             ->values($data_camera->pluck('speed'))
@@ -231,30 +264,33 @@ class KorlantasController extends Controller
             ->with('page', 'Keterangan');
     }
 
-    public function view_display($id_user){
+    public function view_display($id_user)
+    {
         $cameras = Camera::where('user_id', $id_user)->get();
         $cameras_random = Camera::where('user_id', $id_user)->inRandomOrder()->take(2)->get();
 
         //return $cameras_random;
 
         return view('page.korlantas.page_view_display', compact('cameras_random', 'cameras'))
-        ->with('page', 'Viewer');
+            ->with('page', 'Viewer');
     }
 
-    public function pelanggaran($id_user){
+    public function pelanggaran($id_user)
+    {
         $pelanggaran = Anomali::all()->sortByDesc("created_at")->take(200);
-        $operator = User::find($id_user);
-		$cameras = Camera::where('user_id', $id_user)->get();
-
-		return view('page.korlantas.page_pelanggaran', compact('cameras', 'pelanggaran', 'operator'))
-			->with('page', 'Pelanggaran');
-    }
-
-    public function korlantas_gis($id_user){
         $operator = User::find($id_user);
         $cameras = Camera::where('user_id', $id_user)->get();
 
-        return view('page.korlantas.page_gis', compact('operator', 'cameras'))
-         ->with('page', 'GIS');
+        return view('page.korlantas.page_pelanggaran', compact('cameras', 'pelanggaran', 'operator'))
+            ->with('page', 'Pelanggaran');
+    }
+
+    public function korlantas_gis($id_user)
+    {
+        $operator = User::find($id_user);
+        $cameras = Camera::where('user_id', $id_user)->get();
+
+        return view('page.korlantas.page_gis_polos', compact('operator', 'cameras'))
+            ->with('page', 'GIS');
     }
 }

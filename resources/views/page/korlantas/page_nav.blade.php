@@ -134,7 +134,7 @@
 
 
                     <li>
-                        <a class="tooltip-tip " href="{{ route('korlantas_gis', $operator->id) }}" title="login">
+                        <a class="tooltip-tip " href="{{ route('korlantas_gis', $operator->id) }}" title="login" target="_blank">
                             <i class="icon-document-new"></i>
                             <span>GIS</span>
                         </a>
