@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\CountingRekap;
 use App\Speed;
 use App\Camera;
+use App\CameraSetting;
 use App\SpeedRecord;
 use CountRekapSeeder;
 use Illuminate\Support\Carbon;
@@ -75,6 +76,8 @@ class VcaController extends Controller
         $speed = Speed::where('camera_id', $id)->first();
 
         //kodingdiisini a
+        $camera_detail = CameraSetting::where('camera_id', $id)->first();
+        #$camera_detail = CameraSetting::all(9);
 
         //$coun = CountingRekap::all();
         
@@ -91,6 +94,8 @@ class VcaController extends Controller
         ->whereDate('created_at', Carbon::today())->first();
 
         // return $coun;
+
+        
         
         $data = [
 
@@ -98,10 +103,12 @@ class VcaController extends Controller
             'speed' => $speed['speed'],
             'bus_truk' => $bus_truck ? $bus_truck['total'] : 0,
             'mobil' => $mobil ? $mobil['total'] : 0,
-            'motor' => $motor ? $motor['total'] : 0
+            'motor' => $motor ? $motor['total'] : 0,
+            'camera_detail' => $camera_detail
         ];
 
         return $data;
+        return $camera_detail;
         
     }
 
