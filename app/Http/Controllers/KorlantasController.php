@@ -110,8 +110,12 @@ class KorlantasController extends Controller
             ->where('vehicle', '=', $vehicle)
             ->where('created_at', '>=', $date)
             ->orderBy('created_at', 'dsc')->pluck('total');
-
-        return $data;
+        
+        if ($data){
+            return $data;
+        } else {
+            return [];
+        }
     }
 
     public function view_volume_kendaraan_cam($id_user, $id_camera)
