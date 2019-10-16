@@ -76,7 +76,7 @@ class KorlantasController extends Controller
         $cameras = Camera::where('user_id', $id)->get();
         $operator = User::find($id);
         $random_camera = Camera::orderByRaw("RAND()")->first();
-        $data_camera = CountingRekap::orderBy('created_at', 'dsc')->get();
+        $data_camera = CountingRekap::orderBy('created_at', 'dsc')->take(2)->get();
 
         return view('page.korlantas.page_view_volume_kendaraan', compact('cameras', 'operator', 'random_camera', 'data_camera'))
             ->with('page', 'Keterangan');
@@ -119,7 +119,7 @@ class KorlantasController extends Controller
         $cameras = Camera::where('user_id', $id_user)->get();
         $operator = User::find($id_user);
         $selected_camera = Camera::find($id_camera);
-        $data_camera = CountingRekap::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->get();
+        $data_camera = CountingRekap::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->take(200)->get();
 
         $categorys = $this->get_date($id_camera);
 
@@ -290,7 +290,7 @@ class KorlantasController extends Controller
         $operator = User::find($id_user);
         $cameras = Camera::where('user_id', $id_user)->get();
 
-        return view('page.korlantas.page_gis_polos', compact('operator', 'cameras'))
+        return view('page.korlantas.page_gis', compact('operator', 'cameras'))
             ->with('page', 'GIS');
     }
 }

@@ -74,7 +74,9 @@ class VcaController extends Controller
         $camera = Camera::find($id);
         $speed = Speed::where('camera_id', $id)->first();
 
-        $coun = CountingRekap::all();
+        //kodingdiisini a
+
+        //$coun = CountingRekap::all();
         
         $bus_truck = CountingRekap::where('camera_id', $id)
         ->where('vehicle', 'bus_truk')
