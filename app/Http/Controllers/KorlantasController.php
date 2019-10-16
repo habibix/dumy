@@ -144,7 +144,7 @@ class KorlantasController extends Controller
             #echo $category;
         }
 
-        //return $dada;
+        return $data_mobil;
 
         $chart = Charts::multi('bar', 'highcharts')
             ->labels($categorys)
