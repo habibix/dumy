@@ -142,9 +142,13 @@ class KorlantasController extends Controller
 
             $cat[] = $category->format('d, M Y');
             #echo $category;
+
+            if (!$data_motor){
+                $data_motor = [];
+            }
         }
 
-        return $data_mobil;
+        #return $data_mobil;
 
         $chart = Charts::multi('bar', 'highcharts')
             ->labels($categorys)
