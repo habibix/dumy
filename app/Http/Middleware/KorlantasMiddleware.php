@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Response;
 
 class KorlantasMiddleware
 {
@@ -15,8 +16,10 @@ class KorlantasMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user() && $request->user()->type != 'korlantas') {
-            return new Response(view('unauthorized')->with('role', 'KORLANTAS'));
+        if ($request->user() && $request->user()->type != 'korlantas')
+        {
+            
+           return new Response(view('unauthorized')->with('role', 'KORLANTAS'));
         }
         return $next($request);
     }

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class VcaController extends Controller
 {
+
     public function insert_counting($camera_id, $vehicle)
     {
         $count_rekap = CountingRekap::where('camera_id', $camera_id)

@@ -133,7 +133,7 @@
   <div class="col-md-6">
     <div class="box box-primary">
     <div class="box-header with-border">
-      <h3 class="box-title">List User</h3>
+      <h3 class="box-title">Insert Camera</h3>
     </div>
       <form action="{{ route('addCamera') }}" method="post">
         {{ csrf_field() }}

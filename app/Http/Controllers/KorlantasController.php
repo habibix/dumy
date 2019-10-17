@@ -18,6 +18,11 @@ class KorlantasController extends Controller
 {
     //
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         #$cameras = Camera::where('user_id', Auth::user()->id)->get();
@@ -120,6 +125,10 @@ class KorlantasController extends Controller
 
     public function view_volume_kendaraan_cam($id_user, $id_camera)
     {
+        $data_motor = [];
+        $data_mobil = [];
+        $data_bus_truk = [];
+        
         $cameras = Camera::where('user_id', $id_user)->get();
         $operator = User::find($id_user);
         $selected_camera = Camera::find($id_camera);
@@ -142,10 +151,6 @@ class KorlantasController extends Controller
 
             $cat[] = $category->format('d, M Y');
             #echo $category;
-
-            if (!$data_motor){
-                $data_motor = [];
-            }
         }
 
         #return $data_mobil;

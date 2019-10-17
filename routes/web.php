@@ -65,14 +65,7 @@ Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], functi
 });
 
 Route::group(['middleware' => 'auth'], function () {
-    // User needs to be authenticated to enter here.
-    Route::get('/view/{event}/', function ()    {
-        // Uses Auth Middleware
-    });
-
-    Route::get('user/profile', function () {
-        // Uses Auth Middleware
-    });
+    
 });
 
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');
