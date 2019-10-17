@@ -252,7 +252,7 @@
         key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
         basePath: '<your-tomtom-sdk-base-path>',
         center: [{{ $operator->center_koordinat }}],
-        zoom: 15,
+        zoom: 10,
         traffic: {
                 style: 's3',
                 key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
@@ -263,7 +263,7 @@
                 },
                 createPopupForCluster: true,
                 diff: true,
-                minZoom: 10
+                minZoom: 4
             }
     });
     //var marker = tomtom.L.marker(speedyPizzaCoordinates).addTo(map);
