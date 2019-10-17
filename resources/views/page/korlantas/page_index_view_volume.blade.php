@@ -252,7 +252,7 @@
         key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
         basePath: '<your-tomtom-sdk-base-path>',
         center: [{{ $operator->center_koordinat }}],
-        zoom: 10,
+        zoom: 9,
         traffic: {
                 style: 's3',
                 key: 'ViASnrhbgAvEijHSeUJD3DNJbSeC3dfO',
