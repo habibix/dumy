@@ -303,7 +303,7 @@ class KorlantasController extends Controller
         $operator = User::find($id_user);
         $cameras = Camera::where('user_id', $id_user)->get();
 
-        return view('page.korlantas.gis_polos', compact('operator', 'cameras'))
+        return view('page.korlantas.page_gis', compact('operator', 'cameras'))
             ->with('page', 'GIS');
     }
 }
