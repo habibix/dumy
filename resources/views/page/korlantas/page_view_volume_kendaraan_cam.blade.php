@@ -115,9 +115,10 @@
 
             </div>
 
-            <div class="body-nest ini-chart" id="Blank_Page_Content">
+            <div class="body-nest" id="Blank_Page_Content">
             {!! $chart->html() !!}
             </div>
+            
         </div>
     </div>
     <!-- END OF BLANK PAGE -->
@@ -136,15 +137,6 @@
 <link href="{{ asset('apricot/assets/js/dataTable/css/datatables.responsive.css') }}" rel="stylesheet" type="text/css" />
 <!--link href="{{ asset('apricot/dark-chart.css') }}" rel="stylesheet" type="text/css" /-->
 
-
-<!-- highcharts -->
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/series-label.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/themes/dark-unica.js"></script>
-
 <style>
     .footable>tbody>tr>td {
         color: #000 !important
@@ -154,6 +146,8 @@
     .footable>thead>tr>td {
         color: #000 !important
     }
+
+
 </style>
 
 
@@ -161,6 +155,14 @@
 
 <!-- FOOTER -->
 @section('footer')
+
+<!-- highcharts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/themes/dark-unica.js"></script>
 
 <!-- Table -->
 <script src="{{ asset('../../apricot/assets/js/footable/js/toggle_close.js?v=2-0-1') }}" type="text/javascript"></script>

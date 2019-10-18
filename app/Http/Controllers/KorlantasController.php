@@ -98,9 +98,24 @@ class KorlantasController extends Controller
         #return $data_14;
 
         $dates = $data_14->pluck('created_at');
-        #$sortedDates = collect($data_14)->sortBy('created_at')->all();
-        #$dates = $data_14->pluck('created_at');
-        #$sortedDates = collect($dates)->sortBy('date')->all();
+
+        $formattedDates = $dates->map(function ($date) {
+            return $date;
+        });
+
+        return $formattedDates;
+    }
+
+    public function get_date_speed($cam_id)
+    {
+        $data_14 = Speed::where('camera_id', $cam_id)
+            ->groupBy('created_at')
+            ->orderBy('created_at', 'dsc')
+            ->take(14)->get();
+
+        #return $data_14;
+
+        $dates = $data_14->pluck('created_at');
 
         $formattedDates = $dates->map(function ($date) {
             return $date;
@@ -123,11 +138,25 @@ class KorlantasController extends Controller
         }
     }
 
+    public function get_speed_bydate($cam_id, $date)
+    {
+        $data = Speed::where('camera_id', $cam_id)
+            ->where('created_at', '>=', $date)
+            ->orderBy('created_at', 'dsc')->pluck('speed');
+        
+        if ($data){
+            return $data;
+        } else {
+            return [];
+        }
+    }
+
     public function view_volume_kendaraan_cam($id_user, $id_camera)
     {
         $data_motor = [];
         $data_mobil = [];
         $data_bus_truk = [];
+        $cat = [];
         
         $cameras = Camera::where('user_id', $id_user)->get();
         $operator = User::find($id_user);
@@ -161,7 +190,8 @@ class KorlantasController extends Controller
             ->elementLabel('Jumlah Kendaraan')
             ->dataset('Mobil', $data_mobil)
             ->dataset('Motor', $data_motor)
-            ->dataset('Truk/Bus', $data_bus_truk);
+            ->dataset('Truk/Bus', $data_bus_truk)
+            ->responsive(false);
 
         //return $data_motor;
         //return $categorys;
@@ -222,35 +252,49 @@ class KorlantasController extends Controller
         */
 
         return view(
-            'page.korlantas.page_index_view_volume',
-            compact('cameras', 'operator')
-        )
+            'page.korlantas.page_index_view_volume', compact('cameras', 'operator'))
             ->with('page', 'Keterangan');
     }
 
     public function view_speed_kendaraan_cam($id_user, $id_camera)
     {
+        $cat = [];
+        $data_speed = [];
+
         $cameras = Camera::where('user_id', $id_user)->get();
         $operator = User::find($id_user);
         $selected_camera = Camera::find($id_camera);
         $data_camera_dsc = Speed::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->get();
 
+        $categorys = $this->get_date_speed($id_camera);
+
+        //return $categorys;
+
+        foreach($categorys as $category){
+            $data_speed = $this->get_speed_bydate($id_camera, $category, 'motor');
+            $cat[] = $category->format('d, M Y');
+            #echo $category;
+        }
+
+        /*
         $data_camera = Speed::where('camera_id', $id_camera)
             ->take(14)
             ->orderBy('created_at', 'asc')
             ->get();
 
         $dates = $data_camera->pluck('created_at');
-
-        $formattedDates = $dates->map(function ($date) {
+        
+            $formattedDates = $dates->map(function ($date) {
             return $date->format('d, M Y');
         });
+        */
+ 
 
         $chart = Charts::create('bar', 'highcharts')
             ->title('Kecepatan Rata-rata - ' . $operator->name)
             ->elementLabel('Kecepatan Kendaraan')
-            ->labels($formattedDates)
-            ->values($data_camera->pluck('speed'))
+            ->labels($cat)
+            ->values($data_speed)
             ->responsive(true);
 
         /*
@@ -291,6 +335,8 @@ class KorlantasController extends Controller
     public function pelanggaran($id_user)
     {
         $pelanggaran = Anomali::all()->sortByDesc("created_at")->take(200);
+        #$pelanggaran = Anomali::with();
+        
         $operator = User::find($id_user);
         $cameras = Camera::where('user_id', $id_user)->get();
 

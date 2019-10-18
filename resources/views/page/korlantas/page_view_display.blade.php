@@ -24,6 +24,7 @@
             <div class="form-group">
                 <label for="sel1">Pilih Kamera</label>
                 <select class="form-control" id="select_camera">
+                    <option value="">Pilih Kamera</option>
                     @foreach($cameras as $camera)
                     <option value="{{ $camera->id }}">{{ $camera->lokasi }}</option>
                     @endforeach

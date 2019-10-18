@@ -27,6 +27,13 @@
 
     <style>
         #RealTimeClose{color: #000}
+        .highcharts-container{
+  width: 100% !important;
+}
+
+.highcharts-root{
+  width: 100% !important;
+}
     </style>
 
 </head>
