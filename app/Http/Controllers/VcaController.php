@@ -8,6 +8,7 @@ use App\CountingRekap;
 use App\Speed;
 use App\Camera;
 use App\CameraSetting;
+use App\CountRecord;
 use App\SpeedRecord;
 use CountRekapSeeder;
 use Illuminate\Support\Carbon;
@@ -151,6 +152,20 @@ class VcaController extends Controller
         $speed_record->speed_record = $request->speed_record;
         $speed_record->camera_id = $request->camera_id;
         $insert = $speed_record->save();
+        
+        if($insert){
+            return "created";
+        } else {
+            return "failed";
+        }
+    }
+
+    public function insert_countrecord(Request $request){
+        $count_record = new CountRecord();
+        $count_record->vehicle = $request->vehicle;
+        $count_record->dimensi = $request->dimensi;
+        $count_record->camera_id = $request->camera_id;
+        $insert = $count_record->save();
         
         if($insert){
             return "created";

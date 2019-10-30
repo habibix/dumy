@@ -17,4 +17,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-#Route::get('/get_counting/{camera_id}/{vehicle}', 'VcaController@get_counting');
+#Route::get('/get_counting/{camera_id}/{vehicle}', 'VcaController@get_counting');p

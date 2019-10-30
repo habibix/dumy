@@ -112,11 +112,10 @@
             </div>
 
             <div class="body-nest ini-chart" id="Blank_Page_Content">
-            {!! $chart->html() !!}
+            {!! $chart->container() !!}
             </div>
         </div>
     </div>
-    <!-- END OF BLANK PAGE -->
 </div>
 
 @endsection

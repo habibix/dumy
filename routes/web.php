@@ -55,17 +55,25 @@ Route::group(['middleware' => 'App\Http\Middleware\SuperAdminMiddleware'], funct
 
 Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], function() {
 	Route::match(['get', 'post'], '/korlantas/', 'KorlantasController@index')->name('korlantas');	
+
 	Route::match(['get', 'post'], '/korlantas/volume/', 'KorlantasController@view_volume_kendaraan')->name('korlantas_view_volume');
+
 	Route::match(['get', 'post'], '/korlantas/pelanggaran/{id_user}', 'KorlantasController@pelanggaran')->name('pelanggaran');
+
 	Route::match(['get', 'post'], '/korlantas/volume/{id}', 'KorlantasController@index_view_volume')->name('index_view_volume');
-	Route::match(['get', 'post'], '/korlantas/volume/{id_user}/camera/{id_camera}', 'KorlantasController@view_volume_kendaraan_cam')->name('view_volume_kendaraan_cam');
+	Route::match(['get', 'post'], '/korlantas/volume/{id_user}/camera/{id_camera}', 'KorlantasController@view_count_kendaraan')->name('view_volume_kendaraan_cam');
+
 	Route::match(['get', 'post'], '/korlantas/speed/{id_user}/camera/{id_camera}', 'KorlantasController@view_speed_kendaraan_cam')->name('view_speed_kendaraan_cam');
+
 	Route::match(['get', 'post'], '/korlantas/view/{id_user}', 'KorlantasController@view_display')->name('view_display');
+
 	Route::match(['get', 'post'], '/korlantas/gis/{id_user}', 'KorlantasController@korlantas_gis')->name('korlantas_gis');
+
+	//Route::match(['get', 'post'], '/korlantas/view_count_kendaraan/{date}', 'KorlantasController@view_count_kendaraan_date')->name('view_count_kendaraan_date');
 });
 
 Route::group(['middleware' => 'auth'], function () {
-    
+	Route::get('test_data/{date}', ['uses' => 'KorlantasController@chartApiDate']);
 });
 
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');
@@ -77,6 +85,7 @@ Route::get('/get_speed/{id}', 'VcaController@get_speed');
 Route::get('/connect_notif/', 'VcaController@connect_notif');
 Route::get('/release_notif/{id}', 'VcaController@release_notif');
 Route::post('/insert_speedrecord', 'VcaController@insert_speedrecord');
+Route::post('/insert_countrecord', 'VcaController@insert_countrecord');
 
 /*
 Route::post('/insert_speed', [

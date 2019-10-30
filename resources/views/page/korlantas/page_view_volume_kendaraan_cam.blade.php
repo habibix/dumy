@@ -112,13 +112,18 @@
                         <span class="entypo-up-open"></span>
                     </a>
                 </div>
-
             </div>
 
             <div class="body-nest" id="Blank_Page_Content">
-            {!! $chart->html() !!}
+                <div class="row">
+                    <div class="col-sm-3 form-group"><input type="text" class="form-control" id="dp1" value="Pilih Tanggal"></div>
+                </div>
+                
+                    {!! $chart->container() !!}
+                
+                
             </div>
-            
+
         </div>
     </div>
     <!-- END OF BLANK PAGE -->
@@ -135,6 +140,8 @@
 <link href="{{ asset('apricot/assets/js/footable/css/footable-demos.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('apricot/assets/js/dataTable/css/datatables.responsive.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('apricot/assets/js/datepicker/datepicker.css') }}" rel="stylesheet" type="text/css" />
+
 <!--link href="{{ asset('apricot/dark-chart.css') }}" rel="stylesheet" type="text/css" /-->
 
 <style>
@@ -146,8 +153,6 @@
     .footable>thead>tr>td {
         color: #000 !important
     }
-
-
 </style>
 
 
@@ -170,6 +175,8 @@
 <script src="{{ asset('../../apricot/assets/js/footable/js/footable.sort.js?v=2-0-1') }}" type="text/javascript"></script>
 <script src="{{ asset('../../apricot/assets/js/footable/js/footable.filter.js?v=2-0-1') }}" type="text/javascript"></script>
 <script src="{{ asset('../../apricot/assets/js/footable/js/footable.paginate.js?v=2-0-1') }}" type="text/javascript"></script>
+<script type="text/javascript" src="{{ asset('../../apricot/assets/js/datepicker/bootstrap-datepicker.js') }}"></script>
+
 
 <script type="text/javascript">
     $(function() {
@@ -213,5 +220,28 @@
 </script>
 
 {!! $chart->script() !!}
+
+<script type="text/javascript">
+    
+    //url = {{ $chart->id }}_api_url
+    url = '{{ url('/test_data/') }}';
+
+    $('#dp1').datepicker({
+        format: 'dd-mm-yyyy',
+        autoclose: true,
+        todayHighlight: true
+    }).on('changeDate', function(e) {
+        //console.log(e.format());
+        newEndPoint = $('#dp1').val()
+        console.log($('#dp1').val());
+        
+        newUrl = url+"/"+newEndPoint
+        {{ $chart->id }}_refresh(newUrl);
+
+        console.log(newUrl);
+
+        $('#dp1').datepicker('hide');
+    });
+</script>
 
 @endsection

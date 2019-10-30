@@ -184,6 +184,33 @@
 </div>
 <!-- table -->
 
+<div class="row">
+    <div class="col-sm-12">
+        <!-- BLANK PAGE-->
+        <div class="nest" id="Blank_PageClose">
+            <div class="title-alt">
+                <h6>
+                    Pelanggaran</h6>
+                <div class="titleClose">
+                    <a class="gone" href="#Blank_PageClose">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+                <div class="titleToggle">
+                    <a class="nav-toggle-alt" href="#Blank_Page_Content">
+                        <span class="entypo-up-open"></span>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="body-nest ini-chart" id="Blank_Page_Content">
+            {!! $chart->container() !!}
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 <!-- HEADER -->
@@ -220,7 +247,13 @@
 <script src="../../apricot/assets/js/footable/js/footable.filter.js?v=2-0-1" type="text/javascript"></script>
 <script src="../../apricot/assets/js/footable/js/footable.paginate.js?v=2-0-1" type="text/javascript"></script>
 
-
+<!-- highcharts -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/themes/dark-unica.js"></script>
 
 <script type="text/javascript">
     $(function() {
@@ -286,5 +319,7 @@
         });
     });
 </script>
+
+{!! $chart->script() !!}
 
 @endsection

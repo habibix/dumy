@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Charts;
 use App\Anomali;
 use App\User;
 use App\Camera;
+use App\Charts\AnomaliChart;
+use App\Charts\SpeedChart;
+use App\Charts\VolumeChart;
 use App\CountingRekap;
+use App\CountRecord;
 use App\Speed;
 use DB;
 use Illuminate\Support\Carbon;
@@ -17,6 +20,7 @@ use Illuminate\Http\Request;
 class KorlantasController extends Controller
 {
     //
+
 
     public function __construct()
     {
@@ -32,78 +36,53 @@ class KorlantasController extends Controller
             ->with('page', 'Dashboard');
     }
 
-    public function data_day($cam_id, $day, $vehicle)
+    public function view_volume_kendaraan($id_user, $id_camera)
     {
-        for ($x = 1; $x <= $day; $x++) {
-            //echo $x;
-            $date_fix = Carbon::today()->subDays($x)->toDateString();
-            $data = CountingRekap::where('camera_id', $cam_id)
-                ->where('vehicle', '=', $vehicle)
-                ->where('created_at', '>=', $date_fix)
-                ->orderBy('created_at', 'asc')->pluck('total');
-        }
+        $cameras = Camera::where('user_id', $id_user)->get();
+        $operator = User::find($id_user);
+        $selected_camera = Camera::find($id_camera);
+        $data_camera = CountingRekap::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->take(200)->get();
 
-        $data_14 = CountingRekap::where('camera_id', $cam_id)
-            ->groupBy('created_at')
-            ->orderBy('created_at', 'dsc')
-            ->take(14)->get();
+        $data_motor = [];
+        $data_mobil = [];
+        $data_bus_truk = [];
+        $cat = [];
 
-        foreach ($data_14 as $row) {
-            $data = CountingRekap::where('camera_id', $cam_id)
-                ->where('vehicle', '=', $vehicle)
-                ->where('created_at', '>=', $date_fix)
-                ->orderBy('created_at', 'asc')->get();
-        }
+        $data_motor = DB::table('count_record')
+            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
+            ->where('vehicle', 'motor')
+            ->whereDate('created_at', '=', Carbon::now()->toDateString())
+            ->groupBy('hour')
+            ->get();
 
-        return $data;
-    }
-
-    public function view_volume_kendaraan($id)
-    {
-
-        $cameras = Camera::where('user_id', $id)->get();
-
-        $camera = Camera::find($id);
-
-        //return $camera;
-
-        return view('page.korlantas.page_index', compact('camera', 'cameras'))
-            ->with('page', 'Keterangan');
-    }
-
-    public function view_volume_kendaraan_id($id)
-    {
-        //$operator = User::where('camera_id', $id)->first();
-        //$camera = Camera::find($id)->get();
-        // return $id;
-        // return $camera;
-
-        $cameras = Camera::where('user_id', $id)->get();
-        $operator = User::find($id);
-        $random_camera = Camera::orderByRaw("RAND()")->first();
-        $data_camera = CountingRekap::orderBy('created_at', 'dsc')->take(2)->get();
-
-        return view('page.korlantas.page_view_volume_kendaraan', compact('cameras', 'operator', 'random_camera', 'data_camera'))
-            ->with('page', 'Keterangan');
-    }
-
-    public function get_date($cam_id)
-    {
-        $data_14 = CountingRekap::where('camera_id', $cam_id)
-            ->groupBy('created_at')
-            ->orderBy('created_at', 'dsc')
+        $data_mobil = DB::table('count_record')
+            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
             ->where('vehicle', 'mobil')
-            ->take(14)->get();
+            ->whereDate('created_at', '=', Carbon::now()->toDateString())
+            ->groupBy('hour')
+            ->get();
 
-        #return $data_14;
+        $data_bus_truk = DB::table('count_record')
+            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
+            ->where('vehicle', 'bus_truk')
+            ->whereDate('created_at', '=', Carbon::now()->toDateString())
+            ->groupBy('hour')
+            ->get();
 
-        $dates = $data_14->pluck('created_at');
 
-        $formattedDates = $dates->map(function ($date) {
-            return $date;
-        });
+        // generate chart
+        $chart = new VolumeChart;
+        $api = url('/test_data');
+        $chart->labels($data_mobil->pluck('hour'))->load($api);
 
-        return $formattedDates;
+
+        return view('sample_view', compact('chart'));
+
+        return view(
+            'page.korlantas.page_view_volume_kendaraan_cam',
+            compact('cameras', 'operator', 'selected_camera', 'data_camera', 'data_motor', 'data_mobil', 'data_bus_truk', 'chart')
+        )
+            ->with('page', 'Keterangan');
     }
 
     public function get_date_speed($cam_id)
@@ -130,8 +109,8 @@ class KorlantasController extends Controller
             ->where('vehicle', '=', $vehicle)
             ->where('created_at', '>=', $date)
             ->orderBy('created_at', 'dsc')->pluck('total');
-        
-        if ($data){
+
+        if ($data) {
             return $data;
         } else {
             return [];
@@ -143,65 +122,123 @@ class KorlantasController extends Controller
         $data = Speed::where('camera_id', $cam_id)
             ->where('created_at', '>=', $date)
             ->orderBy('created_at', 'dsc')->pluck('speed');
-        
-        if ($data){
+
+        if ($data) {
             return $data;
         } else {
             return [];
         }
     }
 
-    public function view_volume_kendaraan_cam($id_user, $id_camera)
+    public function view_count_kendaraan($id_user, $id_camera)
     {
-        $data_motor = [];
-        $data_mobil = [];
-        $data_bus_truk = [];
-        $cat = [];
-        
+
         $cameras = Camera::where('user_id', $id_user)->get();
         $operator = User::find($id_user);
         $selected_camera = Camera::find($id_camera);
         $data_camera = CountingRekap::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->take(200)->get();
 
-        $categorys = $this->get_date($id_camera);
+        $data_motor = [];
+        $data_mobil = [];
+        $data_bus_truk = [];
+        $cat = [];
 
-        #return $categorys;
-
-        //$data_motor = $this->data_day($id_camera, 14, 'motor')->pluck('total');
-        //$data_mobil = $this->data_day($id_camera, 14, 'mobil')->pluck('total');
-        //$data_bus_truk = $this->data_day($id_camera, 14, 'bus_truk')->pluck('total');
-
-        foreach($categorys as $category){
-            $data_motor = $this->get_data_bydate($id_camera, $category, 'motor');
-            $data_mobil = $this->get_data_bydate($id_camera, $category, 'mobil');
-            $data_bus_truk = $this->get_data_bydate($id_camera, $category, 'bus_truk');
-
-            $dada = $this->get_data_bydate($id_camera, $category, 'mobil');
-
-            $cat[] = $category->format('d, M Y');
-            #echo $category;
+        for ($i = 0; $i <= 23; $i++) {
+            //$hour[] = $i . ':00';
+            $hour = collect([1, 2, 3]);
         }
 
-        #return $data_mobil;
+        //return $hour;
 
-        $chart = Charts::multi('bar', 'highcharts')
-            ->labels($categorys)
-            ->title('Jumlah Kendaraan - ' . $selected_camera->lokasi)
-            ->elementLabel('Jumlah Kendaraan')
-            ->dataset('Mobil', $data_mobil)
-            ->dataset('Motor', $data_motor)
-            ->dataset('Truk/Bus', $data_bus_truk)
-            ->responsive(false);
+        $data_motor = DB::table('count_record')
+            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
+            ->where('vehicle', 'motor')
+            ->whereDate('created_at', '=', Carbon::now()->toDateString())
+            ->groupBy('hour')
+            ->get();
 
-        //return $data_motor;
-        //return $categorys;
+        $data_mobil = DB::table('count_record')
+            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
+            ->where('vehicle', 'mobil')
+            ->whereDate('created_at', '=', Carbon::now()->toDateString())
+            ->groupBy('hour')
+            ->get();
 
-        //return $camera;
+        $data_bus_truk = DB::table('count_record')
+            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
+            ->where('vehicle', 'bus_truk')
+            ->whereDate('created_at', '=', Carbon::now()->toDateString())
+            ->groupBy('hour')
+            ->get();
+
+
+        $chart = new VolumeChart;
+        $today = date("d-m-Y");
+        $api = url('/test_data/' . $today);
+        //$chart->labels($hour);
+        $chart->labels($data_mobil->pluck('hour'))->load($api);
+
+
+        //return view('sample_view', compact('chart'));
+
         return view(
             'page.korlantas.page_view_volume_kendaraan_cam',
-            compact('cameras', 'operator', 'selected_camera', 'data_camera', 'data_motor', 'data_mobil', 'data_bus_truk', 'categorys', 'chart')
+            compact('cameras', 'operator', 'selected_camera', 'data_camera', 'data_motor', 'data_mobil', 'data_bus_truk', 'chart')
         )
             ->with('page', 'Keterangan');
+    }
+
+    public function chartApiDate($date)
+    {
+
+        $date = Carbon::parse($date);
+
+        $data_motor = [];
+        $data_mobil = [];
+        $data_bus_truk = [];
+        $cat = [];
+
+        $data_motor = DB::table('count_record')
+            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
+            ->where('vehicle', 'motor')
+            ->whereDate('created_at', '=', $date)
+            ->groupBy('hour')
+            ->get();
+
+        $data_mobil = DB::table('count_record')
+            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
+            ->where('vehicle', 'mobil')
+            ->whereDate('created_at', '=', $date)
+            ->groupBy('hour')
+            ->get();
+
+        $data_bus_truk = DB::table('count_record')
+            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
+            ->where('vehicle', 'bus_truk')
+            ->whereDate('created_at', '=', $date)
+            ->groupBy('hour')
+            ->get();
+
+
+        $chart = new VolumeChart;
+        $chart->dataset('Mobil', 'line', $data_mobil->pluck('count'));
+        $chart->dataset('Motor', 'line', $data_motor->pluck('count'));
+        $chart->dataset('Bus/Truk', 'line', $data_bus_truk->pluck('count'));
+
+        //$data_mo = collect([]); // Could also be an array
+
+        for ($days_backwards = 23; $days_backwards >= 0; $days_backwards--) {
+            // Could also be an array_push if using an array rather than a collection.
+            //$data_mo->push(User::whereDate('created_at', '>=', Carbon::now()->subHour($days_backwards))->count());
+            $data_mo[] = today()->subHour($days_backwards);
+            // $data_mo[] = CountRecord::whereDate('created_at', '>=' , today()->subHour($days_backwards))
+            // ->whereDate('created_at', '>' , today()->subDay(1))
+            // ->where('vehicle', 'bus_truk')->count();
+        }
+
+        //return $data_mo;
+
+        return $chart->api();
     }
 
     public function index_view_volume($id)
@@ -209,50 +246,10 @@ class KorlantasController extends Controller
         $cameras = Camera::where('user_id', $id)->get();
         $operator = User::find($id);
 
-        //return $cameras;
-
-        /*
-        $data_camera = CountingRekap::orderBy('created_at', 'dsc')->get();
-        $data_speed = Speed::orderBy('created_at', 'dsc')->get();
-
-        $data = DB::table('counting_rekap')
-            ->select('camera_id', DB::raw('SUM(total)'))
-            ->groupBy('camera_id')
-            ->get();
-
-        foreach ($data as $key => $value) {
-            $val_chart[] = Camera::find($value->camera_id)->lokasi;
-        }
-
-        //return $data_camera;
-
-
-        $chart = Charts::create('bar', 'highcharts')
-            ->title('Jumlah Kendaraan Keseluruhan - ' . $operator->name)
-            ->elementLabel('Jumlah Kendaraan')
-            ->labels($val_chart)
-            ->values($data->pluck('SUM(total)'))
-            ->responsive(true);
-
-        //chart speed
-        $data_speed_chart = Speed::take(14)->orderBy('created_at', 'dsc')->get();
-        $dates_speed = $data_speed_chart->pluck('created_at');
-        $formatted_dates_speed = $dates_speed->map(function ($date) {
-            return $date->format('d, M Y');
-        });
-
-        //return $data_speed_chart;
-
-        $chart_speed = Charts::create('bar', 'highcharts')
-            ->title('Kecepatan Rata-rata Kendaraan Keseluruhan')
-            ->elementLabel('kecepatan Kendaraan')
-            ->labels($formatted_dates_speed)
-            ->values($data_speed_chart->pluck('speed'))
-            ->responsive(true);
-        */
-
         return view(
-            'page.korlantas.page_index_view_volume', compact('cameras', 'operator'))
+            'page.korlantas.page_index_view_volume',
+            compact('cameras', 'operator')
+        )
             ->with('page', 'Keterangan');
     }
 
@@ -270,56 +267,52 @@ class KorlantasController extends Controller
 
         //return $categorys;
 
-        foreach($categorys as $category){
+        foreach ($categorys as $category) {
             $data_speed = $this->get_speed_bydate($id_camera, $category, 'motor');
             $cat[] = $category->format('d, M Y');
             #echo $category;
         }
 
-        /*
-        $data_camera = Speed::where('camera_id', $id_camera)
-            ->take(14)
-            ->orderBy('created_at', 'asc')
-            ->get();
+        $chart = new SpeedChart;
+        $chart->labels($cat);
+        $chart->dataset('Kecepatan Rata-rata', 'column', $data_speed);
 
-        $dates = $data_camera->pluck('created_at');
-        
-            $formattedDates = $dates->map(function ($date) {
-            return $date->format('d, M Y');
-        });
-        */
- 
 
-        $chart = Charts::create('bar', 'highcharts')
-            ->title('Kecepatan Rata-rata - ' . $operator->name)
-            ->elementLabel('Kecepatan Kendaraan')
-            ->labels($cat)
-            ->values($data_speed)
-            ->responsive(true);
+        // $chart = Charts::create('bar', 'highcharts')
+        //     ->title('Kecepatan Rata-rata - ' . $operator->name)
+        //     ->elementLabel('Kecepatan Kendaraan')
+        //     ->labels($cat)
+        //     ->values($data_speed)
+        //     ->responsive(true);
 
-        /*
-        $data = Speed::where('camera_id', $id_camera)
-            ->take(14)
-            ->orderBy('created_at', 'dsc')
-            ->get();
+        //chart
+        $day_0 = Speed::whereDate('created_at', today())->count();
+        $day_1 = Speed::whereDate('created_at', today()->subDays(1))->count();
+        $day_2 = Speed::whereDate('created_at', today()->subDays(2))->count();
+        $day_3 = Speed::whereDate('created_at', today()->subDays(3))->count();
+        $day_4 = Speed::whereDate('created_at', today()->subDays(4))->count();
+        $day_5 = Speed::whereDate('created_at', today()->subDays(5))->count();
+        $day_6 = Speed::whereDate('created_at', today()->subDays(6))->count();
 
-        //return $data;
+        $chart = new SpeedChart;
+        #$chart->labels("pelangaran, 1, 3,4");
+        #$chart->dataset('Pelanggaran', 'column', [1, 2, 3, 4]);
+        $chart->labels([
+            today()->subDays(6)->toFormattedDateString(),
+            today()->subDays(5)->toFormattedDateString(),
+            today()->subDays(4)->toFormattedDateString(),
+            today()->subDays(3)->toFormattedDateString(),
+            today()->subDays(2)->toFormattedDateString(),
+            today()->subDays(1)->toFormattedDateString(),
+            today()->toFormattedDateString()
+        ]);
+        $chart->dataset('kecepatan', 'column', [$day_6, $day_5, $day_4, $day_3, $day_2, $day_1, $day_0]);
 
-        foreach ($data as $key => $value) {
-            $val_chart[] = Camera::find($value->camera_id)->lokasi;
-        }
-
-        $chart = Charts::create('bar', 'highcharts')
-			->title('Kecepatan Rata-rata - '.$operator->name)
-			->elementLabel('Kecepatan Kendaraan')
-			->labels($val_chart)
-			->values($data->pluck('speed'))
-            ->responsive(true);
-        */
 
         return view('page.korlantas.page_view_speed_kendaraan_cam', compact('cameras', 'operator', 'selected_camera', 'data_camera_dsc', 'chart'))
             ->with('page', 'Keterangan');
     }
+
 
     public function view_display($id_user)
     {
@@ -335,12 +328,36 @@ class KorlantasController extends Controller
     public function pelanggaran($id_user)
     {
         $pelanggaran = Anomali::all()->sortByDesc("created_at")->take(200);
-        #$pelanggaran = Anomali::with();
-        
+
         $operator = User::find($id_user);
         $cameras = Camera::where('user_id', $id_user)->get();
 
-        return view('page.korlantas.page_pelanggaran', compact('cameras', 'pelanggaran', 'operator'))
+        //chart
+        $day_0 = Anomali::whereDate('created_at', today())->count();
+        $day_1 = Anomali::whereDate('created_at', today()->subDays(1))->count();
+        $day_2 = Anomali::whereDate('created_at', today()->subDays(2))->count();
+        $day_3 = Anomali::whereDate('created_at', today()->subDays(3))->count();
+        $day_4 = Anomali::whereDate('created_at', today()->subDays(4))->count();
+        $day_5 = Anomali::whereDate('created_at', today()->subDays(5))->count();
+        $day_6 = Anomali::whereDate('created_at', today()->subDays(6))->count();
+        $day_7 = Anomali::whereDate('created_at', today()->subDays(7))->count();
+
+        $chart = new AnomaliChart;
+        #$chart->labels("pelangaran, 1, 3,4");
+        #$chart->dataset('Pelanggaran', 'column', [1, 2, 3, 4]);
+        $chart->labels([
+            today()->subDays(7)->toFormattedDateString(),
+            today()->subDays(6)->toFormattedDateString(),
+            today()->subDays(5)->toFormattedDateString(),
+            today()->subDays(4)->toFormattedDateString(),
+            today()->subDays(3)->toFormattedDateString(),
+            today()->subDays(2)->toFormattedDateString(),
+            today()->subDays(1)->toFormattedDateString(),
+            today()->toFormattedDateString()
+        ]);
+        $chart->dataset('Pelanggaran', 'column', [$day_7, $day_6, $day_5, $day_4, $day_3, $day_2, $day_1, $day_0]);
+
+        return view('page.korlantas.page_pelanggaran', compact('cameras', 'pelanggaran', 'operator', 'chart'))
             ->with('page', 'Pelanggaran');
     }
 

@@ -14,6 +14,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         //
         'insert_anomali', 
-        'insert_speedrecord'
+        'insert_speedrecord',
+        'insert_countrecord'
     ];
 }
