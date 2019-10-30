@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 class KorlantasController extends Controller
 {
     //
-    
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -176,13 +176,6 @@ class KorlantasController extends Controller
         $chart->dataset('Kecepatan Rata-rata', 'column', $data_speed);
 
 
-        // $chart = Charts::create('bar', 'highcharts')
-        //     ->title('Kecepatan Rata-rata - ' . $operator->name)
-        //     ->elementLabel('Kecepatan Kendaraan')
-        //     ->labels($cat)
-        //     ->values($data_speed)
-        //     ->responsive(true);
-
         //chart
         $day_0 = Speed::whereDate('created_at', today())->count();
         $day_1 = Speed::whereDate('created_at', today()->subDays(1))->count();
@@ -193,8 +186,6 @@ class KorlantasController extends Controller
         $day_6 = Speed::whereDate('created_at', today()->subDays(6))->count();
 
         $chart = new SpeedChart;
-        #$chart->labels("pelangaran, 1, 3,4");
-        #$chart->dataset('Pelanggaran', 'column', [1, 2, 3, 4]);
         $chart->labels([
             today()->subDays(6)->toFormattedDateString(),
             today()->subDays(5)->toFormattedDateString(),
