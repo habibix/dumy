@@ -235,7 +235,7 @@
         newEndPoint = $('#dp1').val()
         console.log($('#dp1').val());
         
-        newUrl = url+"/"+newEndPoint
+        newUrl = url+"/"+newEndPoint+"/{{ $id_camera }}";
         {{ $chart->id }}_refresh(newUrl);
 
         console.log(newUrl);

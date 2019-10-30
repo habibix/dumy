@@ -20,8 +20,7 @@ use Illuminate\Http\Request;
 class KorlantasController extends Controller
 {
     //
-
-
+    
     public function __construct()
     {
         $this->middleware('auth');
@@ -34,100 +33,6 @@ class KorlantasController extends Controller
         $operators = User::where('type', 'operator')->withCount('punyaKamera')->get();
         return view('page.korlantas.page_index', compact('operators'))
             ->with('page', 'Dashboard');
-    }
-
-    public function view_volume_kendaraan($id_user, $id_camera)
-    {
-        $cameras = Camera::where('user_id', $id_user)->get();
-        $operator = User::find($id_user);
-        $selected_camera = Camera::find($id_camera);
-        $data_camera = CountingRekap::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->take(200)->get();
-
-        $data_motor = [];
-        $data_mobil = [];
-        $data_bus_truk = [];
-        $cat = [];
-
-        $data_motor = DB::table('count_record')
-            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
-            ->where('vehicle', 'motor')
-            ->whereDate('created_at', '=', Carbon::now()->toDateString())
-            ->groupBy('hour')
-            ->get();
-
-        $data_mobil = DB::table('count_record')
-            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
-            ->where('vehicle', 'mobil')
-            ->whereDate('created_at', '=', Carbon::now()->toDateString())
-            ->groupBy('hour')
-            ->get();
-
-        $data_bus_truk = DB::table('count_record')
-            ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
-            ->where('vehicle', 'bus_truk')
-            ->whereDate('created_at', '=', Carbon::now()->toDateString())
-            ->groupBy('hour')
-            ->get();
-
-
-        // generate chart
-        $chart = new VolumeChart;
-        $api = url('/test_data');
-        $chart->labels($data_mobil->pluck('hour'))->load($api);
-
-
-        return view('sample_view', compact('chart'));
-
-        return view(
-            'page.korlantas.page_view_volume_kendaraan_cam',
-            compact('cameras', 'operator', 'selected_camera', 'data_camera', 'data_motor', 'data_mobil', 'data_bus_truk', 'chart')
-        )
-            ->with('page', 'Keterangan');
-    }
-
-    public function get_date_speed($cam_id)
-    {
-        $data_14 = Speed::where('camera_id', $cam_id)
-            ->groupBy('created_at')
-            ->orderBy('created_at', 'dsc')
-            ->take(14)->get();
-
-        #return $data_14;
-
-        $dates = $data_14->pluck('created_at');
-
-        $formattedDates = $dates->map(function ($date) {
-            return $date;
-        });
-
-        return $formattedDates;
-    }
-
-    public function get_data_bydate($cam_id, $date, $vehicle)
-    {
-        $data = CountingRekap::where('camera_id', $cam_id)
-            ->where('vehicle', '=', $vehicle)
-            ->where('created_at', '>=', $date)
-            ->orderBy('created_at', 'dsc')->pluck('total');
-
-        if ($data) {
-            return $data;
-        } else {
-            return [];
-        }
-    }
-
-    public function get_speed_bydate($cam_id, $date)
-    {
-        $data = Speed::where('camera_id', $cam_id)
-            ->where('created_at', '>=', $date)
-            ->orderBy('created_at', 'dsc')->pluck('speed');
-
-        if ($data) {
-            return $data;
-        } else {
-            return [];
-        }
     }
 
     public function view_count_kendaraan($id_user, $id_camera)
@@ -174,7 +79,7 @@ class KorlantasController extends Controller
 
         $chart = new VolumeChart;
         $today = date("d-m-Y");
-        $api = url('/test_data/' . $today);
+        $api = url('/test_data/' . $today.'/'.$id_camera);
         //$chart->labels($hour);
         $chart->labels($data_mobil->pluck('hour'))->load($api);
 
@@ -183,12 +88,12 @@ class KorlantasController extends Controller
 
         return view(
             'page.korlantas.page_view_volume_kendaraan_cam',
-            compact('cameras', 'operator', 'selected_camera', 'data_camera', 'data_motor', 'data_mobil', 'data_bus_truk', 'chart')
+            compact('cameras', 'operator', 'selected_camera', 'data_camera', 'data_motor', 'data_mobil', 'data_bus_truk', 'chart', 'id_camera')
         )
             ->with('page', 'Keterangan');
     }
 
-    public function chartApiDate($date)
+    public function chartApiDate($date, $id_camera)
     {
 
         $date = Carbon::parse($date);
@@ -201,6 +106,7 @@ class KorlantasController extends Controller
         $data_motor = DB::table('count_record')
             ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
             ->where('vehicle', 'motor')
+            ->where('camera_id', $id_camera)
             ->whereDate('created_at', '=', $date)
             ->groupBy('hour')
             ->get();
@@ -208,6 +114,7 @@ class KorlantasController extends Controller
         $data_mobil = DB::table('count_record')
             ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
             ->where('vehicle', 'mobil')
+            ->where('camera_id', $id_camera)
             ->whereDate('created_at', '=', $date)
             ->groupBy('hour')
             ->get();
@@ -215,6 +122,7 @@ class KorlantasController extends Controller
         $data_bus_truk = DB::table('count_record')
             ->select(DB::raw('count(*) as count, created_at, HOUR(created_at) as hour'))
             ->where('vehicle', 'bus_truk')
+            ->where('camera_id', $id_camera)
             ->whereDate('created_at', '=', $date)
             ->groupBy('hour')
             ->get();
@@ -262,16 +170,6 @@ class KorlantasController extends Controller
         $operator = User::find($id_user);
         $selected_camera = Camera::find($id_camera);
         $data_camera_dsc = Speed::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->get();
-
-        $categorys = $this->get_date_speed($id_camera);
-
-        //return $categorys;
-
-        foreach ($categorys as $category) {
-            $data_speed = $this->get_speed_bydate($id_camera, $category, 'motor');
-            $cat[] = $category->format('d, M Y');
-            #echo $category;
-        }
 
         $chart = new SpeedChart;
         $chart->labels($cat);
