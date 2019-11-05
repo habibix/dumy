@@ -97,7 +97,7 @@
         <div class="nest" id="Blank_PageClose">
             <div class="title-alt">
                 <h6>
-                    Volume Kendaraan</h6>
+                    Kecepatan Kendaraan - {{ $operator->name }}</h6>
                 <div class="titleClose">
                     <a class="gone" href="#Blank_PageClose">
                         <span class="entypo-cancel"></span>
@@ -112,7 +112,10 @@
             </div>
 
             <div class="body-nest ini-chart" id="Blank_Page_Content">
-            {!! $chart->container() !!}
+                <div class="row">
+                    <div class="col-sm-3 form-group"><input type="text" class="form-control" id="dp1" value="Pilih Tanggal"></div>
+                </div>
+                {!! $chart->container() !!}
             </div>
         </div>
     </div>
@@ -129,6 +132,7 @@
 <link href="{{ asset('apricot/assets/js/footable/css/footable-demos.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('apricot/assets/js/dataTable/css/datatables.responsive.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('apricot/assets/js/datepicker/datepicker.css') }}" rel="stylesheet" type="text/css" />
 <!--link href="{{ asset('apricot/dark-chart.css') }}" rel="stylesheet" type="text/css" /-->
 
 <!-- highcharts -->
@@ -162,6 +166,7 @@
 <script src="{{ asset('../../apricot/assets/js/footable/js/footable.sort.js?v=2-0-1') }}" type="text/javascript"></script>
 <script src="{{ asset('../../apricot/assets/js/footable/js/footable.filter.js?v=2-0-1') }}" type="text/javascript"></script>
 <script src="{{ asset('../../apricot/assets/js/footable/js/footable.paginate.js?v=2-0-1') }}" type="text/javascript"></script>
+<script type="text/javascript" src="{{ asset('../../apricot/assets/js/datepicker/bootstrap-datepicker.js') }}"></script>
 
 <script type="text/javascript">
     $(function() {
@@ -205,5 +210,27 @@
 </script>
 
 {!! $chart->script() !!}
+
+<script type="text/javascript">
+    //url = {{ $chart->id }}_api_url
+    url = '{{ url('/get_data_speed/') }}';
+
+    $('#dp1').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayHighlight: true
+    }).on('changeDate', function(e) {
+        //console.log(e.format());
+        newEndPoint = $('#dp1').val()
+        console.log($('#dp1').val());
+        
+        newUrl = url+"/"+newEndPoint+"/{{ $selected_camera->id }}";
+        {{ $chart->id }}_refresh(newUrl);
+
+        console.log(newUrl);
+
+        $('#dp1').datepicker('hide');
+    });
+</script>
 
 @endsection

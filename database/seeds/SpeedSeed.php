@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Speed;
+use App\SpeedRecord;
 use Carbon\Carbon;
 
 class SpeedSeed extends Seeder
@@ -13,17 +14,17 @@ class SpeedSeed extends Seeder
      */
     public function run()
     {
-        $camera = ["1", "2", "3", "4"];
+        $camera = ["1"];
 
         $now = Carbon::now();
         //$now = new Carbon('2019-08-29 00:00:00');
 
         foreach ($camera as $key => $value) {
-        	for ($i=0; $i < 14; $i++) {
-	        	$rekap = new Speed;
-	        	$rekap->speed = rand(70, 110);
+        	for ($i=0; $i < 24; $i++) {
+	        	$rekap = new SpeedRecord();
+	        	$rekap->speed_record = rand(70, 110);
 	        	$rekap->camera_id = $value;
-	        	$rekap->created_at = Carbon::today()->subDays($i);
+	        	$rekap->created_at = Carbon::today()->addhour($i);
 	        	$rekap->save();
 	        }
         }

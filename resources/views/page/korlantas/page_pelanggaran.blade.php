@@ -74,7 +74,7 @@
         <div class="nest" id="FilteringClose">
             <div class="title-alt">
                 <h6>
-                    DATA KAMERA</h6>
+                    DATA KAMERA - {{ $operator->name }}</h6>
                 <div class="titleClose">
                     <a class="gone" href="#FilteringClose">
                         <span class="entypo-cancel"></span>
@@ -190,7 +190,7 @@
         <div class="nest" id="Blank_PageClose">
             <div class="title-alt">
                 <h6>
-                    Pelanggaran</h6>
+                    Pelanggaran - {{ $operator->name }}</h6>
                 <div class="titleClose">
                     <a class="gone" href="#Blank_PageClose">
                         <span class="entypo-cancel"></span>
@@ -205,6 +205,18 @@
             </div>
 
             <div class="body-nest ini-chart" id="Blank_Page_Content">
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <select class="col-sm-3 form-control" id="pilih_event">
+                            <option class="form-control" value="">Semua</option>
+                            <option class="form-control" value="melintas_bahu_jalan">Melintas Bahu Jalan</option>
+                            <option class="form-control" value="melanggar_batas_kecepatan">Melanggar Batas kecepatan</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <input type="text" class="form-control" id="dp1" value="{{ date('Y-m-d') }}">
+                    </div>
+                </div>
             {!! $chart->container() !!}
             </div>
         </div>
@@ -221,6 +233,7 @@
 <link href="../../apricot/assets/js/footable/css/footable-demos.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css" />
 <link rel="stylesheet" href="../../apricot/assets/js/dataTable/css/datatables.responsive.css" />
+<script type="text/javascript" src="{{ asset('../../apricot/assets/js/datepicker/bootstrap-datepicker.js') }}"></script>
 
 <meta http-equiv="refresh" content="120" >
 
@@ -246,6 +259,8 @@
 <script src="../../apricot/assets/js/footable/js/footable.sort.js?v=2-0-1" type="text/javascript"></script>
 <script src="../../apricot/assets/js/footable/js/footable.filter.js?v=2-0-1" type="text/javascript"></script>
 <script src="../../apricot/assets/js/footable/js/footable.paginate.js?v=2-0-1" type="text/javascript"></script>
+<link href="{{ asset('apricot/assets/js/datepicker/datepicker.css') }}" rel="stylesheet" type="text/css" />
+
 
 <!-- highcharts -->
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -321,5 +336,40 @@
 </script>
 
 {!! $chart->script() !!}
+
+<script type="text/javascript">
+    
+    //url = {{ $chart->id }}_api_url
+    url = '{{ url('/get_data_anomali/') }}';
+    by_event = $('#pilih_event').val()
+    newEndPoint = $('#dp1').val()
+
+    $('#dp1').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayHighlight: true
+    }).on('changeDate', function(e) {
+        //console.log(e.format());
+        newEndPoint = $('#dp1').val()
+
+        console.log($('#dp1').val());
+        
+        newUrl = url+"/"+newEndPoint+"/{{ $operator->id }}/"+by_event;
+        {{ $chart->id }}_refresh(newUrl);
+
+        console.log(newUrl);
+
+        $('#dp1').datepicker('hide');
+    });
+
+    $('#pilih_event').on('change', function() {
+        //alert( this.value );
+        by_event = $('#pilih_event').val()
+        newUrl = url+"/"+newEndPoint+"/{{ $operator->id }}/"+by_event;
+        {{ $chart->id }}_refresh(newUrl);
+        console.log(newUrl);
+    });
+
+</script>
 
 @endsection

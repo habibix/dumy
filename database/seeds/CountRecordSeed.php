@@ -14,8 +14,8 @@ class CountRecordSeed extends Seeder
     public function run()
     {
         $camera = "1";
-        $vehicle = ["mobil", "motor", "bus_truk"];
-        $date = new Carbon('2019-10-30 00:00:00');
+        $vehicle = ["mobil"];
+        $date = new Carbon('2019-11-1 00:00:00');
 
         foreach($vehicle as $v){
             for ($i=0; $i < 24; $i++) {

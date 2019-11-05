@@ -18,4 +18,9 @@ class Camera extends Model
     {
         return $this->hasOne('App\User');
     }
+
+    public function punya_pelanggaran()
+    {
+        return $this->hasMany(Anomali::class, 'camera_id', 'id');
+    }
 }

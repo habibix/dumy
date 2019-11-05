@@ -73,7 +73,11 @@ Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], functi
 });
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('test_data/{date}/{id_camera}', ['uses' => 'KorlantasController@chartApiDate']);
+	Route::get('get_data_volume/{date}/{id_camera}', ['uses' => 'KorlantasController@chartApiDate']);
+	Route::get('get_data_speed/{date}/{id_camera}', ['uses' => 'KorlantasController@chart_api_speed']);
+	Route::get('get_data_anomali/{date}/{id_user}/{category?}', ['uses' => 'KorlantasController@chart_api_anomali']);
+	//Route::get('get_data_anomali/{date}/{id_user}', ['uses' => 'KorlantasController@chart_api_anomali']);
+	//Route::get('get_data_anomali/{date}/{id_user}', ['uses' => 'KorlantasController@chart_api_anomali']);
 });
 
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');

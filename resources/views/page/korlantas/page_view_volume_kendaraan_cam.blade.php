@@ -101,7 +101,7 @@
         <div class="nest" id="Blank_PageClose">
             <div class="title-alt">
                 <h6>
-                    Volume Kendaraan</h6>
+                    Volume Kendaraan - {{ $operator->name }}</h6>
                 <div class="titleClose">
                     <a class="gone" href="#Blank_PageClose">
                         <span class="entypo-cancel"></span>
@@ -141,6 +141,7 @@
 <link href="{{ asset('apricot/assets/js/dataTable/lib/jquery.dataTables/css/DT_bootstrap.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('apricot/assets/js/dataTable/css/datatables.responsive.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('apricot/assets/js/datepicker/datepicker.css') }}" rel="stylesheet" type="text/css" />
+
 
 <!--link href="{{ asset('apricot/dark-chart.css') }}" rel="stylesheet" type="text/css" /-->
 
@@ -224,10 +225,10 @@
 <script type="text/javascript">
     
     //url = {{ $chart->id }}_api_url
-    url = '{{ url('/test_data/') }}';
+    url = '{{ url('/get_data_volume/') }}';
 
     $('#dp1').datepicker({
-        format: 'dd-mm-yyyy',
+        format: 'yyyy-mm-dd',
         autoclose: true,
         todayHighlight: true
     }).on('changeDate', function(e) {
