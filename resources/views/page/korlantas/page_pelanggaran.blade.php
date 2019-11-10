@@ -209,6 +209,8 @@
                     <div class="col-sm-3 form-group">
                         <select class="col-sm-3 form-control" id="pilih_event">
                             <option class="form-control" value="">Semua</option>
+                            <option class="form-control" value="dilarang_berhenti">Dilarang Berhenti</option>
+                            <option class="form-control" value="lawan_arus">Lawan Arus</option>
                             <option class="form-control" value="melintas_bahu_jalan">Melintas Bahu Jalan</option>
                             <option class="form-control" value="melanggar_batas_kecepatan">Melanggar Batas kecepatan</option>
                         </select>

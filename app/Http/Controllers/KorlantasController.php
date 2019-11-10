@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Anomali;
+use App\AnomaliRekap;
 use App\User;
 use App\Camera;
 use App\Charts\AnomaliChart;
@@ -31,7 +32,7 @@ class KorlantasController extends Controller
     {
         $hour_label = collect([]);
 
-        for ($i = 0; $i <= 24; $i++) {
+        for ($i = 0; $i <= 23; $i++) {
             $hour_label->push($i . ":00");
         }
 
@@ -69,9 +70,25 @@ class KorlantasController extends Controller
         $data_camera = CountingRekap::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->take(200)->get();
 
         $hour_label = collect([]);
+        $date_label = collect([]);
+        $max_hour = collect([]);
+        $data_rekap = collect([]);
+        
 
-        for ($i = 0; $i <= 24; $i++) {
+        for ($i = 0; $i <= 23; $i++) {
             $hour_label->push($i . ":00");
+            $date_label->push($i . ":00:00");
+        }
+        
+        //Order::where('created_at', '>=', Carbon::now()->startOfMonth())->get();
+
+        foreach($date_label as $dtl){
+            $max_hour = CountingRekap::where('created_at', '>=', Carbon::now()->startOfMonth())
+                ->where('created_at', 'LIKE', '%'.$dtl)
+                ->select('id','created_at', DB::raw('sum(total) as total_vehicle'))
+                ->first();
+
+            $data_rekap->push((int)$max_hour['total_vehicle']);
         }
 
 
@@ -80,17 +97,26 @@ class KorlantasController extends Controller
         $api = url('/get_data_volume/' . $today . '/' . $id_camera);
         $chart->labels($hour_label)->load($api);
 
+        $chart = new VolumeChart;
+        $today = date("Y-m-d");
+        $api = url('/get_data_volume/' . $today . '/' . $id_camera);
+        $chart->labels($hour_label)->load($api);
+
+        $chart_month = new VolumeChart;
+        $chart_month->labels($hour_label);
+        $chart_month->dataset('Volume Kendaraan', 'column', $data_rekap);
+
 
         //return $today;
 
         return view(
             'page.korlantas.page_view_volume_kendaraan_cam',
-            compact('cameras', 'operator', 'selected_camera', 'data_camera', 'chart', 'id_camera')
+            compact('cameras', 'operator', 'selected_camera', 'data_camera', 'chart', 'id_camera', 'chart_month')
         )
             ->with('page', 'Keterangan');
     }
 
-    public function chartApiDate($date, $id_camera)
+    public function chartApiDate($date, $id_camera, $vehicle=null)
     {
         $date_time = $date . ' 00:00:00';
 
@@ -100,24 +126,52 @@ class KorlantasController extends Controller
 
         for ($hour = 0; $hour <= 23; $hour++) {
 
-            $data_mobil->push(CountRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
-                ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
-                ->where('vehicle', 'mobil')
-                ->where('camera_id', $id_camera)
-                ->count());
+            // $data_mobil->push(CountRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
+            //     ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
+            //     ->where('vehicle', 'mobil')
+            //     ->where('camera_id', $id_camera)
+            //     ->count());
 
-            $data_motor->push(CountRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
-                ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
-                ->where('vehicle', 'motor')
-                ->where('camera_id', $id_camera)
-                ->count());
+            // $data_motor->push(CountRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
+            //     ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
+            //     ->where('vehicle', 'motor')
+            //     ->where('camera_id', $id_camera)
+            //     ->count());
 
-            $data_bus_truk->push(CountRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
-                ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
-                ->where('vehicle', 'bus_truk')
-                ->where('camera_id', $id_camera)
-                ->count());
+            // $data_bus_truk->push(CountRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
+            //     ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
+            //     ->where('vehicle', 'bus_truk')
+            //     ->where('camera_id', $id_camera)
+            //     ->count());
+
+            //echo Carbon::parse($date_time)->addHour($hour)."";
+
+            $mob = CountingRekap::where('camera_id', $id_camera)
+            ->where('vehicle', 'mobil')
+            ->where('created_at', Carbon::parse($date_time)->addHour($hour))
+            ->first();
+
+            $mot = CountingRekap::where('camera_id', $id_camera)
+            ->where('vehicle', 'motor')
+            ->where('created_at', Carbon::parse($date_time)->addHour($hour))
+            ->first();
+
+            $bus = CountingRekap::where('camera_id', $id_camera)
+            ->where('vehicle', 'bus_truk')
+            ->where('created_at', Carbon::parse($date_time)->addHour($hour))
+            ->first();
+
+            //return $mob;
+
+            $data_mobil->push($mob['total'] > 0 ? $mob['total'] : 0);
+            $data_motor->push($mot['total'] > 0 ? $mot['total'] : 0);
+            $data_bus_truk->push($bus['total'] > 0 ? $bus['total'] : 0);
+
+            //$data_mobil->push($cnt['total']);
+
         }
+
+        //return $data_mobil;
 
         $chart = new VolumeChart;
         $chart->dataset('Mobil', 'line', $data_mobil);
@@ -137,18 +191,37 @@ class KorlantasController extends Controller
         $selected_camera = Camera::find($id_camera);
         $data_camera_dsc = Speed::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->get();
 
-        //return $this->hour_label();
+        $date_label = collect([]);
+        $data_rekap_speed = collect([]);
+        for ($i = 0; $i <= 23; $i++) {
+            $date_label->push($i . ":00:00");
+        }
+
+        foreach($date_label as $dtl){
+            $max_hour_speed = Speed::where('created_at', '>=', Carbon::now()->startOfMonth())
+                ->where('created_at', 'LIKE', '%'.$dtl)
+                ->select('id', 'created_at', DB::raw('avg(speed) as average_speed'))
+                ->first();
+
+            $data_rekap_speed->push((int)$max_hour_speed['average_speed']);
+        }
+
+        //return $data_rekap_speed;
+
+        $chart_month = new VolumeChart;
+        $chart_month->labels($this->hour_label());
+        $chart_month->dataset('Volume Kendaraan', 'column', $data_rekap_speed);
 
         $chart = new SpeedChart;
         $today = date("Y-m-d");
         $api = url('/get_data_speed/' . $today . '/' . $id_camera);
         $chart->labels($this->hour_label())->load($api);
 
-        return view('page.korlantas.page_view_speed_kendaraan_cam', compact('cameras', 'operator', 'selected_camera', 'data_camera_dsc', 'chart'))
+        return view('page.korlantas.page_view_speed_kendaraan_cam', compact('cameras', 'operator', 'selected_camera', 'data_camera_dsc', 'chart', 'chart_month'))
             ->with('page', 'Keterangan');
     }
 
-    public function chart_api_speed($date, $id_camera)
+    public function chart_api_speed($date, $id_camera, $vehicle=null)
     {
         $date_time = $date . ' 00:00:00';
 
@@ -156,15 +229,27 @@ class KorlantasController extends Controller
 
         for ($hour = 0; $hour <= 23; $hour++) {
 
-            $avg_speed = SpeedRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
-                ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
-                ->where('camera_id', $id_camera)
-                ->avg('speed_record');
+            // $avg_speed = SpeedRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
+            //     ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
+            //     ->where('camera_id', $id_camera)
+            //     ->avg('speed_record');
 
-            $avg_speed = (int) $avg_speed;
+            // $avg_speed = (int) $avg_speed;
 
-            $speed->push($avg_speed);
+            // $speed->push($avg_speed);
+
+            $spd = Speed::where('camera_id', $id_camera)
+            ->where('created_at', Carbon::parse($date_time)->addHour($hour))
+            ->where('vehicle', 'LIKE', $vehicle)
+            ->get()
+            ->avg('speed');
+
+            //echo $spd."<br>";
+
+            $speed->push((int)$spd > 0 ? (int)$spd : 0);
         }
+
+        //return $spd;
 
         $chart = new SpeedChart;
         $chart->dataset('Kecepatan', 'column', $speed);
@@ -188,42 +273,7 @@ class KorlantasController extends Controller
     {
         $pelanggaran = Anomali::all()->sortByDesc("created_at")->take(200);
         $operator = User::find($id_user);
-        //$cameras = Camera::where('user_id', $id_user)->get();
         $cameras = Camera::with('punya_pelanggaran')->where('user_id', $id_user)->get();
-        $user = User::with('punyaKamera')->find($id_user);
-
-        //chart
-        $day_0 = Anomali::whereDate('created_at', today())->count();
-        $day_1 = Anomali::whereDate('created_at', today()->subDays(1))->count();
-        $day_2 = Anomali::whereDate('created_at', today()->subDays(2))->count();
-        $day_3 = Anomali::whereDate('created_at', today()->subDays(3))->count();
-        $day_4 = Anomali::whereDate('created_at', today()->subDays(4))->count();
-        $day_5 = Anomali::whereDate('created_at', today()->subDays(5))->count();
-        $day_6 = Anomali::whereDate('created_at', today()->subDays(6))->count();
-        $day_7 = Anomali::whereDate('created_at', today()->subDays(7))->count();
-
-        $chart = new AnomaliChart;
-        #$chart->labels("pelangaran, 1, 3,4");
-        #$chart->dataset('Pelanggaran', 'column', [1, 2, 3, 4]);
-        $chart->labels([
-            today()->subDays(7)->toFormattedDateString(),
-            today()->subDays(6)->toFormattedDateString(),
-            today()->subDays(5)->toFormattedDateString(),
-            today()->subDays(4)->toFormattedDateString(),
-            today()->subDays(3)->toFormattedDateString(),
-            today()->subDays(2)->toFormattedDateString(),
-            today()->subDays(1)->toFormattedDateString(),
-            today()->toFormattedDateString()
-        ]);
-        $chart->dataset('Pelanggaran', 'column', [$day_7, $day_6, $day_5, $day_4, $day_3, $day_2, $day_1, $day_0]);
-
-        $pelanggaran = collect([]);
-
-        foreach ($cameras as $camera) {
-            foreach ($camera['punya_pelanggaran'] as $pel) {
-                $pelanggaran->push($pel);
-            }
-        }
 
         $chart = new AnomaliChart;
         $today = date("Y-m-d");
@@ -234,7 +284,7 @@ class KorlantasController extends Controller
             ->with('page', 'Pelanggaran');
     }
 
-    public function chart_api_anomali($date, $id_user, $vehicle=null)
+    public function chart_api_anomali($date, $id_user, $anomali_type = null)
     {
         ini_set('memory_limit', '256M');
         $date_time = $date . ' 00:00:00';
@@ -243,40 +293,41 @@ class KorlantasController extends Controller
 
         for ($hour = 0; $hour <= 23; $hour++) {
 
-            $pelanggaran = collect([]);
+            $ano = AnomaliRekap::where('user_id', $id_user)
+            ->where('created_at', Carbon::parse($date_time)->addHour($hour))
+            ->where('anomali_type', 'LIKE', $anomali_type)
+            ->get()
+            ->sum('total');
 
-            $date_time = $date . ' 00:00:00';
-            $cameras = Camera::with(['punya_pelanggaran' => function ($q) use ($hour, $date_time, $vehicle) {
-                $q->where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
-                ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
-                ->where('anomali', 'LIKE', $vehicle);
-            }])
-                ->where('user_id', $id_user)->get();
+            $anomali->push($ano);
 
-            foreach ($cameras as $camera) {
-                foreach ($camera['punya_pelanggaran'] as $pel) {
-//                    $pel = count($pel);
-                    //echo $hour."-".$pel."</br>";
-                    $pelanggaran->push($pel);
-                }
-            }
-
-            $anomali->push($pelanggaran->count());
-
-            // echo $pelanggaran->count();
-            // echo "</br></br></br></br>";
         }
 
-        // return $anomali;
-        // return $chart->api();
+        //return $anomali;
 
-        // return $cameras;
+        //         for ($hour = 0; $hour <= 23; $hour++) {
 
-        // foreach ($cameras as $camera) {
-        //     foreach ($camera['punya_pelanggaran'] as $pel) {
-        //         $pelanggaran->push($pel);
-        //     }
-        // }
+        //             $pelanggaran = collect([]);
+
+        //             $date_time = $date . ' 00:00:00';
+        //             $cameras = Camera::with(['punya_pelanggaran' => function ($q) use ($hour, $date_time, $anomali_type) {
+        //                 $q->where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
+        //                 ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
+        //                 ->where('anomali', 'LIKE', $anomali_type);
+        //             }])
+        //                 ->where('user_id', $id_user)->get();
+
+        //             foreach ($cameras as $camera) {
+        //                 foreach ($camera['punya_pelanggaran'] as $pel) {
+        // //                    $pel = count($pel);
+        //                     //echo $hour."-".$pel."</br>";
+        //                     $pelanggaran->push($pel);
+        //                 }
+        //             }
+
+        //             $anomali->push($pelanggaran->count());
+
+        //         }
 
         $chart = new AnomaliChart;
         $chart->dataset('Anomali', 'column', $anomali);

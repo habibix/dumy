@@ -73,17 +73,20 @@ Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], functi
 });
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('get_data_volume/{date}/{id_camera}', ['uses' => 'KorlantasController@chartApiDate']);
-	Route::get('get_data_speed/{date}/{id_camera}', ['uses' => 'KorlantasController@chart_api_speed']);
+	Route::get('get_data_volume/{date}/{id_camera}/{vehicle?}', ['uses' => 'KorlantasController@chartApiDate']);
+	Route::get('get_data_speed/{date}/{id_camera}/{vehicle?}', ['uses' => 'KorlantasController@chart_api_speed']);
 	Route::get('get_data_anomali/{date}/{id_user}/{category?}', ['uses' => 'KorlantasController@chart_api_anomali']);
 	//Route::get('get_data_anomali/{date}/{id_user}', ['uses' => 'KorlantasController@chart_api_anomali']);
 	//Route::get('get_data_anomali/{date}/{id_user}', ['uses' => 'KorlantasController@chart_api_anomali']);
 });
 
 Route::get('/insert_counting/{camera_id}/{vehicle}', 'VcaController@insert_counting');
-Route::get('/insert_speed/{camera_id}/{speed}', 'VcaController@insert_speed');
+//Route::get('/insert_speed_rekap/{camera_id}/{speed}/{vehicle}', 'VcaController@insert_speed_rekap');
+Route::get('/insert_speed/{camera_id}/{speed}/{vehicle}', 'VcaController@insert_speed');
 Route::post('/insert_anomali', 'VcaController@insert_anomali');
 
+Route::get('/insert_counting_rekap/{camera}/{vehicle}', 'VcaController@insert_counting_rekap');
+Route::get('/insert_anomali_rekap/{camera}/{user_id}/{anomali_type}', 'VcaController@insert_anomali_rekap');
 Route::get('/get_value_cam/{id}', 'VcaController@get_value_cam');
 Route::get('/get_speed/{id}', 'VcaController@get_speed');
 Route::get('/connect_notif/', 'VcaController@connect_notif');

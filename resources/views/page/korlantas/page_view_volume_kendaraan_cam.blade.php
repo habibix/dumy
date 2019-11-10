@@ -129,6 +129,37 @@
     <!-- END OF BLANK PAGE -->
 </div>
 
+<div class="row">
+    <div class="col-sm-12">
+        <!-- BLANK PAGE-->
+        <div class="nest" id="Blank_PageClose">
+            <div class="title-alt">
+                <h6>
+                    Tingkat Volume Kendaraan Perbulan - {{ $operator->name }}</h6>
+                <div class="titleClose">
+                    <a class="gone" href="#Blank_PageClose">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+                <div class="titleToggle">
+                    <a class="nav-toggle-alt" href="#Blank_Page_Content">
+                        <span class="entypo-up-open"></span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="body-nest" id="Blank_Page_Content">
+                
+                    {!! $chart_month->container() !!}
+                
+                
+            </div>
+
+        </div>
+    </div>
+    <!-- END OF BLANK PAGE -->
+</div>
+
 @endsection
 
 <!-- HEADER -->
@@ -221,6 +252,7 @@
 </script>
 
 {!! $chart->script() !!}
+{!! $chart_month->script() !!}
 
 <script type="text/javascript">
     

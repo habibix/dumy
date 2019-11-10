@@ -113,9 +113,44 @@
 
             <div class="body-nest ini-chart" id="Blank_Page_Content">
                 <div class="row">
-                    <div class="col-sm-3 form-group"><input type="text" class="form-control" id="dp1" value="Pilih Tanggal"></div>
+                    <div class="col-sm-3 form-group">
+                        <select class="col-sm-3 form-control" id="pilih_event">
+                            <option class="form-control" value="">Semua</option>
+                            <option class="form-control" value="mobil">Mobil</option>
+                            <option class="form-control" value="motor">Motor</option>
+                            <option class="form-control" value="bus_truk">Bus/Truk</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 form-group"><input type="text" class="form-control" id="dp1" value="{{ date('Y-m-d') }}"></div>
                 </div>
                 {!! $chart->container() !!}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <!-- BLANK PAGE-->
+        <div class="nest" id="Blank_PageClose">
+            <div class="title-alt">
+                <h6>
+                    Kecepatan Kendaraan - {{ $operator->name }}</h6>
+                <div class="titleClose">
+                    <a class="gone" href="#Blank_PageClose">
+                        <span class="entypo-cancel"></span>
+                    </a>
+                </div>
+                <div class="titleToggle">
+                    <a class="nav-toggle-alt" href="#Blank_Page_Content">
+                        <span class="entypo-up-open"></span>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="body-nest ini-chart" id="Blank_Page_Content">
+                {!! $chart_month->container() !!}
             </div>
         </div>
     </div>
@@ -210,10 +245,13 @@
 </script>
 
 {!! $chart->script() !!}
+{!! $chart_month->script() !!}
 
 <script type="text/javascript">
     //url = {{ $chart->id }}_api_url
     url = '{{ url('/get_data_speed/') }}';
+    by_event = $('#pilih_event').val()
+    newEndPoint = $('#dp1').val()
 
     $('#dp1').datepicker({
         format: 'yyyy-mm-dd',
@@ -231,6 +269,17 @@
 
         $('#dp1').datepicker('hide');
     });
+
+    $('#pilih_event').on('change', function() {
+        //alert( this.value );
+        by_event = $('#pilih_event').val()
+        newUrl = url+"/"+newEndPoint+"/{{ $selected_camera->id }}/"+by_event;
+        {{ $chart->id }}_refresh(newUrl);
+        console.log(newUrl);
+    });
+
 </script>
+
+
 
 @endsection
