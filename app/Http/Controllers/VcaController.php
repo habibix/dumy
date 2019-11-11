@@ -44,9 +44,9 @@ class VcaController extends Controller
         $data = [
 
             'stream_url' => $camera['rtsp_address'],
-            'bus_truk' => (int)$data_bus_truk,
-            'mobil' => (int)$data_mobil,
-            'motor' => (int)$data_motor,
+            'bus_truk' => (int) $data_bus_truk,
+            'mobil' => (int) $data_mobil,
+            'motor' => (int) $data_motor,
             'camera_detail' => $camera_detail
         ];
 
@@ -195,7 +195,6 @@ class VcaController extends Controller
         if ($insert_count_record) {
             $this->insert_counting_rekap($request->camera_id, $request->vehicle);
         }
-
     }
 
     public function insert_counting_rekap($camera_id, $vehicle)
@@ -216,10 +215,9 @@ class VcaController extends Controller
         //return $count_rekap;
 
         if ($count_rekap && $diff == 0) {
-            
+
             $inc = DB::table('counting_rekap')->where('id', $count_rekap['id'])->increment('total');
             return "TAMBAH";
-            
         } else {
             $counting = new CountingRekap();
             $counting->total = 1;
@@ -237,15 +235,17 @@ class VcaController extends Controller
 
     public function insert_speedrecord(Request $request)
     {
-        $speed_record = new SpeedRecord();
-        $speed_record->vehicle = $request->vehicle;
-        $speed_record->speed_record = $request->speed_record;
-        $speed_record->camera_id = $request->camera_id;
-        $insert = $speed_record->save();
+        if ($request->speed_record != 0) {
+            $speed_record = new SpeedRecord();
+            $speed_record->vehicle = $request->vehicle;
+            $speed_record->speed_record = $request->speed_record;
+            $speed_record->camera_id = $request->camera_id;
+            $insert = $speed_record->save();
 
-        if ($insert) {
-            //return "no";
-            $this->insert_speed_rekap($request->camera_id, $request->speed_record, $request->vehicle);
+            if ($insert) {
+                //return "no";
+                $this->insert_speed_rekap($request->camera_id, $request->speed_record, $request->vehicle);
+            }
         }
     }
 
@@ -268,12 +268,12 @@ class VcaController extends Controller
             //$inc = DB::table('speed')->where('id', $speed_rekap['id'])->increment('speed');
 
             $avg_speed = ($speed_rekap['speed'] + $speed) / 2;
-            
+
             $speed_avg = Speed::find($speed_rekap['id']);
             $speed_avg->speed = $avg_speed;
             $speed_avg->save();
 
-            return "Masuk bu".$speed_rekap['speed']."+".$speed.":". $avg_speed;
+            return "Masuk bu" . $speed_rekap['speed'] . "+" . $speed . ":" . $avg_speed;
             //return $avg_speed;
         } else {
             $speed_insert = new Speed();

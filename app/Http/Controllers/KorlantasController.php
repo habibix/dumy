@@ -126,25 +126,6 @@ class KorlantasController extends Controller
 
         for ($hour = 0; $hour <= 23; $hour++) {
 
-            // $data_mobil->push(CountRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
-            //     ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
-            //     ->where('vehicle', 'mobil')
-            //     ->where('camera_id', $id_camera)
-            //     ->count());
-
-            // $data_motor->push(CountRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
-            //     ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
-            //     ->where('vehicle', 'motor')
-            //     ->where('camera_id', $id_camera)
-            //     ->count());
-
-            // $data_bus_truk->push(CountRecord::where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
-            //     ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
-            //     ->where('vehicle', 'bus_truk')
-            //     ->where('camera_id', $id_camera)
-            //     ->count());
-
-            //echo Carbon::parse($date_time)->addHour($hour)."";
 
             $mob = CountingRekap::where('camera_id', $id_camera)
             ->where('vehicle', 'mobil')
@@ -189,7 +170,7 @@ class KorlantasController extends Controller
         $cameras = Camera::where('user_id', $id_user)->get();
         $operator = User::find($id_user);
         $selected_camera = Camera::find($id_camera);
-        $data_camera_dsc = Speed::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->get();
+        $data_camera_dsc = Speed::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->take(200);
 
         $date_label = collect([]);
         $data_rekap_speed = collect([]);
