@@ -170,7 +170,9 @@ class KorlantasController extends Controller
         $cameras = Camera::where('user_id', $id_user)->get();
         $operator = User::find($id_user);
         $selected_camera = Camera::find($id_camera);
-        $data_camera_dsc = Speed::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->take(200);
+        $data_camera_dsc = Speed::where('camera_id', $id_camera)->orderBy('created_at', 'dsc')->take(200)->get();
+
+        //return $data_camera_dsc;
 
         $date_label = collect([]);
         $data_rekap_speed = collect([]);
