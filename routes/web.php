@@ -1,5 +1,8 @@
 <?php
 
+use App\Camera;
+use App\License;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,7 +22,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/test', 'HomeController@test')->name('test');
+Route::get('/test', function(){
+	//echo base64_encode(base64_encode('_license popup _camera 20'));
+	return $camera = Camera::count();
+})->name('test');
 
 Route::get("/new", function(){
 	return View::make("page.operator.index");
@@ -31,6 +37,9 @@ Route::group(['middleware' => 'App\Http\Middleware\AdminMiddleware'], function()
 	Route::match(['get', 'post'], '/admin/deleteuser/{id}', 'HomeController@deleteUser')->name('deleteUser');
 	Route::match(['get', 'post'], '/admin/logs/', 'HomeController@showLogs')->name('showLogs');
 	Route::match(['get', 'post'], '/admin/addcamera/', 'HomeController@addCamera')->name('addCamera');
+	Route::match(['get', 'post'], '/admin/license/', 'HomeController@insert_license_form')->name('license');
+	Route::match(['post'], '/admin/addlicense/', 'HomeController@insert_license')->name('insert_license');
+	Route::match(['get', 'post'], '/admin/camera/', 'HomeController@camera')->name('camera');
 	//Route::match(['get', 'post'], '/admin/deleteuser/{id}', 'HomeController@deleteUser')->name('deleteUser');
 });
 
@@ -93,6 +102,10 @@ Route::get('/connect_notif/', 'VcaController@connect_notif');
 Route::get('/release_notif/{id}', 'VcaController@release_notif');
 Route::post('/insert_speedrecord', 'VcaController@insert_speedrecord');
 Route::post('/insert_countrecord', 'VcaController@insert_countrecord');
+
+Route::get('/pass/', function(){
+	echo bcrypt('korlantas404');
+});
 
 /*
 Route::post('/insert_speed', [

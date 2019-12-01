@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\File;
 use App\Counting;
 use App\Camera;
 use App\User;
@@ -11,6 +13,7 @@ use App\Logs;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\CountingRekap;
+use App\License;
 
 class HomeController extends Controller
 {
@@ -154,6 +157,9 @@ class HomeController extends Controller
 
     public function addCamera(Request $request)
     {
+        $camera = Camera::all();
+        $license = License::first();
+        $license = $license['license_camera'];
 
         //$this->log_userCreate(Auth::user()->id);
 
@@ -161,22 +167,32 @@ class HomeController extends Controller
             'wilayah' => 'required|string|max:100',
             'lokasi' => 'required|string|max:150',
             'ip_camera' => 'required|ip',
-            'user_id' => 'required'
+            'user_id' => 'required',
+            'area_capture' => 'required',
+            'area_khusus' =>'required'
         ]);
 
-        $user = Camera::firstOrCreate([
-            'ip_camera' => $request->ip_camera
-        ], [
-            'wilayah' => $request->wilayah,
-            'lokasi' => $request->lokasi,
-            'user_id' => $request->user_id,
-        ]);
+        if(count($camera) < 20 ){
+            $user = Camera::firstOrCreate([
+                'ip_camera' => $request->ip_camera
+            ], [
+                'wilayah' => $request->wilayah,
+                'lokasi' => $request->lokasi,
+                'user_id' => $request->user_id,
+                'area_capture' => $request->area_capture,
+                'area_khusus' => $request->area_khusus,
+                'event_speed' => $request->event_speed,
+                'event_counting' => $request->event_counting,
+                'event_crossing' => $request->event_crossing,
+                'restriced_area' => $request->restriced_area
+            ]);
+    
+            return redirect(route('camera'))->with(['success' => 'Kamera Ditambahkan']);
+        } else{
+            return redirect(route('camera'))->with(['err' => 'Jumlah kamera sudah maksimal']);
+        }
 
-        /*if($user){
-            echo "baik";
-        }*/
-
-        return redirect(route('admin'))->with(['success' => 'Data Ditambahkan']);
+        
     }
 
     public function showLogs()
@@ -185,6 +201,43 @@ class HomeController extends Controller
         $logs = Logs::all();
         return view('page.admin.logs')
             ->with('logs', $logs);
+    }
+
+    public function insert_license_form()
+    {
+        $license = License::all();
+        return view('page.admin.license', compact('license'));
+    }
+
+    public function insert_license(Request $request)
+    {
+        $request->validate([
+            'license' => 'required'
+        ]);
+
+        $lic = array();
+
+        $input = Input::all();
+        $file = File::get($input['license']);
+        $license = base64_decode(base64_decode($file));
+        $license = explode(" ", $license);
+
+        echo $lic['license_type'] = $license[1];
+        echo $lic['license_camera'] = $license[3];
+
+        $license = new License();
+        $license->license_type = $lic['license_type'];
+        $license->license_camera = $lic['license_camera'];
+        $license->save();
+
+        return redirect(route('license'))->with(['success' => 'License Ditambahkan']);
+
+    }
+
+    public function camera(){
+        $camera = Camera::all();
+        $user = User::where('type', 'operator')->get();
+        return view('page.admin.camera', compact('camera', 'user'));
     }
 
     // SUPERADMIN CASE

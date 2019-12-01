@@ -44,6 +44,7 @@ class VcaController extends Controller
         $data = [
 
             'stream_url' => $camera['rtsp_address'],
+            'user_id' => $camera['user_id'],
             'bus_truk' => (int) $data_bus_truk,
             'mobil' => (int) $data_mobil,
             'motor' => (int) $data_motor,
