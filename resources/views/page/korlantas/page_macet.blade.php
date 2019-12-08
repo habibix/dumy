@@ -68,7 +68,7 @@
                             <td>{{ $row->created_at->format('Y-m-d h:i:s') }}</td>
                             <td>{{ $row->camera->lokasi }}</td>
                             <td>{{ $row->camera->arah }}</td>
-                            <td>{{ $row->image }}</td>
+                            <td><a class="pop btn btn-info btn-lg" href="{{ config('app.url_root') }}/vca/{{ $row->image }}">Tampilkan</a></td>
                         </tr>
                         @endforeach
 
@@ -118,7 +118,7 @@
         <div class="nest" id="Blank_PageClose">
             <div class="title-alt">
                 <h6>
-                    Pelanggaran - {{ $operator->name }}</h6>
+                    Data Kemacetan - {{ $operator->name }}</h6>
                 <div class="titleClose">
                     <a class="gone" href="#Blank_PageClose">
                         <span class="entypo-cancel"></span>
@@ -134,15 +134,6 @@
 
             <div class="body-nest ini-chart" id="Blank_Page_Content">
                 <div class="row">
-                    <div class="col-sm-3 form-group">
-                        <select class="col-sm-3 form-control" id="pilih_event">
-                            <option class="form-control" value="">Semua</option>
-                            <option class="form-control" value="dilarang_berhenti">Dilarang Berhenti</option>
-                            <option class="form-control" value="lawan_arus">Lawan Arus</option>
-                            <option class="form-control" value="melintas_bahu_jalan">Melintas Bahu Jalan</option>
-                            <option class="form-control" value="melanggar_batas_kecepatan">Melanggar Batas kecepatan</option>
-                        </select>
-                    </div>
                     <div class="col-sm-3 form-group">
                         <input type="text" class="form-control" id="dp1" value="{{ date('Y-m-d') }}">
                     </div>

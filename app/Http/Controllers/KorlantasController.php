@@ -303,16 +303,31 @@ class KorlantasController extends Controller
     }
 
     public function kemacetan($id_user){
-        $macet = Anomali::where('anomali', 'like', 'kemacetan')->take(1000);
+        $macet = Anomali::where('anomali', 'like', 'kemacetan')->where('user_id', $id_user)->take(500)->get();
+
+        // return $macet;
+        
         $operator = User::find($id_user);
         $cameras = Camera::where('user_id', $id_user)->get();
 
         $chart = new AnomaliChart;
-        $chart->labels(['One', 'Two', 'Three', 'Four']);
-        $chart->dataset('My dataset', 'line', [1, 2, 3, 4]);
-        $chart->dataset('My dataset 2', 'line', [4, 3, 2, 1]);
+        $today = date("Y-m-d");
+        // http://127.0.0.1:8000/get_data_anomali/2019-12-08/5/melintas_bahu_jalan
+        $api = url('/get_data_anomali/' . $today . '/' . $id_user. '/kemacetan');
+        $chart->labels($this->hour_label())->load($api);
+
+        // return $api;
+
+        // $chart = new AnomaliChart;
+        // $chart->labels(['One', 'Two', 'Three', 'Four']);
+        // $chart->dataset('My dataset', 'line', [1, 2, 3, 4]);
+        // $chart->dataset('My dataset 2', 'line', [4, 3, 2, 1]);
 
         return view('page.korlantas.page_macet', compact('macet', 'operator', 'cameras', 'chart'))
         ->with('page', 'Kemacetan');
+    }
+
+    public function kemacetan_api(){
+
     }
 }
