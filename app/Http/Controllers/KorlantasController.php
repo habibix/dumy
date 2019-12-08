@@ -254,7 +254,7 @@ class KorlantasController extends Controller
 
     public function pelanggaran($id_user)
     {
-        $pelanggaran = Anomali::all()->sortByDesc("created_at")->take(200);
+        $pelanggaran = Anomali::all()->sortByDesc("created_at")->take(1000);
         $operator = User::find($id_user);
         $cameras = Camera::with('punya_pelanggaran')->where('user_id', $id_user)->get();
 
@@ -286,32 +286,6 @@ class KorlantasController extends Controller
 
         }
 
-        //return $anomali;
-
-        //         for ($hour = 0; $hour <= 23; $hour++) {
-
-        //             $pelanggaran = collect([]);
-
-        //             $date_time = $date . ' 00:00:00';
-        //             $cameras = Camera::with(['punya_pelanggaran' => function ($q) use ($hour, $date_time, $anomali_type) {
-        //                 $q->where('created_at', '>=', Carbon::parse($date_time)->addHour($hour))
-        //                 ->where('created_at', '<=', Carbon::parse($date_time)->addHour($hour + 1))
-        //                 ->where('anomali', 'LIKE', $anomali_type);
-        //             }])
-        //                 ->where('user_id', $id_user)->get();
-
-        //             foreach ($cameras as $camera) {
-        //                 foreach ($camera['punya_pelanggaran'] as $pel) {
-        // //                    $pel = count($pel);
-        //                     //echo $hour."-".$pel."</br>";
-        //                     $pelanggaran->push($pel);
-        //                 }
-        //             }
-
-        //             $anomali->push($pelanggaran->count());
-
-        //         }
-
         $chart = new AnomaliChart;
         $chart->dataset('Anomali', 'column', $anomali);
 
@@ -325,5 +299,19 @@ class KorlantasController extends Controller
 
         return view('page.korlantas.page_gis', compact('operator', 'cameras'))
             ->with('page', 'GIS');
+    }
+
+    public function kemacetan($id_user){
+        $macet = Anomali::where('anomali', 'like', 'kemacetan')->take(1000);
+        $operator = User::find($id_user);
+        $cameras = Camera::where('user_id', $id_user)->get();
+
+        $chart = new AnomaliChart;
+        $chart->labels(['One', 'Two', 'Three', 'Four']);
+        $chart->dataset('My dataset', 'line', [1, 2, 3, 4]);
+        $chart->dataset('My dataset 2', 'line', [4, 3, 2, 1]);
+
+        return view('page.korlantas.page_macet', compact('macet', 'operator', 'cameras', 'chart'))
+        ->with('page', 'Kemacetan');
     }
 }

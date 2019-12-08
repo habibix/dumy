@@ -56,6 +56,8 @@ Route::group(['middleware' => 'App\Http\Middleware\MemberMiddleware'], function(
 	Route::match(['get', 'post'], '/operator/macet/', 'OperatorController@macet')->name('macet');
 	Route::match(['get', 'post'], '/operator/macet/{id}', 'OperatorController@macet_id')->name('macet_id');
 	Route::match(['get', 'post'], '/operator/view/', 'OperatorController@view_user')->name('view_user');
+	
+	
 });
 
 Route::group(['middleware' => 'App\Http\Middleware\SuperAdminMiddleware'], function() {
@@ -77,6 +79,8 @@ Route::group(['middleware' => 'App\Http\Middleware\KorlantasMiddleware'], functi
 	Route::match(['get', 'post'], '/korlantas/view/{id_user}', 'KorlantasController@view_display')->name('view_display');
 
 	Route::match(['get', 'post'], '/korlantas/gis/{id_user}', 'KorlantasController@korlantas_gis')->name('korlantas_gis');
+
+	Route::match(['get', 'post'], '/korlantas/kemacetan/{id_user}', 'KorlantasController@kemacetan')->name('kemacetan');
 
 	//Route::match(['get', 'post'], '/korlantas/view_count_kendaraan/{date}', 'KorlantasController@view_count_kendaraan_date')->name('view_count_kendaraan_date');
 });

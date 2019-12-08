@@ -112,6 +112,13 @@
                         </a>
                     </li>
 
+                    <li>
+                        <a class="tooltip-tip " href="{{ route('kemacetan', $operator->id) }}" title="kemacetan">
+                            <i class="icon-document-new"></i>
+                            <span>Kemacetan</span>
+                        </a>
+                    </li>
+
 
                 </ul>
 
