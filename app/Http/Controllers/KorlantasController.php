@@ -258,6 +258,7 @@ class KorlantasController extends Controller
         $operator = User::find($id_user);
         // $cameras = Camera::with('punya_pelanggaran')->where('user_id', $id_user)->get();
         $cameras = [];
+        $cameras = Camera::where('user_id', $id_user)->get();
 
         $chart = new AnomaliChart;
         $today = date("Y-m-d");
