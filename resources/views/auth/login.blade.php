@@ -34,7 +34,7 @@
     }
 
     html {
-      background: url(/img/bg1.png) no-repeat center center fixed;
+      background: url(/img/new_bg.png) no-repeat center center fixed;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
