@@ -254,7 +254,7 @@ class KorlantasController extends Controller
 
     public function pelanggaran($id_user)
     {
-        $pelanggaran = Anomali::all()->sortByDesc("created_at")->take(500);
+        $pelanggaran = Anomali::sortByDesc("created_at")->take(500);
         $operator = User::find($id_user);
         // $cameras = Camera::with('punya_pelanggaran')->where('user_id', $id_user)->get();
         $cameras = [];
@@ -281,7 +281,7 @@ class KorlantasController extends Controller
             $ano = AnomaliRekap::where('user_id', $id_user)
             ->where('created_at', Carbon::parse($date_time)->addHour($hour))
             ->where('anomali_type', 'LIKE', $anomali_type)
-            ->take(100)
+            ->get()
             ->sum('total');
 
             $anomali->push($ano);
