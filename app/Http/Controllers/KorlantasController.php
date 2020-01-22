@@ -281,7 +281,7 @@ class KorlantasController extends Controller
             $ano = AnomaliRekap::where('user_id', $id_user)
             ->where('created_at', Carbon::parse($date_time)->addHour($hour))
             ->where('anomali_type', 'LIKE', $anomali_type)
-            ->take(500)
+            ->take(100)
             ->sum('total');
 
             $anomali->push($ano);
