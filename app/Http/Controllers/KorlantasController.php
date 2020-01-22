@@ -254,7 +254,7 @@ class KorlantasController extends Controller
 
     public function pelanggaran($id_user)
     {
-        $pelanggaran = Anomali::take(500)->sortByDesc("created_at")->get();
+        $pelanggaran = Anomali::take(500)->orderBy("created_at")->get();
         $operator = User::find($id_user);
         // $cameras = Camera::with('punya_pelanggaran')->where('user_id', $id_user)->get();
         $cameras = [];
